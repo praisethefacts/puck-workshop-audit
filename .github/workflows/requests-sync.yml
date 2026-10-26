@@ -1,0 +1,58 @@
+name: Sync audit requests
+
+# Keeps the public request queue on the site in sync with the GitHub issues
+# labelled `mod-request`, and refreshes the "update watch" list when a Workshop
+# build moves past the audited bytes.
+
+on:
+  schedule:
+    - cron: "17 * * * *" # hourly, at :17
+  workflow_dispatch:
+  issues:
+    types: [opened, edited, reopened, closed, labeled, unlabeled]
+  push:
+    branches: [main]
+    paths:
+      - "data/requests.json"
+      - "data/audit.json"
+
+permissions:
+  contents: write
+  issues: read
+
+concurrency:
+  group: requests-sync
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    name: Refresh request queue and update watch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Sync the request queue from issues
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run sync:requests
+
+      - name: Refresh the update watch (Workshop build moved?)
+        run: npm run staleness
+
+      - name: Commit changed data
+        run: |
+          if git diff --quiet -- data/requests.json data/staleness.json; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/requests.json data/staleness.json
+          git commit -m "chore(queue): sync requests and update watch"
+          git push origin main

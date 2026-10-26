@@ -1,0 +1,56 @@
+name: Triage audit requests
+
+# When someone opens an issue asking for a mod to be checked, label it `mod-request`,
+# post a short acknowledgement and kick off the queue sync right away instead of
+# waiting for the hourly schedule.
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+  contents: read
+  actions: write
+
+jobs:
+  triage:
+    name: Label and acknowledge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect the issue
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ',') }}
+        run: |
+          if [[ "$ISSUE_LABELS" == *"mod-request"* ]]; then
+            echo "already labelled" >&2
+            echo "request=no" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          combined="$ISSUE_TITLE $ISSUE_BODY"
+          if [[ "$combined" =~ (steamcommunity\.com/sharedfiles/filedetails/?\?id=[0-9]+|steam://|published[[:space:]]+file|[0-9]{6,12}) ]]; then
+            echo "request=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "request=no" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Label and comment
+        if: steps.check.outputs.request == 'yes'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue edit "$ISSUE_NUMBER" --add-label mod-request --repo "${{ github.repository }}"
+          gh issue comment "$ISSUE_NUMBER" --repo "${{ github.repository }}" --body \
+            "Queued. The queue on the site refreshes within the hour (usually within a minute of this label). If the mod is already in the ledger, its report and audited hash are linked from https://puck-workshop-safecheck.netlify.app/ — otherwise it will show as pending until the next audit lands."
+
+      - name: Trigger the queue sync now
+        if: steps.check.outputs.request == 'yes'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run requests-sync.yml --repo "${{ github.repository }}"

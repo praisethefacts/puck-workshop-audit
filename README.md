@@ -1,104 +1,115 @@
 # Puck Workshop mod audit
 
-A static, dependency-free security audit site for 63 installed Puck Workshop mods. The pages are plain HTML, CSS and vanilla JavaScript; Netlify hosts the static output and one Web API function for the public request queue.
+A static, dependency-free security audit site for 63 installed Puck Workshop mods, plus a public
+request queue that tracks the next mods to be audited. Plain HTML, CSS and vanilla JavaScript; the
+build is a single Node script with no npm dependencies, and Netlify hosts the static output and two
+small Web API functions.
 
-No framework, build tool, CDN, cookie or client-side tracker is used.
+No framework, bundler, CDN, cookie or client-side tracker is used.
 
 ## What is here
 
 | Path | Purpose |
 | --- | --- |
-| `index.html` | Verdict, headline numbers, findings, re-audit log and the filterable 63-row ledger |
-| `mods/<id>.html` | One rendered audit report per Workshop item |
-| `method.html` | Method, scoring bands, scope and limitations, with a contents list |
-| `requests.html` | Workshop audit request form and the public GitHub-backed queue |
-| `assets/style.css` | The single stylesheet |
-| `assets/app.js` | Ledger filtering/sorting and request-page behaviour |
-| `netlify/functions/api.mjs` | Dependency-free Web API function for `/api/request` and `/api/requests` |
-| `scripts/build.mjs` | Zero-dependency generator for every page |
-| `scripts/theme/` | Source stylesheet, browser script and favicon copied by the generator |
-| `netlify.toml` | Static publish directory, function directory and API rewrites |
+| `data/audit.json` | The audit itself: verdicts, scores, findings, re-audit log, full report Markdown |
+| `data/requests.json` | The public audit queue, kept in sync with GitHub issues labelled `mod-request` |
+| `data/staleness.json` | "Update watch": Workshop builds that moved, or delisted items, since the audit |
+| `data/site-config.json` | Which mods/requests/re-audits are hidden, and the canonical site URL |
+| `scripts/build.mjs` | Zero-dependency generator: renders `dist/` from the data files |
+| `scripts/verify.mjs` | Structural checks on the built site (rows, pages, queue, update watch, leaks) |
+| `scripts/check-links.mjs` | Internal link and anchor checker |
+| `scripts/validate-data.mjs` | Schema checks for the committed data files |
+| `scripts/sync-requests.mjs` | GitHub issues → `data/requests.json` |
+| `scripts/check-staleness.mjs` | Steam Workshop → `data/staleness.json` |
+| `scripts/admin.mjs` | CLI for hiding/showing entries (`data/site-config.json`) |
+| `scripts/serve.mjs` | Tiny static server for `dist/` |
+| `scripts/theme/` | Source stylesheet, browser script and favicon copied into `dist/assets/` |
+| `netlify/functions/api.mjs` | `/api/requests` (GET) and `/api/request` (POST) |
+| `netlify/functions/admin.mjs` | `/api/admin` (POST): password-gated visibility changes |
+| `netlify.toml` | Build command, publish directory, function directory, API rewrites and headers |
 
-The generated `assets/` files are copies of `scripts/theme/` and are committed with the HTML so the site works as plain files.
+`dist/` is generated and is not committed. Every page, report and asset in it is reproducible from
+the committed data with `npm run build`.
 
-## Regenerate
+## Build, verify and preview
 
-Requirements: Node.js 18 or newer. There are no packages to install.
-
-```sh
-node scripts/build.mjs
-```
-
-The generator reads the audit JSON in this order:
-
-1. The path in the `SITE_DATA` environment variable.
-2. `../puck-audit-site/data/site.json` (the sibling audit workspace).
-3. `data/site.json` (a local copy, if present).
-
-The generated site does not fetch Markdown at runtime. Reports are rendered during the build.
+Requirements: Node.js 20 or newer. There is nothing to install.
 
 ```sh
-SITE_DATA=/absolute/path/to/site.json node scripts/build.mjs
+npm run build     # writes dist/
+npm run verify    # structural checks on dist/
+npm run check     # build + verify + internal link check + data validation
+npm run serve     # http://127.0.0.1:4173/ over dist/
 ```
 
-## Preview
+`build.mjs` accepts `--out <dir>` and `--data <file>` (defaults: `dist`, `data/audit.json`). The
+site never fetches Markdown at runtime: every report is rendered during the build, and the generator
+redacts local filesystem paths and machine usernames from report content before writing HTML.
 
-The static pages work directly from the filesystem. To exercise the Netlify redirects and function locally:
-
-```sh
-npx netlify dev
-```
-
-A plain static server is enough for the ledger, reports and method page. The request queue will show its designed unavailable state when `/api/requests` does not exist.
+For the API functions, use `npx netlify dev` instead of `npm run serve`; the static server is enough
+for the ledger, reports, method page and the request page's designed offline state.
 
 ## Deploy
 
-From this folder, with the Netlify CLI installed and the site linked:
+Deployment is automated: a push to `main` runs **Deploy**, which builds, verifies, checks links and
+publishes `dist/` to Netlify. To do it locally:
 
 ```sh
-netlify deploy --prod
+npm run build
+netlify deploy --prod --dir=dist --functions=netlify/functions
 ```
 
-The generated files are already present. Netlify does not need a build command; `netlify.toml` publishes the folder and bundles the function. Do not deploy a generated copy that still contains the source audit JSON.
+### Repository secrets
 
-### Environment variables
+| Secret | Used by | Purpose |
+| --- | --- | --- |
+| `NETLIFY_AUTH_TOKEN` | Deploy | Netlify personal access token. |
+| `NETLIFY_SITE_ID` | Deploy | `710ee0da-e912-4c0d-a334-f9a6ad59b911` for the live site. |
 
-Set these in Netlify (Site configuration → Environment variables):
+### Netlify environment variables
 
 | Name | Required | Purpose |
 | --- | --- | --- |
-| `GITHUB_TOKEN` | Required for writes; optional for public reads | Token with permission to create issues in the queue repository. A fine-grained token with **Issues: read and write** on that repository is enough. |
-| `GITHUB_REPO` | Optional | `owner/repo` for the request queue. Defaults to `praisethefacts/puck-workshop-audit`. |
+| `GITHUB_TOKEN` | Yes | Fine-grained token with **Issues: read and write** and **Contents: read and write** on the queue repository. Creates request issues, and commits visibility changes from the admin page. |
+| `GITHUB_REPO` | Optional | `owner/repo` for the queue. Defaults to `praisethefacts/puck-workshop-audit`. |
+| `ADMIN_TOKEN` | Yes, for `/admin.html` | Password for the admin page. Compared server-side; never rendered into the page. |
 
-Never put `GITHUB_TOKEN` in client code, `netlify.toml`, or the repository. The function is the only place it is read, and it is never returned to the browser.
+Never put these in client code, `netlify.toml`, or the repository. Both functions read them from the
+environment and never return them to the browser.
+
+## Automation
+
+The repository keeps itself current with GitHub Actions (details in
+[`docs/AUTOMATION.md`](docs/AUTOMATION.md)):
+
+- **CI** — build, verify, link-check and data-validate every push and pull request.
+- **Deploy** — build and publish to Netlify on every push to `main`.
+- **Sync audit requests** — hourly, on issue events and on dispatch: issues labelled `mod-request`
+  become `data/requests.json`, and the Workshop update watch is refreshed.
+- **Update watch** — daily Steam check so a mod that changed after its audit shows an update banner.
+- **Site admin** — manual workflow for hide/show changes without leaving GitHub.
+- **Triage audit requests** — labels and acknowledges new request issues, then triggers the sync.
+- **CodeQL**, **Link and uptime check**, **Dependabot** — security scanning, weekly link/uptime probe
+  and dependency/action updates.
+
+## Admin page
+
+`/admin.html` (noindex, not linked from the site navigation) lets the operator hide or restore a mod,
+a request or a re-audit row. Each action is a commit to `data/site-config.json` via
+`/api/admin`, so it is reviewable and reversible; the audit reports themselves are never deleted.
+
+The page asks for `ADMIN_TOKEN`. The same changes can be made from the **Site admin** workflow or
+locally with `npm run admin -- hide-mod 3776968217`.
 
 ## API contract
 
 ### `GET /api/requests`
 
-Reads open and closed issues labelled `mod-request` from the configured GitHub repository.
-
-```json
-{
-  "ok": true,
-  "items": [
-    {
-      "number": 12,
-      "title": "Audit request: Example mod (3776968217)",
-      "url": "https://github.com/owner/repo/issues/12",
-      "state": "open",
-      "createdAt": "2026-10-26T22:42:50Z",
-      "labels": ["mod-request"]
-    }
-  ]
-}
-```
-
-Errors are JSON with `{ "ok": false, "error": "..." }` and a 4xx/5xx status.
+Reads open and closed issues labelled `mod-request` from the configured repository and returns them
+as a list of public queue entries. When the queue cannot be reached the page shows its offline state
+and links to the GitHub issue list rather than pretending the queue is empty.
 
 ### `POST /api/request`
-
-Request body:
 
 ```json
 {
@@ -108,24 +119,38 @@ Request body:
 }
 ```
 
-`mod` can be a public Steam Community file link, a numeric published file ID, or a `steam://url/CommunityFilePage/<id>` link. The function:
+`mod` may be a Workshop link, a numeric published file ID, or `steam://url/CommunityFilePage/<id>`.
+The function extracts the ID, checks the item through Steam's public `GetPublishedFileDetails`
+endpoint (rejecting deleted, unlisted, private or banned items), opens a GitHub issue titled
+`Audit request: <title> (<id>)` with the `mod-request` label, and returns
+`{ "ok": true, "issueUrl": "..." }`.
 
-1. Extracts and validates the ID.
-2. Checks the item through Steam's public `GetPublishedFileDetails` endpoint and rejects deleted, unlisted, private or banned items.
-3. Opens a GitHub issue titled `Audit request: <title> (<id>)` with the `mod-request` label.
-4. Returns `{ "ok": true, "issueUrl": "..." }`.
+Limits: `mod` 300 characters, `reason` 2,000, `contact` 200. POSTs are rate-limited in memory per
+client address to five per hour per function instance; this is a courtesy limit, not a security
+boundary.
 
-Limits: `mod` 300 characters, `reason` 2,000, `contact` 200. POSTs are rate-limited in memory per client address to five per hour per function instance; this is a courtesy limit, not a security boundary.
+### `POST /api/admin`
 
-The form handles validation, a pending button, success, API errors, timeouts and an unreachable API. If the API is unavailable, it links to the GitHub issue list so a request can still be filed.
+```json
+{ "password": "<ADMIN_TOKEN>", "action": "hide-mod", "id": "3776968217" }
+```
+
+Actions: `hide-mod`, `show-mod`, `hide-request`, `show-request`, `hide-reaudit`, `show-reaudit` and
+`check` (validates the password and returns the current hidden lists). Changes are written to
+`data/site-config.json` in the repository through the GitHub contents API, which then triggers the
+deploy workflow.
 
 ## Content and privacy notes
 
 - The site contains no analytics, cookies or third-party scripts.
-- The request queue is public. Contact details entered in the form become part of a public GitHub issue.
-- Reports are static triage tied to file hashes, not a sandbox detonation or a guarantee. Read `method.html` before treating a verdict as complete.
-- The generator redacts local filesystem paths and machine usernames from report content before writing HTML.
+- The request queue is public. Contact details entered in the form become part of a public GitHub
+  issue.
+- Reports are static triage tied to file hashes, not a sandbox detonation or a guarantee. Read
+  `method.html` before treating a verdict as complete.
+- The admin page is excluded from the sitemap and marked `noindex`; it contains no data beyond the
+  public ledger.
 
 ## License and attribution
 
-The audit content belongs to its author. Steam Workshop names and links belong to their respective creators. This repository contains no mod binaries.
+The audit content belongs to its author. Steam Workshop names and links belong to their respective
+creators. This repository contains no mod binaries.

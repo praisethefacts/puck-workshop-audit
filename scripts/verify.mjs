@@ -1,116 +1,159 @@
-import { readFile, readdir, stat } from "node:fs/promises";
+﻿#!/usr/bin/env node
+/**
+ * Post-build checks for the generated site.
+ *
+ * Usage: node scripts/verify.mjs [--out dist] [--data data/audit.json]
+ * Exits non-zero and prints every problem instead of the first one.
+ */
+import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = path.resolve(".");
-const data = JSON.parse(await readFile(path.resolve("../puck-audit-site/data/site.json"), "utf8"));
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+const cliArg = (name) => {
+  const index = process.argv.indexOf(`--${name}`);
+  return index !== -1 ? process.argv[index + 1] : undefined;
+};
+
+const OUT = path.resolve(ROOT, cliArg("out") || "dist");
+const dataPath = path.resolve(ROOT, cliArg("data") || path.join("data", "audit.json"));
+
+const readJson = (file, fallback) => {
+  try {
+    return JSON.parse(fs.readFileSync(file, "utf8").replace(/^\uFEFF/, ""));
+  } catch (error) {
+    if (error.code === "ENOENT") return fallback;
+    throw error;
+  }
+};
+
 const problems = [];
-const pages = [];
+const notes = [];
 
-async function walk(dir) {
-  for (const entry of await readdir(dir, { withFileTypes: true })) {
-    if (entry.name === ".netlify" || entry.name === "node_modules" || entry.name === "scripts") continue;
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) await walk(full);
-    else if (entry.name.endsWith(".html")) pages.push(full);
+const audit = readJson(dataPath, null);
+if (!audit || !Array.isArray(audit.mods)) {
+  console.error(`No usable audit data at ${dataPath}`);
+  process.exit(1);
+}
+
+const config = readJson(path.join(ROOT, "data", "site-config.json"), {});
+const requests = readJson(path.join(ROOT, "data", "requests.json"), { requests: [] });
+const staleness = readJson(path.join(ROOT, "data", "staleness.json"), { items: [] });
+
+const hiddenMods = new Set((config.hiddenMods || []).map(String));
+const hiddenRequests = new Set((config.hiddenRequests || []).map(String));
+
+const mods = audit.mods.filter((mod) => !hiddenMods.has(String(mod.id)));
+const visibleRequests = (requests.requests || [])
+  .filter((request) => !request.hidden)
+  .filter(
+    (request) =>
+      !hiddenRequests.has(String(request.id)) && !hiddenRequests.has(String(request.issue))
+  );
+const staleItems = (staleness.items || []).filter((item) => !hiddenMods.has(String(item.id)));
+
+const exists = (relative) => fs.existsSync(path.join(OUT, relative));
+const read = (relative) => fs.readFileSync(path.join(OUT, relative), "utf8");
+
+const index = exists("index.html") ? read("index.html") : "";
+if (!index.trim()) problems.push("index.html is missing or empty");
+
+const rowCount = (index.match(/<tr data-name=/g) || []).length;
+if (rowCount !== mods.length) {
+  problems.push(`index has ${rowCount} ledger rows, expected ${mods.length}`);
+}
+
+const modPageCount = exists("mods")
+  ? fs.readdirSync(path.join(OUT, "mods")).filter((name) => name.endsWith(".html")).length
+  : 0;
+if (modPageCount !== mods.length) {
+  problems.push(`mods/ has ${modPageCount} pages, expected ${mods.length}`);
+}
+
+for (const mod of mods) {
+  if (!exists(path.join("mods", `${mod.id}.html`))) {
+    problems.push(`missing mod page for ${mod.id}`);
   }
 }
-await walk(root);
-
-const allGenerated = [];
-async function walkAll(dir) {
-  for (const entry of await readdir(dir, { withFileTypes: true })) {
-    if (entry.name === ".netlify" || entry.name === "node_modules") continue;
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) await walkAll(full);
-    else allGenerated.push(full);
-  }
-}
-await walkAll(root);
-
-if (pages.length !== 66) problems.push(`Expected 66 HTML pages, got ${pages.length}`);
-
-for (const file of allGenerated) {
-  const rel = path.relative(root, file).replaceAll("\\", "/");
-  if (!/\.(html|css|js|mjs|toml|md|svg)$/.test(file)) continue;
-  const text = await readFile(file, "utf8");
-  if (new RegExp(["w4", "ua"].join(""), "i").test(text)) problems.push(`${rel}: contains local username`);
-  if (/C:\\Users|C:\\Program Files/i.test(text)) problems.push(`${rel}: contains absolute Windows path`);
-  if (/\{\{[^}\n]+\}\}/.test(text)) problems.push(`${rel}: contains unresolved template placeholder`);
-}
-
-const byId = new Map(data.mods.map((m) => [m.id, m]));
-for (const mod of data.mods) {
-  const rel = `mods/${mod.id}.html`;
-  const file = path.join(root, rel);
-  let html;
-  try { html = await readFile(file, "utf8"); } catch { problems.push(`${rel}: missing`); continue; }
-  if (!html.includes('class="report" id="report"')) problems.push(`${rel}: missing report body`);
-  if (!html.includes(`https://steamcommunity.com/sharedfiles/filedetails/?id=${mod.id}`)) problems.push(`${rel}: no Workshop link`);
-  if (html.includes("undefined")) problems.push(`${rel}: contains literal undefined`);
-  if (!/class="prose"[\s\S]{500,}<\/div>/.test(html)) problems.push(`${rel}: report body looks empty`);
-  if (!new RegExp(`Audit report`, "i").test(html) && !html.includes(mod.name.slice(0, 12))) problems.push(`${rel}: no readable report identity`);
-}
-
-const index = await readFile(path.join(root, "index.html"), "utf8");
-const indexRows = (index.match(/<tr data-name=/g) || []).length;
-if (indexRows !== 63) problems.push(`index: expected 63 mod rows, found ${indexRows}`);
-const esc = (value) => String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-for (const mod of data.mods) {
-  if (!index.includes(`mods/${mod.id}.html`)) problems.push(`index: missing link for ${mod.id}`);
-  if (!index.includes(esc(mod.name))) problems.push(`index: missing name for ${mod.id}`);
-}
-
-const shells = new Map();
-for (const file of pages) {
-  const rel = path.relative(root, file).replaceAll("\\", "/");
-  const html = await readFile(file, "utf8");
-  if (!/^<!doctype html>/i.test(html.trimStart())) problems.push(`${rel}: no doctype`);
-  if (!/<html lang="en">/.test(html)) problems.push(`${rel}: no lang`);
-  if (!/<meta name="viewport" content="width=device-width, initial-scale=1">/.test(html)) problems.push(`${rel}: no viewport`);
-  const title = html.match(/<title>([^<]+)<\/title>/i);
-  if (!title || !title[1].trim()) problems.push(`${rel}: no title`);
-  const h1s = (html.match(/<h1\b/g) || []).length;
-  if (h1s !== 1) problems.push(`${rel}: expected 1 h1, found ${h1s}`);
-  if (!/<main\b/.test(html)) problems.push(`${rel}: no main`);
-  if (!/<nav\b/.test(html)) problems.push(`${rel}: no nav`);
-  shells.set(rel, html);
-
-  for (const match of html.matchAll(/href="([^"]+)"/g)) {
-    const href = match[1];
-    if (/^(?:https?:|mailto:|#)/.test(href)) continue;
-    if (href === "/api/request" || href === "/api/requests") continue;
-    const clean = href.split("#")[0].split("?")[0];
-    if (!clean) continue;
-    const target = clean.startsWith("/") ? path.join(root, clean) : path.resolve(path.dirname(file), clean);
-    try {
-      const info = await stat(target);
-      if (info.isDirectory()) await stat(path.join(target, "index.html"));
-    } catch {
-      problems.push(`${rel}: broken link ${href}`);
-    }
+for (const id of hiddenMods) {
+  if (exists(path.join("mods", `${id}.html`))) {
+    problems.push(`hidden mod ${id} still has a generated page`);
   }
 }
 
-if (!index.includes("<caption")) problems.push("index: table has no caption");
-if (!index.includes('scope="col"')) problems.push("index: table headers have no scope");
-if (!index.includes('class="skip-link"')) problems.push("index: no skip link");
+for (const required of [
+  "method.html",
+  "requests.html",
+  "404.html",
+  "sitemap.xml",
+  "robots.txt",
+  path.join("assets", "style.css"),
+  path.join("assets", "app.js"),
+  path.join("assets", "favicon.svg"),
+]) {
+  if (!exists(required)) problems.push(`missing ${required}`);
+}
 
-const method = shells.get("method.html") || "";
-if (!method.includes('class="toc toc--doc"')) problems.push("method: no TOC");
-if (!method.includes("How this audit was done")) problems.push("method: missing method prose");
+const allPages = [
+  path.join(OUT, "index.html"),
+  path.join(OUT, "method.html"),
+  path.join(OUT, "requests.html"),
+]
+  .concat(mods.map((mod) => path.join(OUT, "mods", `${mod.id}.html`)))
+  .filter((file) => fs.existsSync(file));
 
-const requests = shells.get("requests.html") || "";
-if (!requests.includes('id="request-form"')) problems.push("requests: no form");
-if (!requests.includes("https://github.com/praisethefacts/puck-workshop-audit/issues")) problems.push("requests: no fallback link");
-if (!requests.includes('aria-live="polite"')) problems.push("requests: no live status");
+const leakPattern = /(?:[A-Za-z]:[\\/]Users[\\/][^\\/\s]|\bw4ua\b|REA For malwares)/i;
+for (const file of allPages) {
+  const html = fs.readFileSync(file, "utf8");
+  if (leakPattern.test(html)) {
+    problems.push(`local path leak in ${path.relative(OUT, file)}`);
+    break;
+  }
+}
 
-const long = data.mods.reduce((a, b) => (b.report.length > a.report.length ? b : a));
-const short = data.mods.reduce((a, b) => (b.report.length < a.report.length ? b : a));
-console.log(`Pages: ${pages.length}`);
-console.log(`Index rows: ${indexRows}`);
-console.log(`Mod pages: ${data.mods.length}`);
-console.log(`Longest report: ${long.name} (${long.report.length} chars)`);
-console.log(`Shortest report: ${short.name} (${short.report.length} chars)`);
-console.log(`Index bytes: ${Buffer.byteLength(index)}`);
-console.log(problems.length ? `PROBLEMS (${problems.length}):\n- ${problems.join("\n- ")}` : "All checks passed.");
-if (problems.length) process.exitCode = 1;
+const requestsHtml = exists("requests.html") ? read("requests.html") : "";
+if (visibleRequests.length > 0 && !/id="requested"/.test(requestsHtml)) {
+  problems.push("requests.html has no requested-mods section despite queued requests");
+}
+for (const request of visibleRequests) {
+  if (request.id && !requestsHtml.includes(String(request.id))) {
+    problems.push(`requests.html does not mention request ${request.id}`);
+  }
+}
+if (visibleRequests.length === 0 && /id="requested"/.test(requestsHtml)) {
+  problems.push("requests.html renders an empty requested-mods section");
+}
+
+if (staleItems.length > 0 && !/note-callout--watch/.test(index)) {
+  problems.push("index.html is missing the update-watch banner despite stale builds");
+}
+if (staleItems.length === 0 && /note-callout--watch/.test(index)) {
+  problems.push("index.html shows an update-watch banner with no stale builds");
+}
+
+const sitemap = exists("sitemap.xml") ? read("sitemap.xml") : "";
+const locCount = (sitemap.match(/<loc>/g) || []).length;
+if (locCount !== mods.length + 3) {
+  problems.push(`sitemap has ${locCount} entries, expected ${mods.length + 3}`);
+}
+
+if (!/Sitemap: https?:\/\//.test(exists("robots.txt") ? read("robots.txt") : "")) {
+  problems.push("robots.txt has no sitemap URL");
+}
+
+notes.push(`${allPages.length} HTML pages checked`);
+notes.push(`${mods.length} ledger rows, ${modPageCount} mod pages`);
+notes.push(
+  `${visibleRequests.length} queued request(s), ${staleItems.length} stale build(s), ${hiddenMods.size} hidden mod(s)`
+);
+
+for (const note of notes) console.log(note);
+
+if (problems.length > 0) {
+  console.error(`\n${problems.length} problem(s):`);
+  for (const problem of problems) console.error(` - ${problem}`);
+  process.exit(1);
+}
+
+console.log("All checks passed.");

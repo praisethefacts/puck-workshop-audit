@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-verify:
+    name: Build, verify and link-check the site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build the static site from committed data
+        run: npm run build
+
+      - name: Verify pages, ledger rows, requests and update watch
+        run: npm run verify
+
+      - name: Check every internal link and anchor
+        run: npm run check:links
+
+      - name: Validate the committed data files
+        run: node scripts/validate-data.mjs
+
+      - name: Upload the built site for debugging
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 3

@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-10-26T23:25:18.440Z",
+  "source": "Steam ISteamRemoteStorage/GetPublishedFileDetails",
+  "items": [
+    {
+      "id": "3778714545",
+      "name": "TLAN Client (unlisted in Steam metadata)",
+      "auditedAt": "2026-10-26",
+      "state": "missing",
+      "workshopUpdated": ""
+    },
+    {
+      "id": "3775350613",
+      "name": "TLAN Rules Client (unlisted in Steam metadata)",
+      "auditedAt": "2026-10-26",
+      "state": "missing",
+      "workshopUpdated": ""
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "puck-workshop-audit",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Static audit ledger for Puck (Steam app 2994020) Workshop mods, built from the per-mod forensic reports.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "verify": "node scripts/verify.mjs",
+    "check": "npm run build && npm run verify && npm run check:links",
+    "check:links": "node scripts/check-links.mjs",
+    "serve": "node scripts/serve.mjs",
+    "sync:requests": "node scripts/sync-requests.mjs",
+    "staleness": "node scripts/check-staleness.mjs",
+    "admin": "node scripts/admin.mjs"
+  }
+}

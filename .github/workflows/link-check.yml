@@ -1,0 +1,44 @@
+name: Link and uptime check
+
+on:
+  schedule:
+    - cron: "43 6 * * 1" # Mondays 06:43 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    name: Internal links and live routes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build
+        run: npm run build
+
+      - name: Internal links and anchors
+        run: npm run check:links
+
+      - name: Live route check
+        run: |
+          set -euo pipefail
+          base="https://puck-workshop-safecheck.netlify.app"
+          for path in "" "method.html" "requests.html" "mods/3735183385.html" "sitemap.xml" "robots.txt"; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "$base/$path")
+            echo "$path -> $code"
+            [ "$code" = "200" ] || { echo "::error::$path returned $code"; exit 1; }
+          done
+
+      - name: Queue API responds
+        run: |
+          set -euo pipefail
+          body=$(curl -s --max-time 20 -H "accept: application/json" "https://puck-workshop-safecheck.netlify.app/api/requests")
+          echo "$body" | head -c 400
+          echo
+          node -e 'const d=JSON.parse(process.argv[1]); if(!Array.isArray(d.requests)) { console.error("no requests array"); process.exit(1);} console.log(d.requests.length+" request(s) served")' "$body"

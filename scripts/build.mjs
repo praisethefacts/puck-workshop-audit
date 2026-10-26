@@ -4,8 +4,17 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const THEME_DIR = path.join(ROOT, "scripts", "theme");
-const OUT_MODS = path.join(ROOT, "mods");
-const OUT_ASSETS = path.join(ROOT, "assets");
+const DATA_DIR = path.join(ROOT, "data");
+
+function cliArg(name) {
+  const index = process.argv.indexOf(`--${name}`);
+  return index !== -1 ? process.argv[index + 1] : undefined;
+}
+
+// Build output goes to dist/ by default so generated pages never mix with sources.
+const OUT = path.resolve(ROOT, cliArg("out") || "dist");
+const OUT_MODS = path.join(OUT, "mods");
+const OUT_ASSETS = path.join(OUT, "assets");
 
 const GITHUB_REPO = "praisethefacts/puck-workshop-audit";
 const GITHUB_ISSUES = `https://github.com/${GITHUB_REPO}/issues`;
@@ -15,11 +24,23 @@ const WORKSHOP = "https://steamcommunity.com/sharedfiles/filedetails/?id=";
 /* Input                                                                      */
 /* -------------------------------------------------------------------------- */
 
+function readJson(file, fallback) {
+  try {
+    return JSON.parse(fs.readFileSync(file, "utf8").replace(/^\uFEFF/, ""));
+  } catch (error) {
+    if (error.code === "ENOENT") return fallback;
+    throw new Error(`Could not parse ${path.relative(ROOT, file)}: ${error.message}`);
+  }
+}
+
 function findData() {
+  const explicit = cliArg("data");
   const candidates = [
+    explicit && path.resolve(explicit),
     process.env.SITE_DATA,
+    path.join(DATA_DIR, "audit.json"),
+    path.join(DATA_DIR, "site.json"),
     path.resolve(ROOT, "..", "puck-audit-site", "data", "site.json"),
-    path.join(ROOT, "data", "site.json"),
   ].filter(Boolean);
 
   for (const candidate of candidates) {
@@ -27,7 +48,7 @@ function findData() {
   }
 
   console.error(
-    "Could not find site.json. Set SITE_DATA to the audit JSON, or place it at data/site.json."
+    "Could not find audit JSON. Pass --data <file>, set SITE_DATA, or place it at data/audit.json."
   );
   process.exit(1);
 }
@@ -52,6 +73,47 @@ for (const mod of data.mods) {
   }
   auditIds.add(String(mod.id));
 }
+
+/* -------------------------------------------------------------------------- */
+/* Site control files                                                         */
+/* -------------------------------------------------------------------------- */
+
+// data/site-config.json  -> { hiddenMods: [], hiddenRequests: [], hiddenReaudits: [] }
+// data/requests.json    -> { requests: [{ id, title, status, issue, requestedAt, updatedAt, note }] }
+// data/staleness.json   -> { items: [{ id, name, auditedAt, workshopUpdated }] }
+const siteConfig = readJson(path.join(DATA_DIR, "site-config.json"), {});
+const requestsData = readJson(path.join(DATA_DIR, "requests.json"), { requests: [] });
+const stalenessData = readJson(path.join(DATA_DIR, "staleness.json"), { items: [] });
+
+const hiddenMods = new Set((siteConfig.hiddenMods || []).map(String));
+const hiddenRequests = new Set((siteConfig.hiddenRequests || []).map(String));
+const hiddenReaudits = new Set((siteConfig.hiddenReaudits || []).map(String));
+
+if (hiddenMods.size > 0) {
+  const kept = data.mods.filter((mod) => !hiddenMods.has(String(mod.id)));
+  const removed = data.mods.length - kept.length;
+  console.log(
+    `Hidden by data/site-config.json: ${removed} mod${removed === 1 ? "" : "s"} (${[...hiddenMods].join(", ")}).`
+  );
+  if (kept.length === 0) {
+    console.error("Every mod is hidden, refusing to build an empty ledger.");
+    process.exit(1);
+  }
+  data.mods = kept;
+}
+
+if (Array.isArray(data.reaudits)) {
+  data.reaudits = data.reaudits.filter(
+    (entry) => !hiddenReaudits.has(String(entry.mod || "").match(/\b(\d{6,})\b/)?.[1] || "")
+  );
+}
+
+const pendingRequests = (requestsData.requests || [])
+  .filter((request) => !request.hidden)
+  .filter((request) => !hiddenRequests.has(String(request.id)) && !hiddenRequests.has(String(request.issue)))
+  .sort((a, b) => String(b.requestedAt || "").localeCompare(String(a.requestedAt || "")));
+
+const staleItems = (stalenessData.items || []).filter((item) => !hiddenMods.has(String(item.id)));
 
 /* -------------------------------------------------------------------------- */
 /* Text helpers                                                               */
@@ -560,7 +622,7 @@ function navItems(prefix) {
   ];
 }
 
-function pageShell({ title, description, prefix = "", current = "home", main, bodyClass = "" }) {
+function pageShell({ title, description, prefix = "", current = "home", main, bodyClass = "", noindex = false }) {
   const nav = navItems(prefix)
     .map(
       (item) =>
@@ -579,6 +641,7 @@ function pageShell({ title, description, prefix = "", current = "home", main, bo
 <meta name="theme-color" content="#090a08">
 <title>${esc(title)}</title>
 <meta name="description" content="${attr(description)}">
+${noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
 <link rel="icon" href="${prefix}assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="${prefix}assets/style.css">
 <script src="${prefix}assets/app.js" defer></script>
@@ -643,19 +706,28 @@ ${main}
 /* Index                                                                      */
 /* -------------------------------------------------------------------------- */
 
-const stats = data.stats || {};
-const counts = {
-  total: Number(stats.total) || data.mods.length,
-  clean: Number(stats.clean) || 0,
-  benign: Number(stats.benign) || 0,
-  caveats: Number(stats.caveats) || 0,
-  suspicious: Number(stats.suspicious) || 0,
-  assetOnly: Number(stats.assetOnly) || 0,
-};
+const counts = data.mods.reduce(
+  (acc, mod) => {
+    const category = verdictCategory(mod.verdict);
+    acc.total += 1;
+    if (category !== "unknown" && Object.hasOwn(acc, category)) acc[category] += 1;
+    if (kindInfo(mod.kind).asset) acc.assetOnly += 1;
+    return acc;
+  },
+  { total: 0, clean: 0, benign: 0, caveats: 0, suspicious: 0, assetOnly: 0 }
+);
 
 const sortedByRisk = [...data.mods].sort(
   (a, b) => Number(b.score) - Number(a.score) || String(a.name).localeCompare(String(b.name))
 );
+
+const worstSuspicious = sortedByRisk.find((mod) => verdictCategory(mod.verdict) === "suspicious");
+const worstLabel = worstSuspicious ? worstSuspicious.name : "none";
+const gradeLine = counts.suspicious
+  ? `${counts.suspicious} record${counts.suspicious === 1 ? "" : "s"} sit in the suspicious band. The highest is ${esc(
+      worstSuspicious.name
+    )}; read that report before treating an update as safe.`
+  : "No record sits in the suspicious band in this build. Verdicts are still tied to the audited hashes.";
 
 function filterOption(value, label) {
   return `<option value="${attr(value)}">${esc(label)}</option>`;
@@ -685,6 +757,46 @@ function modRow(mod) {
     mod.name
   )} on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
 </tr>`;
+}
+
+function renderStalenessBanner() {
+  if (!staleItems.length) return "";
+
+  const linkList = (items) => {
+    const visible = items.slice(0, 4);
+    const extra = items.length - visible.length;
+    return visible
+      .map((item) => {
+        const known = data.mods.find((mod) => String(mod.id) === String(item.id));
+        if (known) return `<a href="mods/${attr(known.id)}.html">${esc(known.name)}</a>`;
+        return esc(item.name || `mod ${item.id}`);
+      })
+      .join(", ")
+      .concat(extra > 0 ? ` and ${extra} more` : "");
+  };
+
+  const updated = staleItems.filter((item) => item.state !== "missing");
+  const missing = staleItems.filter((item) => item.state === "missing");
+  const parts = [];
+  if (updated.length) {
+    parts.push(
+      `${linkList(updated)} changed on the Workshop after the audited snapshot (${esc(data.auditDate)}), so the published files are no longer the audited bytes`
+    );
+  }
+  if (missing.length) {
+    parts.push(
+      `${linkList(missing)} cannot be verified on the Workshop any more (delisted or unlisted), so the audited copy is the only record of it`
+    );
+  }
+
+  return `<section class="section section--watch" aria-labelledby="watch-title">
+  <div class="note-callout note-callout--watch">
+    <p class="meta-label">Update watch · ${staleItems.length} build${staleItems.length === 1 ? "" : "s"} moved or unverifiable</p>
+    <p>${parts.join("; ")}. The verdicts below apply to the audited bytes only; a re-audit is queued at <a href="requests.html#requested">the request list</a>.</p>
+  </div>
+</section>
+
+`;
 }
 
 function renderIndex() {
@@ -746,7 +858,7 @@ function renderIndex() {
       <div><span class="panel-number panel-number--warn">${counts.suspicious}</span><span class="panel-label">Suspicious verdict</span></div>
       <div><span class="panel-number">${counts.caveats}</span><span class="panel-label">With caveats</span></div>
     </div>
-    <p class="panel-note">The single suspicious record is hardware fingerprinting over plain HTTP, not credential theft. One previously suspicious mod was re-audited clean after its B55 fix.</p>
+    <p class="panel-note">${gradeLine}</p>
   </aside>
 </section>
 
@@ -755,10 +867,12 @@ function renderIndex() {
     <div class="stat"><div class="stat-value">${counts.total}</div><div class="stat-label"><span class="stat-tick" aria-hidden="true"></span>Mods audited</div><p class="stat-note">Every installed file</p></div>
     <div class="stat stat--clean"><div class="stat-value">${counts.clean}</div><div class="stat-label"><span class="stat-tick" aria-hidden="true"></span>Clean</div><p class="stat-note">Plus ${counts.benign} benign</p></div>
     <div class="stat stat--caveats"><div class="stat-value">${counts.caveats}</div><div class="stat-label"><span class="stat-tick" aria-hidden="true"></span>With caveats</div><p class="stat-note">Privacy or capability</p></div>
-    <div class="stat stat--suspicious"><div class="stat-value">${counts.suspicious}</div><div class="stat-label"><span class="stat-tick" aria-hidden="true"></span>Suspicious</div><p class="stat-note">RHL Companion</p></div>
+    <div class="stat stat--suspicious"><div class="stat-value">${counts.suspicious}</div><div class="stat-label"><span class="stat-tick" aria-hidden="true"></span>Suspicious</div><p class="stat-note">${worstSuspicious ? esc(worstLabel) : "None"}</p></div>
     <div class="stat"><div class="stat-value">${counts.assetOnly}</div><div class="stat-label"><span class="stat-tick" aria-hidden="true"></span>Asset-only</div><p class="stat-note">No executable code</p></div>
   </div>
 </section>
+
+${renderStalenessBanner()}
 
 <section class="section" aria-labelledby="verdict-title">
   <div class="section-head">
@@ -1112,6 +1226,60 @@ function renderMethodPage() {
 /* Requests                                                                   */
 /* -------------------------------------------------------------------------- */
 
+function renderRequestedSection() {
+  if (!pendingRequests.length) return "";
+
+  const STATUS = {
+    pending: { label: "Pending audit", cls: "open" },
+    "needs-reaudit": { label: "Needs re-audit", cls: "open" },
+    audited: { label: "Audited", cls: "closed" },
+    closed: { label: "Closed, not audited", cls: "closed" },
+    rejected: { label: "Rejected", cls: "closed" },
+    duplicate: { label: "Duplicate", cls: "closed" },
+  };
+
+  const items = pendingRequests
+    .map((request) => {
+      const status = STATUS[request.status] || STATUS.pending;
+      const meta = [
+        request.id ? `Mod ${esc(request.id)}` : "",
+        request.issue ? `Issue #${esc(request.issue)}` : "",
+        request.requestedAt ? `requested ${esc(dateDisplay(request.requestedAt))}` : "",
+        request.note ? esc(request.note) : "",
+      ]
+        .filter(Boolean)
+        .join(" · ");
+      return `<li class="request-row">
+<div>
+<p class="request-title"><a href="${attr(WORKSHOP + String(request.id))}" target="_blank" rel="noopener noreferrer">${esc(
+        request.title || `Workshop item ${request.id}`
+      )}<span class="external-mark" aria-hidden="true">↗</span></a></p>
+<p class="request-meta">${meta}</p>
+</div>
+<span class="request-status request-status--${status.cls}">${esc(status.label)}</span>
+</li>`;
+    })
+    .join("\n");
+
+  return `<section class="queue-section" id="requested" aria-labelledby="requested-title">
+  <div class="section-head section-head--queue">
+    <span class="section-num">03</span>
+    <div class="section-head-copy">
+      <p class="kicker">Requested</p>
+      <h2 id="requested-title">Queued for audit.</h2>
+      <p class="section-lede">Kept in sync by the repository workflows from the GitHub request queue. A request is marked audited once its report exists, and needs re-audit when the Workshop build moves past the audited bytes.</p>
+    </div>
+  </div>
+  <div class="queue-panel">
+    <ul class="request-list">${items}</ul>
+  </div>
+  <div class="queue-foot">
+    <p class="meta-label">Source: data/requests.json · synced by GitHub Actions</p>
+    <a class="text-link" href="${GITHUB_ISSUES}" target="_blank" rel="noopener noreferrer">Request another mod<span class="external-mark" aria-hidden="true">↗</span></a>
+  </div>
+</section>`;
+}
+
 function renderRequestsPage() {
   const main = `<div class="shell page-enter">
 <header class="page-hero page-hero--request">
@@ -1226,6 +1394,8 @@ function renderRequestsPage() {
   </div>
 </section>
 
+${renderRequestedSection()}
+
 <div class="closing closing--compact">
   <div class="closing-grid">
     <div>
@@ -1249,6 +1419,231 @@ function renderRequestsPage() {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Admin page                                                                 */
+/* -------------------------------------------------------------------------- */
+
+const ADMIN_STATE = () => {
+  const known = new Set(data.mods.map((mod) => String(mod.id)));
+  return {
+    mods: data.mods.map((mod) => ({
+      id: String(mod.id),
+      name: mod.name,
+      verdict: mod.verdict,
+      score: mod.score,
+    })),
+    requests: (requestsData.requests || []).map((request) => ({
+      id: String(request.id),
+      title: request.title || request.name || "",
+      issue: request.issue || 0,
+      status: request.status,
+    })),
+    reaudits: (data.reaudits || []).map((entry) => {
+      const match = String(entry.mod || "").match(/\b(\d{6,12})\b/);
+      return { id: match ? match[1] : "", what: entry.what || "", mod: entry.mod || "" };
+    }).filter((entry) => entry.id && known.has(entry.id)),
+    hidden: {
+      hiddenMods: siteConfig.hiddenMods || [],
+      hiddenRequests: siteConfig.hiddenRequests || [],
+      hiddenReaudits: siteConfig.hiddenReaudits || [],
+    },
+  };
+};
+
+function renderAdminPage() {
+  const state = ADMIN_STATE();
+  const main = `<div class="shell page-enter">
+<header class="page-hero">
+  <div>
+    <p class="eyebrow"><span class="eyebrow-index">A</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Site admin</span></p>
+    <h1>Take things off the site.</h1>
+    <p class="page-lede">Hide a mod, a request or a re-audit row. Every action is a commit to <code>data/site-config.json</code>, so it is reviewable and reversible — nothing is deleted from the audit itself.</p>
+    <div class="hero-actions"><a class="text-link" href="index.html">Back to the ledger</a></div>
+  </div>
+</header>
+
+<section class="queue-section" aria-labelledby="admin-title">
+  <div class="section-head">
+    <span class="section-num">01</span>
+    <div class="section-head-copy">
+      <p class="kicker">Authenticate</p>
+      <h2 id="admin-title">Admin password</h2>
+      <p>Set as <code>ADMIN_TOKEN</code> on the site. It is checked server-side and never stored in the page.</p>
+    </div>
+  </div>
+  <form class="admin-bar" id="admin-form" autocomplete="off">
+    <label class="meta-label" for="admin-password">Password</label>
+    <input class="field" id="admin-password" type="password" autocomplete="current-password" placeholder="Admin token" required />
+    <button class="btn btn--primary" type="submit" id="admin-submit">Unlock</button>
+    <p class="admin-status" id="admin-status" role="status" aria-live="polite">Locked. Enter the admin token to manage visibility.</p>
+  </form>
+</section>
+
+<div id="admin-panels" hidden>
+<section class="queue-section" aria-labelledby="admin-mods-title">
+  <div class="section-head">
+    <span class="section-num">02</span>
+    <div class="section-head-copy">
+      <p class="kicker">Ledger</p>
+      <h2 id="admin-mods-title">Mods</h2>
+      <p>Hiding a mod removes its row and its report page from the published site. The report stays in the repository of reports.</p>
+    </div>
+  </div>
+  <ul class="admin-list" id="admin-mods"></ul>
+</section>
+
+<section class="queue-section" aria-labelledby="admin-requests-title">
+  <div class="section-head">
+    <span class="section-num">03</span>
+    <div class="section-head-copy">
+      <p class="kicker">Queue</p>
+      <h2 id="admin-requests-title">Requests</h2>
+      <p>Hide a request from the public queue without closing its GitHub issue.</p>
+    </div>
+  </div>
+  <ul class="admin-list" id="admin-requests"></ul>
+</section>
+
+<section class="queue-section" aria-labelledby="admin-reaudits-title">
+  <div class="section-head">
+    <span class="section-num">04</span>
+    <div class="section-head-copy">
+      <p class="kicker">History</p>
+      <h2 id="admin-reaudits-title">Re-audits</h2>
+      <p>Hide a re-audit log row for one mod.</p>
+    </div>
+  </div>
+  <ul class="admin-list" id="admin-reaudits"></ul>
+</section>
+</div>
+</div>
+
+<script>
+(function () {
+  var STATE = ${JSON.stringify(state).replace(/</g, "\\u003c")};
+  var password = "";
+  var form = document.getElementById("admin-form");
+  var input = document.getElementById("admin-password");
+  var submit = document.getElementById("admin-submit");
+  var status = document.getElementById("admin-status");
+  var panels = document.getElementById("admin-panels");
+
+  function say(message, tone) {
+    status.textContent = message;
+    status.className = "admin-status" + (tone ? " admin-status--" + tone : "");
+  }
+
+  function list(node, items, kind, hiddenKey) {
+    node.innerHTML = "";
+    items.forEach(function (item) {
+      var hidden = STATE.hidden[hiddenKey].indexOf(item.id) !== -1;
+      var li = document.createElement("li");
+      li.className = "admin-row" + (hidden ? " is-hidden" : "");
+      var label = document.createElement("span");
+      label.className = "admin-row-label";
+      label.textContent = item.name || item.title || ("mod " + item.id);
+      var meta = document.createElement("span");
+      meta.className = "admin-row-meta";
+      meta.textContent = item.id + (item.verdict ? " · " + item.verdict : "") + (item.status ? " · " + item.status : "");
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "btn btn--quiet admin-row-action";
+      button.textContent = hidden ? "Show" : "Hide";
+      button.addEventListener("click", function () {
+        act((hidden ? "show-" : "hide-") + kind, item.id, button);
+      });
+      li.appendChild(label);
+      li.appendChild(meta);
+      li.appendChild(button);
+      node.appendChild(li);
+    });
+    if (!items.length) {
+      var empty = document.createElement("li");
+      empty.className = "admin-row admin-row--empty";
+      empty.textContent = "Nothing here.";
+      node.appendChild(empty);
+    }
+  }
+
+  function render() {
+    list(document.getElementById("admin-mods"), STATE.mods, "mod", "hiddenMods");
+    list(document.getElementById("admin-requests"), STATE.requests, "request", "hiddenRequests");
+    list(document.getElementById("admin-reaudits"), STATE.reaudits, "reaudit", "hiddenReaudits");
+  }
+
+  function act(action, id, button) {
+    button.disabled = true;
+    say("Saving " + action + " " + id + "…");
+    fetch("/api/admin", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ password: password, action: action, id: id }),
+    })
+      .then(function (response) {
+        return response.json().catch(function () { return {}; }).then(function (body) {
+          if (!response.ok || !body.ok) throw new Error(body.error || "Request failed (" + response.status + ").");
+          return body;
+        });
+      })
+      .then(function (body) {
+        STATE.hidden.hiddenMods = body.hiddenMods || STATE.hidden.hiddenMods;
+        STATE.hidden.hiddenRequests = body.hiddenRequests || STATE.hidden.hiddenRequests;
+        STATE.hidden.hiddenReaudits = body.hiddenReaudits || STATE.hidden.hiddenReaudits;
+        render();
+        say(body.changed ? "Saved. The deploy picks it up in a moment." : "Already in that state — nothing changed.", "ok");
+      })
+      .catch(function (error) {
+        button.disabled = false;
+        say(error.message, "error");
+      });
+  }
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    password = input.value.trim();
+    if (!password) return;
+    submit.disabled = true;
+    say("Checking…");
+    fetch("/api/admin", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ password: password, action: "check" }),
+    })
+      .then(function (response) {
+        return response.json().catch(function () { return {}; }).then(function (body) {
+          if (response.status === 401) throw new Error("Wrong password.");
+          if (!response.ok && !body.error) throw new Error("Admin API unavailable (" + response.status + ").");
+          return body;
+        });
+      })
+      .then(function (body) {
+        if (body.error && /password/i.test(body.error)) throw new Error(body.error);
+        STATE.hidden.hiddenMods = body.hiddenMods || STATE.hidden.hiddenMods;
+        STATE.hidden.hiddenRequests = body.hiddenRequests || STATE.hidden.hiddenRequests;
+        STATE.hidden.hiddenReaudits = body.hiddenReaudits || STATE.hidden.hiddenReaudits;
+        panels.hidden = false;
+        form.hidden = true;
+        render();
+        say("Unlocked. Pick a row and hide or restore it.", "ok");
+      })
+      .catch(function (error) {
+        submit.disabled = false;
+        say(error.message, "error");
+      });
+  });
+})();
+</script>`;
+
+  return pageShell({
+    title: "Site admin — Puck Workshop audit",
+    description: "Visibility controls for the Puck Workshop audit ledger.",
+    current: "",
+    noindex: true,
+    main,
+    bodyClass: "page-admin",
+  });
+}
+
+/* -------------------------------------------------------------------------- */
 /* Write                                                                      */
 /* -------------------------------------------------------------------------- */
 
@@ -1265,37 +1660,90 @@ function copyAsset(name) {
   fs.copyFileSync(source, path.join(OUT_ASSETS, name));
 }
 
+if (path.resolve(OUT) === path.resolve(ROOT)) {
+  console.error("Refusing to build into the source directory. Use --out <dir> (default: dist).");
+  process.exit(1);
+}
+
+fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT_MODS, { recursive: true });
 fs.mkdirSync(OUT_ASSETS, { recursive: true });
 
-for (const entry of fs.readdirSync(OUT_MODS)) {
-  if (entry.endsWith(".html")) fs.rmSync(path.join(OUT_MODS, entry), { force: true });
-}
-
-writeFile(path.join(ROOT, "index.html"), renderIndex());
+writeFile(path.join(OUT, "index.html"), renderIndex());
 for (const [index, mod] of data.mods.entries()) {
   writeFile(path.join(OUT_MODS, `${mod.id}.html`), renderModPage(mod, index));
 }
-writeFile(path.join(ROOT, "method.html"), renderMethodPage());
-writeFile(path.join(ROOT, "requests.html"), renderRequestsPage());
+writeFile(path.join(OUT, "method.html"), renderMethodPage());
+writeFile(path.join(OUT, "requests.html"), renderRequestsPage());
+writeFile(path.join(OUT, "admin.html"), renderAdminPage());
 
 copyAsset("style.css");
 copyAsset("app.js");
 copyAsset("favicon.svg");
 
-const htmlFiles = ["index.html", "method.html", "requests.html"].concat(
+const SITE_URL = String(
+  siteConfig.siteUrl || process.env.SITE_URL || "https://puck-workshop-safecheck.netlify.app"
+).replace(/\/+$/, "");
+
+const sitemapEntries = ["", "method.html", "requests.html"]
+  .map((relative) => `  <url><loc>${esc(`${SITE_URL}/${relative}`)}</loc></url>`)
+  .concat(
+    data.mods.map(
+      (mod) => `  <url><loc>${esc(`${SITE_URL}/mods/${mod.id}.html`)}</loc></url>`
+    )
+  )
+  .join("\n");
+
+writeFile(
+  path.join(OUT, "sitemap.xml"),
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapEntries}\n</urlset>\n`
+);
+
+writeFile(
+  path.join(OUT, "robots.txt"),
+  `User-agent: *\nAllow: /\nDisallow: /admin.html\nSitemap: ${SITE_URL}/sitemap.xml\n`
+);
+
+writeFile(
+  path.join(OUT, "404.html"),
+  pageShell({
+    title: "Not found — Puck Workshop audit",
+    description: "That page is not in the ledger. Return to the audit index.",
+    current: "",
+    prefix: "/",
+    main: `<div class="shell page-enter">
+<header class="page-hero">
+  <div>
+    <p class="eyebrow"><span class="eyebrow-index">404</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Not in the ledger</span></p>
+    <h1>No record at this address.</h1>
+    <p class="page-lede">The page may have been removed from the ledger, or the link is wrong. Every current record is listed on the index.</p>
+    <div class="hero-actions">
+      <a class="btn btn--primary" href="/index.html">Back to the ${counts.total} records</a>
+      <a class="text-link" href="/method.html">Read the method</a>
+    </div>
+  </div>
+</header>
+</div>`,
+  })
+);
+
+const htmlFiles = ["index.html", "method.html", "requests.html", "admin.html", "404.html"].concat(
   data.mods.map((mod) => `mods/${mod.id}.html`)
 );
 
 let totalBytes = 0;
 for (const relative of htmlFiles) {
-  totalBytes += fs.statSync(path.join(ROOT, relative)).size;
+  totalBytes += fs.statSync(path.join(OUT, relative)).size;
 }
 for (const asset of ["style.css", "app.js", "favicon.svg"]) {
   totalBytes += fs.statSync(path.join(OUT_ASSETS, asset)).size;
 }
 
+console.log(`Output: ${path.relative(ROOT, OUT) || "."}`);
 console.log(`Source data: ${path.relative(ROOT, dataPath) || "site.json"}`);
 console.log(`Wrote ${htmlFiles.length} HTML pages (${data.mods.length} mod records).`);
+if (hiddenMods.size) console.log(`Hidden mods: ${[...hiddenMods].join(", ")}`);
+if (pendingRequests.length) console.log(`Requested mods listed: ${pendingRequests.length}.`);
+if (staleItems.length) console.log(`Stale (Workshop moved): ${staleItems.length}.`);
 console.log(`Wrote 3 assets. Generated page/asset bytes: ${totalBytes.toLocaleString("en-US")}.`);
 console.log(`Audit snapshot: ${data.auditDate} · ${data.mods.length} mods.`);

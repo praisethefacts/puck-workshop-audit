@@ -1,0 +1,45 @@
+name: Update watch
+
+# Daily check of every audited mod against Steam's public Workshop API. When a mod
+# is updated (or delisted) after the audited snapshot, the site shows an update
+# banner until a new audit lands.
+
+on:
+  schedule:
+    - cron: "23 5 * * *" # daily at 05:23 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-watch
+  cancel-in-progress: true
+
+jobs:
+  staleness:
+    name: Compare audited builds with the live Workshop
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check Workshop builds
+        run: npm run staleness
+
+      - name: Commit the watch list
+        run: |
+          if git diff --quiet -- data/staleness.json; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/staleness.json
+          git commit -m "chore(watch): refresh update watch"
+          git push origin main

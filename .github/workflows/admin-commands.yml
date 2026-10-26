@@ -1,0 +1,66 @@
+name: Site admin
+
+# Small, reviewable admin surface for the ledger: hide/show a mod, a request or a
+# re-audit note straight from the Actions UI. Everything it changes lives in
+# data/site-config.json, so each change is a normal commit with an audit trail.
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "What to do"
+        required: true
+        type: choice
+        options:
+          - hide-mod
+          - show-mod
+          - hide-request
+          - show-request
+          - hide-reaudit
+          - show-reaudit
+          - list
+      id:
+        description: "Mod id, issue number or re-audit mod id (not needed for list)"
+        required: false
+        type: string
+      value:
+        description: "Value for site-url / show-reaudit"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  admin:
+    name: Apply admin change
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Apply the change
+        run: node scripts/admin.mjs "${{ inputs.action }}" "${{ inputs.id }}" "${{ inputs.value }}"
+
+      - name: Rebuild and verify
+        run: |
+          npm run build
+          npm run verify
+          npm run check:links
+
+      - name: Commit the new configuration
+        run: |
+          if git diff --quiet -- data/site-config.json; then
+            echo "No configuration change."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/site-config.json
+          git commit -m "chore(admin): ${{ inputs.action }} ${{ inputs.id }} ${{ inputs.value }}"
+          git push origin main
