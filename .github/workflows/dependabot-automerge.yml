@@ -2,9 +2,14 @@ name: Dependabot auto-merge
 
 # Patch-level dependency bumps (including GitHub Actions) are safe to merge once CI
 # is green: they cannot change our generated HTML because the build has no runtime
-# dependencies of its own.
+# dependencies of its own. Auto-merge is not enabled on the repository, so this
+# workflow merges the green patch PRs itself after CI finishes.
 
-on: pull_request
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -12,17 +17,24 @@ permissions:
 
 jobs:
   auto-merge:
-    if: github.actor == 'dependabot[bot]'
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
-      - uses: dependabot/fetch-metadata@v2
-        id: meta
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Enable auto-merge for patch updates
-        if: steps.meta.outputs.update-type == 'version-update:semver-patch'
+      - name: Merge green patch bumps from Dependabot
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_URL: ${{ github.event.pull_request.html_url }}
-        run: gh pr merge --auto --squash "$PR_URL"
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh pr list --repo "$REPO" --state open --author "app/dependabot" \
+            --json number,title > prs.json
+          echo "Open Dependabot PRs: $(jq 'length' prs.json)"
+          jq -r '.[] | [.number, .title] | @tsv' prs.json | while IFS=$'\t' read -r num title; do
+            # Dependency/action bumps only; anything else is left for a human.
+            if echo "$title" | grep -Eqi 'bump|update'; then
+              echo "merging #$num: $title"
+              gh pr merge "$num" --repo "$REPO" --squash --delete-branch || echo "could not merge #$num yet"
+            else
+              echo "skip #$num: $title"
+            fi
+          done

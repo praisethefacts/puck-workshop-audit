@@ -4,6 +4,13 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Commits made by the queue/update-watch workflows use the Actions token, and
+  # GitHub does not start a workflow for those pushes. Deploy after them instead.
+  workflow_run:
+    workflows: ["Sync audit requests", "Update watch"]
+    types: [completed]
+  schedule:
+    - cron: "43 * * * *" # hourly backstop so the site never lags the data
 
 permissions:
   contents: read
@@ -16,6 +23,7 @@ jobs:
   deploy:
     name: Deploy the audit to Netlify
     runs-on: ubuntu-latest
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     environment:
       name: production
       url: https://puck-workshop-safecheck.netlify.app
