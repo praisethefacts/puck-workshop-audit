@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-26T23:26:12.925Z",
+  "updatedAt": "2026-10-26T23:44:03.360Z",
   "source": "GitHub issues labelled mod-request in praisethefacts/puck-workshop-audit",
   "requests": [
     {
@@ -8,7 +8,7 @@
       "issue": 5,
       "status": "audited",
       "requestedAt": "2026-10-26T23:16:32Z",
-      "updatedAt": "2026-10-26T23:26:12.925Z",
+      "updatedAt": "2026-10-26T23:44:03.360Z",
       "note": "",
       "workshopUpdated": "2026-10-06T13:47:52.000Z",
       "steamResult": 1
@@ -19,7 +19,7 @@
       "issue": 4,
       "status": "audited",
       "requestedAt": "2026-10-26T23:11:12Z",
-      "updatedAt": "2026-10-26T23:26:12.925Z",
+      "updatedAt": "2026-10-26T23:44:03.360Z",
       "note": "form smoke test - ignore",
       "workshopUpdated": "2026-10-22T17:54:27.000Z",
       "steamResult": 1
@@ -30,10 +30,11 @@
       "issue": 3,
       "status": "audited",
       "requestedAt": "2026-10-26T23:08:25Z",
-      "updatedAt": "2026-10-26T23:26:12.925Z",
+      "updatedAt": "2026-10-26T23:44:03.360Z",
       "note": "test",
       "workshopUpdated": "2026-10-25T20:50:38.000Z",
-      "steamResult": 1
+      "steamResult": 1,
+      "duplicateIssue": 7
     },
     {
       "id": "3824593782",
@@ -41,7 +42,7 @@
       "issue": 2,
       "status": "pending",
       "requestedAt": "2026-10-26T23:08:23Z",
-      "updatedAt": "2026-10-26T23:26:12.925Z",
+      "updatedAt": "2026-10-26T23:44:03.360Z",
       "note": "Companion server mod for APPL Cinema Studio (the clip-sharing receiver) - not installed locally, never audited.",
       "workshopUpdated": "",
       "steamResult": 9
