@@ -89,8 +89,11 @@ The repository keeps itself current with GitHub Actions (details in
 - **Update watch** — daily Steam check so a mod that changed after its audit shows an update banner.
 - **Site admin** — manual workflow for hide/show changes without leaving GitHub.
 - **Triage audit requests** — labels and acknowledges new request issues, then triggers the sync.
-- **CodeQL**, **Link and uptime check**, **Dependabot** — security scanning, weekly link/uptime probe
-  and dependency/action updates.
+- **Link and uptime check**, **Dependabot** — weekly link/uptime probe and dependency/action updates.
+
+CodeQL is intentionally not part of the pipeline: code scanning needs GitHub Advanced Security, which
+is not enabled for this private repository, so the workflow could only fail. Add
+`.github/workflows/codeql.yml` back if the repository ever gains code scanning.
 
 ## Admin page
 
