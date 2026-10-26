@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#090a08">
+<title>APPL Cinema Studio — With caveats · Puck Workshop audit</title>
+<meta name="description" content="Audit report for APPL Cinema Studio (Workshop 3824708567): With caveats, suspicion score 28/100. Code review included.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="statusbar">
+  <div class="shell statusbar-inner">
+    <span class="status-state"><span class="status-dot" aria-hidden="true"></span>No malware found</span>
+    <span>Independent static audit</span>
+    <span class="statusbar-detail">63 installed mods</span>
+    <span class="statusbar-detail">Snapshot 2026-10-26</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="../index.html" aria-label="Puck Workshop audit home">
+      <span class="brand-mark" aria-hidden="true">PWA</span>
+      <span class="brand-copy">
+        <span class="brand-name">Puck Workshop audit</span>
+        <span class="brand-sub">Forensic mod ledger</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary"><a href="../index.html" aria-current="page">Mods</a><a href="../method.html">Method</a><a href="../requests.html">Requests</a></nav>
+    <span class="header-proof"><span class="status-dot" aria-hidden="true"></span>63 records</span>
+  </div>
+</header>
+<main id="main" class="page-main">
+<div class="shell page-enter">
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">Audit ledger</a></li>
+    <li aria-current="page">APPL Cinema Studio</li>
+  </ol>
+</nav>
+<article>
+<header class="record-hero">
+  <div class="record-copy">
+    <p class="eyebrow"><span class="eyebrow-index">RECORD 3824708567</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Code-bearing entry</span></p>
+    <h1>APPL Cinema Studio</h1>
+    <div class="record-verdict">
+      <span class="badge badge--caveats"><span class="badge-dot" aria-hidden="true"></span>With caveats</span>
+      <span class="record-score-label">Risk score <strong>28/100</strong> · Moderate</span>
+    </div>
+    <p class="record-summary">This entry ships code. The report covers every file, the decompiled managed code and the external interfaces it uses. Report tied to the audited bytes; a later Workshop update can change the verdict.</p>
+    <div class="record-actions">
+      <a class="btn btn--primary" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3824708567" target="_blank" rel="noopener noreferrer">Open Workshop<span class="external-mark" aria-hidden="true">↗</span></a>
+      <a class="text-link" href="#report">Read the report</a>
+    </div>
+  </div>
+  <aside class="record-score-panel" aria-label="Record summary">
+    <span class="meta-label">Suspicion score</span>
+    <div class="record-big-score">28<span>/ 100</span></div>
+    <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:28"></span></div>
+    <div class="record-band">Moderate · Review the caveats</div>
+    <dl class="record-mini-facts">
+      <div><dt>Kind</dt><dd>managed .NET mod</dd></div>
+      <div><dt>Verdict</dt><dd>BENIGN / WITH CAVEATS</dd></div>
+      <div><dt>Workshop</dt><dd>3824708567</dd></div>
+      <div><dt>Report</dt><dd>9,002 characters</dd></div>
+    </dl>
+  </aside>
+</header>
+<div class="record-layout">
+  <div>
+    <div class="report-head">
+      <div>
+        <p class="kicker">Full audit report</p>
+        <h2 class="report-title">What the bytes do</h2>
+      </div>
+      <p class="report-timestamp"><span class="meta-label">Audit</span> 2026-10-26</p>
+    </div>
+    <section class="report" id="report" aria-label="Audit report">
+      <div class="prose"><p><strong>Verdict: BENIGN WITH CAVEATS - risk score 28/100. No malware.</strong> It is a genuine, unusually well-written in-game replay/recording studio for Puck. The only ways data leaves your PC are (a) optional and entirely self-configured Discord webhook posts, and (b) the game&#39;s own netcode, which ships clips to/from the <em>game server you are already connected to</em>. It has no hardcoded server, no downloader, no credential/wallet/browser access, no keylogging, no persistence and no obfuscation.</p>
+<ul><li>Mod id: <code>3824708567</code> - Workshop title <strong>APPL Cinema Studio</strong></li><li>Creator: <code>76561198706249123</code> - created and updated <strong>2026-10-22 17:54 UTC</strong> (v1.0.0, new mod)</li><li>Workshop: 20 subscribers, 20 views, 243,712 B reported, not banned</li><li>On disk: 1 file, 243,712 B (0.23 MB) - <code>APPLCinema.dll</code> + <code>config.json</code>, SHA-256 <code>6c0c45c5d73bb20e0a0b3d6159076a958209e84b339fd1daa24a228489387f64</code> (inventory.tsv / hashes_sha256.txt: exact match to Workshop size)</li><li>Description advertises: automatic highlights + clips for goals/saves/top plays, an F7 studio with 10 cameras, 16:9 / 2.39:1 / 9:16 renders at 30-60 fps, render queue, thumbnails, and a companion <strong>server</strong> mod (<code>3824593782</code>, not installed here). &quot;Built for Puck build 1235. By Exency.&quot;</li></ul>
+<h2 id="1-binary-facts">1. Binary facts <a class="heading-anchor" href="#1-binary-facts" aria-label="Link to 1. Binary facts">#</a></h2>
+<div class="table-wrap" role="region" aria-label="Table in section 1. Binary facts" tabindex="0"><table aria-label="Table in section 1. Binary facts"><caption>Table in section 1. Binary facts</caption><thead><tr><th scope="col">Property</th><th scope="col">Value</th></tr></thead><tbody><tr><td>Format</td><td>PE32, Intel 386, DLL, 32-bit, .NET (managed)</td></tr><tr><td>Sections</td><td><code>.text</code> / <code>.rsrc</code> / <code>.reloc</code>, 3 sections, overlay <strong>0 bytes</strong></td></tr><tr><td>Entropy</td><td>5.97 (normal for compiled C#; not packed/encrypted)</td></tr><tr><td>Signed</td><td><strong>No</strong> (as is every Puck mod here - not a red flag by itself)</td></tr><tr><td>Native code</td><td>0 native DLLs; <code>.text</code> is IL only</td></tr><tr><td>Obfuscation</td><td>none: readable type names, no string encryption, no <code>Assembly.Load</code>, no base64 blobs</td></tr><tr><td>Size</td><td>243,712 B = exactly the Workshop-reported size</td></tr></tbody></table></div>
+<h2 id="2-what-it-does">2. What it does <a class="heading-anchor" href="#2-what-it-does" aria-label="Link to 2. What it does">#</a></h2>
+<p><code>CinemaPlugin</code> (implements <code>IPuckPlugin</code>) creates a <code>GameObject(&quot;APPLCinema&quot;)</code> with a <code>Recorder</code> component. It records every frame of the <strong>game view</strong> into RAM (ring buffer keyed by <code>Time.realtimeSinceStartup</code>), detects goals/saves/shot moments from the game&#39;s own events and <code>PlayerCustomizationState</code> state, and keeps clips plus full-game replays as <code>.puckclip</code> / <code>.puckgame</code> files (GZip-compressed custom containers, <code>ClipIO</code> / <code>GameWriter</code> / <code>GameReader</code>).</p>
+<p>The F7 <code>Studio</code> is a full editing UI: a custom UI toolkit (no Unity UI), 10 director cameras with keyframed paths/predictive tracking, matte/scope/vertical framing, a render queue and thumbnails. Rendering is done two ways: a <strong>Windows Media Foundation</strong> MP4 writer (<code>Mp4Writer</code>, the 9 <code>DllImport</code>s into <code>ole32</code>/<code>mfplat</code>/<code>mfreadwrite</code> - all documented MF sink-writer APIs) or, if available, a locally installed <strong>ffmpeg</strong> (found only via config / PATH / WinGet - never downloaded).</p>
+<p>Two optional distribution paths:</p>
+<ul><li><strong>Discord webhook</strong> (<code>cfg.Webhook</code>, empty by default): multipart POST of the clip file + highlight metadata to <code>&lt;webhook&gt;?wait=true</code>, 3 retries with <code>Retry-After</code> handling, and a self-test that posts and then deletes its own test message. Accepted only if the URL both starts <code>https://</code> <strong>and</strong> contains <code>/api/webhooks/</code> (<code>Settings.HasWebhook</code>).</li><li><strong>Game netcode</strong> (<code>Courier</code>): Unity Netcode <code>CustomMessagingManager</code> named messages <code>&quot;APPLCinema.Hello&quot;</code> / <code>&quot;APPLCinema.Clip&quot;</code>. A client sends Hello when it connects (only if <code>receive_clips</code> is on); the server then ships that player <em>their own</em> clips in 8192-byte pieces, 0.2 s pacing, max 4 MiB per clip, max 8 transfers open. Received clips are validated (<code>Parcel.SafeName</code>: no separators / <code>..</code> / <code>:</code> and must end <code>.puckclip</code>), parsed with <code>ClipIO.Read</code>, then saved into the clips folder. Nothing received is executed or rendered automatically.</li></ul>
+<p><code>Ports.Free()</code> / <code>FirstFree()</code> only <em>probe</em> whether a UDP/TCP port is free, used by a Harmony patch (<code>appl.cinema.practiceport</code>) that shifts the Practice server port if the configured one is taken. It never opens a listener.</p>
+<h2 id="3-checks-performed-and-results">3. Checks performed and results <a class="heading-anchor" href="#3-checks-performed-and-results" aria-label="Link to 3. Checks performed and results">#</a></h2>
+<div class="table-wrap" role="region" aria-label="Table in section 3. Checks performed and results" tabindex="0"><table aria-label="Table in section 3. Checks performed and results"><caption>Table in section 3. Checks performed and results</caption><thead><tr><th scope="col">Check</th><th scope="col">Result</th></tr></thead><tbody><tr><td>Credential / browser / wallet access (Login Data, Cookies, wallets, <code>%APPDATA%</code> scans)</td><td><strong>None</strong> - no such API or string in the code</td></tr><tr><td>Token / session / auth-ticket theft</td><td><strong>None</strong></td></tr><tr><td>Keylogging, clipboard, hooking of input</td><td><strong>None</strong> - no <code>GetAsyncKeyState</code>, no <code>OpenClipboard</code>, no hooks</td></tr><tr><td>Ransomware file encryption / mass file rewrite</td><td><strong>None</strong> - only writes its own clips, config, renders</td></tr><tr><td>Crypto miner / stratum / xmrig / wallet RPC</td><td><strong>None</strong></td></tr><tr><td>Persistence (Run key, Task Scheduler, services, startup folder)</td><td><strong>None</strong> - no registry API at all</td></tr><tr><td>Autostart / update / downloader</td><td><strong>None</strong> - no download code; ffmpeg must already exist locally</td></tr><tr><td>Process injection, <code>Assembly.Load</code>, <code>VirtualAlloc</code>, remote threads</td><td><strong>None</strong></td></tr><tr><td>Shell exec</td><td>2 uses: <code>explorer.exe &lt;output folder&gt;</code> and <code>ffmpeg.exe</code> with <code>UseShellExecute=false</code></td></tr><tr><td>Hardcoded C2 / IPs / domains / Discord invites</td><td><strong>None</strong> - every URL comes from <code>config.json</code></td></tr><tr><td>Screen capture of the whole desktop</td><td><strong>No</strong> - <code>ScreenCapture.CaptureScreenshotAsTexture</code> = the game view only</td></tr><tr><td>Persistence of hidden state</td><td>config.json only (documented fields), no hidden files</td></tr></tbody></table></div>
+<p>Full API-surface buckets produced by the harness: FileSystem 122 hits, Unity 57, P-Invoke 38, Persistence 21 (all <code>Time.realtimeSinceStartup</code> timestamps), Process 14, Env 12, Crypto 10 (all <code>UniversalAdditionalCameraData</code>), Reflection 10 (game-type field access), DllImport 9, Network 9, Obfuscation 6 (all <code>GZipStream</code>), Harmony 1, Screen 1, Shell 1, Webhooks 1 (<code>/api/webhooks/</code> validation). Binary string scan: only <code>MZ</code> and <code>Environment.GetEnvironmentVariable</code> (feature test flags <code>APPLCINEMA_MP4TEST</code> / <code>APPLCINEMA_SENDTEST</code> / <code>APPLCINEMA_SELFTEST</code>). Text grep over all sources for URLs/IPs/dotted-quads: nothing beyond the config fields.</p>
+<h2 id="4-findings">4. Findings <a class="heading-anchor" href="#4-findings" aria-label="Link to 4. Findings">#</a></h2>
+<ol><li><strong>(Medium-low) Optional upload of your clips to a Discord webhook.</strong> Off by default (<code>&quot;webhook&quot;: &quot;&quot;</code>). If you paste a webhook URL, clips - including in-game player names / SteamIDs of everyone in the clip - are uploaded there. Validation only requires <code>https://</code> + <code>/api/webhooks/</code>, so a Relay/hijacked URL would also pass; treat it like a password. This is a feature, not malware, but it is the single data-exfiltration path in this mod.</li><li><strong>(Low) A game server can push clip files onto your disk</strong> while you are connected (<code>receive_clips</code> defaults to true). Each file is capped at 4 MiB, name-validated, parsed before saving, and never auto-executed; worst case is junk files in your clips folder.</li><li><strong>(Low) It reads your <code>Downloads</code> folder</strong> (top level only, <code>*.puckclip</code> / <code>*.puckgame</code>) plus any <code>clip_folders</code> you configure, to import clips. File names are shown in the UI/log. Nothing else in that folder is read.</li><li><strong>(Low) ffmpeg execution.</strong> Rendering can launch whatever <code>ffmpeg.exe</code> it finds first (config path -&gt; PATH -&gt; <code>%LOCALAPPDATA%\Microsoft\WinGet</code>). If something already replaced ffmpeg on your machine, that binary would run - keep normal AV/software hygiene. It does not fetch ffmpeg itself.</li><li><strong>(Info) In-process modifications.</strong> Harmony patch + reflection into game internals (<code>ServerManager.StartHost</code>, <code>EventManager</code>, <code>GoalTrigger</code>, <code>PlayerCustomizationState</code>) - normal for Puck mods, but combined with unsigned binary + Steam auto-update it means the code can change under you at any time.</li><li><strong>(Info) Provenance.</strong> Created and updated same day, 20 subscribers, brand-new item. The author claims a companion server mod <code>3824593782</code>; that item is <strong>not installed here</strong> and was not audited. If you run it, audit it separately (it is the server-side half that stores/serves clips).</li></ol>
+<h2 id="5-evidence-trail">5. Evidence trail <a class="heading-anchor" href="#5-evidence-trail" aria-label="Link to 5. Evidence trail">#</a></h2>
+<ul><li><code>evidence/hashes_sha256.txt</code> - SHA-256 of the only mod file</li><li><code>evidence/pe_info.txt</code> - PE32/i386/.NET, 3 sections, overlay 0, entropy 5.97, unsigned</li><li><code>evidence/api_surface.txt</code> - all 78 types, 56 decompiled C# files, bucket summaries quoted above</li><li><code>evidence/inventory.tsv</code> - 1 file, exact byte size vs Workshop metadata</li><li><code>sources/APPLCinema/</code> - full decompiled project (<code>CinemaPlugin.cs</code>, <code>Recorder.cs</code> 50 KB, <code>Studio.cs</code> 163 KB, <code>Courier.cs</code>, <code>Parcel.cs</code>, <code>ClipIO.cs</code>, <code>Mp4Writer.cs</code>, <code>PracticePort.cs</code>, <code>Ports.cs</code>, <code>Settings.cs</code>, 47 more)</li><li>Workshop metadata: <code>ISteamRemoteStorage/GetPublishedFileDetails</code> (title, creator, dates, subs, size, <code>banned: 0</code>)</li></ul>
+<h2 id="6-bottom-line">6. Bottom line <a class="heading-anchor" href="#6-bottom-line" aria-label="Link to 6. Bottom line">#</a></h2>
+<p><strong>Not malware. Keep it if you actually use the clips/studio; otherwise it is dead weight.</strong> It is one of the cleanest mods in this collection code-wise: no hidden network endpoints, no credential access, no persistence, no obfuscation. Before relying on it:</p>
+<ul><li>leave <code>&quot;webhook&quot;: &quot;&quot;</code> empty unless you control the Discord channel;</li><li>set <code>&quot;receive_clips&quot;: false</code> if you do not want servers able to drop files into your clips folder;</li><li>keep <code>keep_games</code> modest - recordings are large and pruned only from its own folder;</li><li>remember it only captures the game view, never your desktop.</li></ul></div>
+    </section>
+    <nav class="prev-next" aria-label="Adjacent audit records">
+<a class="prev-next-link" href="3802863574.html">
+<span class="meta-label">Previous record</span>
+<span>Arena Loader</span>
+</a>
+<a class="prev-next-link prev-next-link--next" href="3784458679.html">
+<span class="meta-label">Next record</span>
+<span>GPM Stats</span>
+</a>
+</nav>
+  </div>
+  <aside class="report-aside" aria-label="Report navigation and actions">
+    <div class="aside-block">
+      <p class="meta-label">Verdict</p>
+      <div class="aside-verdict"><span class="badge badge--caveats"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></div>
+      <p class="aside-note">Moderate risk band. A verdict applies to the reviewed build, not to every future update.</p>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">Suspicion score</p>
+      <div class="aside-score-row"><span class="aside-score">28</span><span class="aside-score-denom">/ 100</span></div>
+      <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:28"></span></div>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">On this page</p>
+      <nav class="toc" aria-label="Report sections"><ol><li><a href="#1-binary-facts">1. Binary facts</a></li><li><a href="#2-what-it-does">2. What it does</a></li><li><a href="#3-checks-performed-and-results">3. Checks performed and results</a></li><li><a href="#4-findings">4. Findings</a></li><li><a href="#5-evidence-trail">5. Evidence trail</a></li><li><a href="#6-bottom-line">6. Bottom line</a></li></ol></nav>
+    </div>
+    <div class="aside-block aside-block--link">
+      <a class="aside-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3824708567" target="_blank" rel="noopener noreferrer">Steam Workshop <span aria-hidden="true">↗</span></a>
+      <a class="aside-link" href="../method.html">Method &amp; scoring <span aria-hidden="true">→</span></a>
+      <a class="aside-link" href="../requests.html">Request another check <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-mark">PUCK WORKSHOP <span>/</span> AUDIT</p>
+        <p class="footer-note">Static reports tied to file inventories and hashes. Triage, not a guarantee. Read the method before treating a verdict as a clean bill of health.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../index.html">Audit ledger</a>
+        <a href="../method.html">Method &amp; limits</a>
+        <a href="../requests.html">Request a check</a>
+        <a href="https://github.com/praisethefacts/puck-workshop-audit/issues" target="_blank" rel="noopener noreferrer">GitHub issues <span class="external-mark" aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="footer-meta">
+        <p><span class="meta-label">Snapshot</span><span>2026-10-26</span></p>
+        <p><span class="meta-label">Scope</span><span>63 mods · app 2994020</span></p>
+        <p><span class="meta-label">Reports</span><span>Hash-bound, per mod</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>No tracking · no cookies · plain static output</span>
+      <span>Puck · Steam Workshop 2994020</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

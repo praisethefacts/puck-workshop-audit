@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#090a08">
+<title>PlayerQoL — With caveats · Puck Workshop audit</title>
+<meta name="description" content="Audit report for PlayerQoL (Workshop 3574337071): With caveats, suspicion score 34/100. Code review included.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="statusbar">
+  <div class="shell statusbar-inner">
+    <span class="status-state"><span class="status-dot" aria-hidden="true"></span>No malware found</span>
+    <span>Independent static audit</span>
+    <span class="statusbar-detail">63 installed mods</span>
+    <span class="statusbar-detail">Snapshot 2026-10-26</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="../index.html" aria-label="Puck Workshop audit home">
+      <span class="brand-mark" aria-hidden="true">PWA</span>
+      <span class="brand-copy">
+        <span class="brand-name">Puck Workshop audit</span>
+        <span class="brand-sub">Forensic mod ledger</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary"><a href="../index.html" aria-current="page">Mods</a><a href="../method.html">Method</a><a href="../requests.html">Requests</a></nav>
+    <span class="header-proof"><span class="status-dot" aria-hidden="true"></span>63 records</span>
+  </div>
+</header>
+<main id="main" class="page-main">
+<div class="shell page-enter">
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">Audit ledger</a></li>
+    <li aria-current="page">PlayerQoL</li>
+  </ol>
+</nav>
+<article>
+<header class="record-hero">
+  <div class="record-copy">
+    <p class="eyebrow"><span class="eyebrow-index">RECORD 3574337071</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Code-bearing entry</span></p>
+    <h1>PlayerQoL</h1>
+    <div class="record-verdict">
+      <span class="badge badge--caveats"><span class="badge-dot" aria-hidden="true"></span>With caveats</span>
+      <span class="record-score-label">Risk score <strong>34/100</strong> · Moderate</span>
+    </div>
+    <p class="record-summary">This entry ships code. The report covers every file, the decompiled managed code and the external interfaces it uses. Report tied to the audited bytes; a later Workshop update can change the verdict.</p>
+    <div class="record-actions">
+      <a class="btn btn--primary" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3574337071" target="_blank" rel="noopener noreferrer">Open Workshop<span class="external-mark" aria-hidden="true">↗</span></a>
+      <a class="text-link" href="#report">Read the report</a>
+    </div>
+  </div>
+  <aside class="record-score-panel" aria-label="Record summary">
+    <span class="meta-label">Suspicion score</span>
+    <div class="record-big-score">34<span>/ 100</span></div>
+    <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:34"></span></div>
+    <div class="record-band">Moderate · Review the caveats</div>
+    <dl class="record-mini-facts">
+      <div><dt>Kind</dt><dd>managed .NET mod</dd></div>
+      <div><dt>Verdict</dt><dd>BENIGN / WITH CAVEATS</dd></div>
+      <div><dt>Workshop</dt><dd>3574337071</dd></div>
+      <div><dt>Report</dt><dd>6,962 characters</dd></div>
+    </dl>
+  </aside>
+</header>
+<div class="record-layout">
+  <div>
+    <div class="report-head">
+      <div>
+        <p class="kicker">Full audit report</p>
+        <h2 class="report-title">What the bytes do</h2>
+      </div>
+      <p class="report-timestamp"><span class="meta-label">Audit</span> 2026-10-26</p>
+    </div>
+    <section class="report" id="report" aria-label="Audit report">
+      <div class="prose"><p><strong>Verdict:</strong> <code>BENIGN / WITH CAVEATS</code> <strong>Risk score:</strong> <code>34/100 (Moderate)</code> <strong>Kind:</strong> <code>managed .NET mod</code> + asset payload (3 MP3 ping sounds, PDB symbols) <strong>Author:</strong> <code>76561198067045734</code> · <strong>Published/updated:</strong> <code>2025-09-25 05:54 UTC</code> · <strong>Subscribers:</strong> <code>132,418</code> · <strong>On-disk size:</strong> <code>0.57 MB</code></p>
+<h2 id="what-it-is">What it is <a class="heading-anchor" href="#what-it-is" aria-label="Link to What it is">#</a></h2>
+<p>A large client-side quality-of-life bundle: configurable key binds and chat macros, rich-text/markdown/kaomoji/custom-emoji chat rendering, local mute of individual players, scoreboard conveniences (copy SteamID, open Steam profile) and per-player ping/jingle sounds. Most of the code is UI and input work, but it ships a genuinely capable downloader: a user-editable <code>links.txt</code> of image URLs (seeded with default links to <code>files.catbox.moe</code>) whose images are downloaded and cached locally as chat emoji.</p>
+<h2 id="contents">Contents <a class="heading-anchor" href="#contents" aria-label="Link to Contents">#</a></h2>
+<ul><li>5 files / 602,598 bytes: <code>PoncePlayerInput.dll</code> (393,216 B), 3 <code>.mp3</code> ping sounds (<code>PingSounds/*.mp3</code>, e.g. <code>apple-pay-sound.mp3</code>), and a <code>.pdb</code> debug-symbols file that should not normally be shipped to users.</li><li><code>PoncePlayerInput.dll</code> — managed .NET (<code>dotnet=1</code>), PE32 <code>machine=i386</code>, <code>signed=0</code>, sections <code>.text/.rsrc/.reloc</code>, overlay 0, entropy 5.66 (normal IL).</li><li>All hashes are in <code>evidence/hashes_sha256.txt</code>; PE facts in <code>evidence/pe_info.txt</code>; decompiled source in <code>sources/</code>.</li></ul>
+<h2 id="code-analysis">Code analysis <a class="heading-anchor" href="#code-analysis" aria-label="Link to Code analysis">#</a></h2>
+<ul><li>33 decompiled files, namespaces <code>PoncePlayerInput</code>, <code>PoncePlayerInput.PonceMods.Shared</code>, <code>PoncePlayerInput.PoncePuck.Keybinds</code>, <code>...PoncePuck.LocalMute</code>, <code>...PoncePuck.Emotes</code> etc. Many Harmony patches on UI/chat/gameplay-display paths (e.g. <code>UIChat.AddChatMessage</code> in <code>PoncePuck.Keybinds/ChatRichTextPatch.cs:9</code>, chat-message focus/blur patches).</li><li>Configuration and storage:<ul><li><code>Application.persistentDataPath/PonceMods/PonceMods_ModMenuHub.json</code> (<code>PonceMods.Shared/ModMenuHub.cs:73,78</code>, read <code>:350</code>, write <code>:383</code>);</li><li><code>config/ModHub/PlayerQoL/PonceKeybinds.Commands.json</code>, <code>PonceLocalMute.json</code> (<code>PoncePuck.Keybinds/KeybindRunner.cs:404-420</code>);</li><li>legacy <code>config/playerinput</code> migration (<code>ModHubConfig.cs:181-255</code>); general config read/write via <code>ModHubConfig.cs:305,323</code>.</li></ul></li><li><strong>Clipboard</strong>: writes a SteamID to the system clipboard when the user picks &quot;copy ID&quot; on the scoreboard — <code>GUIUtility.systemCopyBuffer = player.steamId</code> at <code>ScoreboardUtil.cs:1612,2543,2870,3219</code> (logged at <code>:1613,2544,2871,3220</code>). Writes only; no clipboard reads.</li><li><strong>Steam profile opening</strong>: builds <code>https://steamcommunity.com/profiles/&lt;steamid&gt;</code> (<code>ScoreboardUtil.cs:914</code>) and invokes the game&#39;s URL-opener via reflection (<code>ScoreboardUtil.cs:4170</code>) — user-initiated, browser/overlay only.</li><li><strong>Custom emoji image downloader</strong> (<code>PoncePuck.LocalMute/CustomEmojiPack.cs</code>):<ul><li><code>GetEmojisDir()</code> → <code>config/ModHub/PlayerQoL/Emojis</code> (<code>:495-499</code>), <code>GetCacheDir()</code> → <code>.../EmojiCache</code> (<code>:489-493</code>);</li><li><code>links.txt</code> is created with a header explaining the format (<code>:507-511</code>), seeded with default URL entries (<code>DefaultLinkEmojis</code>, <code>:46</code>; seeding at <code>:591-599</code>), and parsed into name→URL pairs (<code>:534-643</code>);</li><li>downloads via <code>UnityWebRequest.Get(url)</code> (<code>:693</code>), saved as bytes into the cache (<code>:703</code>), logged at <code>:721</code>, then loaded <strong>only</strong> as textures — the file scanner accepts only <code>.png/.jpg/.jpeg/.gif</code> (<code>:451-466</code>) and only images are registered as emoji (<code>:468-471</code>, <code>RegisterFromFile</code>);</li><li>&quot;EDIT LINKS&quot; / &quot;OPEN FOLDER&quot; buttons open the local files in the OS (<code>:501-532</code>) — user action.</li></ul></li><li>Ping sounds: loaded from the mod&#39;s own MP3s through <code>UnityWebRequestMultimedia.GetAudioClip(fileUri, audioType)</code> on a local <code>file://</code> URI (<code>PingSoundRuntime.cs:147</code>).</li><li><strong>Absent:</strong> no HTTP client/<code>WebClient</code>/<code>Socket</code>/<code>TcpClient</code> (0 hits); no registry, no <code>Process.Start</code>, no <code>Assembly.Load</code>, no <code>DllImport</code>, no crypto, no base64 decoders, no keylogging (<code>GetAsyncKeyState</code>), no screen capture, no Steam auth-ticket or credential/session/cookie access, no persistence (no Run key/task/service), no auto-update or remote code execution.</li></ul>
+<h2 id="findings">Findings <a class="heading-anchor" href="#findings" aria-label="Link to Findings">#</a></h2>
+<ol><li><strong>Downloads files from URLs listed in a user-editable <code>links.txt</code>, with default links to <code>files.catbox.moe</code></strong> — <code>CustomEmojiPack.cs:46</code> (defaults), <code>:534-643</code> (parse), <code>:693-703</code> (download + write to <code>EmojiCache</code>). The downloader itself will fetch whatever URL the file lists; the saved bytes are then filtered to image extensions and only loaded as textures. Severity: medium (arbitrary remote content fetch triggered automatically on startup for seeded links; primary trust anchor is the third-party image host and the shipped default list).</li><li><strong>Ships a <code>.pdb</code> debug-symbols file</strong> — <code>evidence/FACTS.md</code> (<code>.pdb=1</code>). Not malicious, but unnecessary information disclosure (original source paths/names) and a sign of a sloppy release build. Severity: low.</li><li><strong>Writes SteamIDs to the system clipboard</strong> — <code>ScoreboardUtil.cs:1612,2543,2870,3219</code>. User-initiated &quot;copy ID&quot; action; no clipboard reading. Severity: informational.</li><li><strong>Broad chat/UI patch surface including rich text injection</strong> — <code>ChatRichTextPatch.cs:9</code> and the markdown/kaomoji pipeline (<code>LocalMuteClientMod.cs:729-744</code> builds <code>&lt;b&gt;/&lt;i&gt;/&lt;color&gt;</code> markup from chat text). Rendered locally; worth noting because chat text is turned into rich-text markup, but it is the mod&#39;s advertised feature. Severity: informational.</li><li><strong>Steam profile URLs opened through the game&#39;s URL opener</strong> — <code>ScoreboardUtil.cs:914,4170</code>. User-clicked; opens <code>steamcommunity.com</code> only. Severity: informational.</li><li><strong>No credential/token access, no persistence, no process/registry/network-socket capability</strong> — 0 hits for the credential/persistence API set across 33 files; <code>evidence/api_surface.txt</code> shows only <code>[Clipboard/Input] matches=4</code> and <code>[Network] matches=5</code> (all <code>UnityWebRequest</code> local-file loads plus the URLs above).</li></ol>
+<h2 id="evidence-trail">Evidence trail <a class="heading-anchor" href="#evidence-trail" aria-label="Link to Evidence trail">#</a></h2>
+<ul><li>SHA-256 inventory: <code>evidence/hashes_sha256.txt</code>, <code>evidence/inventory.tsv</code>, <code>evidence/FACTS.md</code>; <code>evidence/api_surface.txt</code> (Clipboard/Input and Network categories, 33 types).</li><li>PE facts: <code>evidence/pe_info.txt</code> (managed, unsigned, no overlay, entropy 5.66). Binary scan: 27 &quot;magic signature&quot; hits — mostly <code>MZ</code>/<code>ZIP</code> byte patterns inside the DLL&#39;s compressed metadata/resources and the MP3 payload; no valid embedded PE.</li><li>Decompilation: complete <code>ilspycmd</code> output, 33 files (<code>sources/</code>); <code>CustomEmojiPack.cs</code> was read in full around the download/allow-list logic.</li><li>Independent binary REA notes reviewed: <code>_harness/rea/3574337071__PoncePlayerInput.dll.md</code>.</li><li>Not verified: contents of the shipped default <code>links.txt</code> URLs were not fetched (no live requests made), and the actual cached image bytes were not examined; runtime UI behaviour not executed (game not run by instruction).</li></ul>
+<h2 id="bottom-line">Bottom line <a class="heading-anchor" href="#bottom-line" aria-label="Link to Bottom line">#</a></h2>
+<p>Keep with caveats, and consider editing <code>config/ModHub/PlayerQoL/Emojis/links.txt</code> to remove any link you do not trust — the mod downloads whatever image URLs are listed there (defaults point at a public image host) and only uses them as chat emoji, but it is still automatic fetching of remote content.</p></div>
+    </section>
+    <nav class="prev-next" aria-label="Adjacent audit records">
+<a class="prev-next-link" href="3776968217.html">
+<span class="meta-label">Previous record</span>
+<span>RHL Companion (MultiAccountGuard)</span>
+</a>
+<a class="prev-next-link prev-next-link--next" href="3811996661.html">
+<span class="meta-label">Next record</span>
+<span>Rink</span>
+</a>
+</nav>
+  </div>
+  <aside class="report-aside" aria-label="Report navigation and actions">
+    <div class="aside-block">
+      <p class="meta-label">Verdict</p>
+      <div class="aside-verdict"><span class="badge badge--caveats"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></div>
+      <p class="aside-note">Moderate risk band. A verdict applies to the reviewed build, not to every future update.</p>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">Suspicion score</p>
+      <div class="aside-score-row"><span class="aside-score">34</span><span class="aside-score-denom">/ 100</span></div>
+      <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:34"></span></div>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">On this page</p>
+      <nav class="toc" aria-label="Report sections"><ol><li><a href="#what-it-is">What it is</a></li><li><a href="#contents">Contents</a></li><li><a href="#code-analysis">Code analysis</a></li><li><a href="#findings">Findings</a></li><li><a href="#evidence-trail">Evidence trail</a></li><li><a href="#bottom-line">Bottom line</a></li></ol></nav>
+    </div>
+    <div class="aside-block aside-block--link">
+      <a class="aside-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3574337071" target="_blank" rel="noopener noreferrer">Steam Workshop <span aria-hidden="true">↗</span></a>
+      <a class="aside-link" href="../method.html">Method &amp; scoring <span aria-hidden="true">→</span></a>
+      <a class="aside-link" href="../requests.html">Request another check <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-mark">PUCK WORKSHOP <span>/</span> AUDIT</p>
+        <p class="footer-note">Static reports tied to file inventories and hashes. Triage, not a guarantee. Read the method before treating a verdict as a clean bill of health.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../index.html">Audit ledger</a>
+        <a href="../method.html">Method &amp; limits</a>
+        <a href="../requests.html">Request a check</a>
+        <a href="https://github.com/praisethefacts/puck-workshop-audit/issues" target="_blank" rel="noopener noreferrer">GitHub issues <span class="external-mark" aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="footer-meta">
+        <p><span class="meta-label">Snapshot</span><span>2026-10-26</span></p>
+        <p><span class="meta-label">Scope</span><span>63 mods · app 2994020</span></p>
+        <p><span class="meta-label">Reports</span><span>Hash-bound, per mod</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>No tracking · no cookies · plain static output</span>
+      <span>Puck · Steam Workshop 2994020</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#090a08">
+<title>RHL Companion (MultiAccountGuard) — Suspicious · Puck Workshop audit</title>
+<meta name="description" content="Audit report for RHL Companion (MultiAccountGuard) (Workshop 3776968217): Suspicious, suspicion score 45/100. Code review included.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="statusbar">
+  <div class="shell statusbar-inner">
+    <span class="status-state"><span class="status-dot" aria-hidden="true"></span>No malware found</span>
+    <span>Independent static audit</span>
+    <span class="statusbar-detail">63 installed mods</span>
+    <span class="statusbar-detail">Snapshot 2026-10-26</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="../index.html" aria-label="Puck Workshop audit home">
+      <span class="brand-mark" aria-hidden="true">PWA</span>
+      <span class="brand-copy">
+        <span class="brand-name">Puck Workshop audit</span>
+        <span class="brand-sub">Forensic mod ledger</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary"><a href="../index.html" aria-current="page">Mods</a><a href="../method.html">Method</a><a href="../requests.html">Requests</a></nav>
+    <span class="header-proof"><span class="status-dot" aria-hidden="true"></span>63 records</span>
+  </div>
+</header>
+<main id="main" class="page-main">
+<div class="shell page-enter">
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">Audit ledger</a></li>
+    <li aria-current="page">RHL Companion (MultiAccountGuard)</li>
+  </ol>
+</nav>
+<article>
+<header class="record-hero">
+  <div class="record-copy">
+    <p class="eyebrow"><span class="eyebrow-index">RECORD 3776968217</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Code-bearing entry</span></p>
+    <h1>RHL Companion (MultiAccountGuard)</h1>
+    <div class="record-verdict">
+      <span class="badge badge--suspicious"><span class="badge-dot" aria-hidden="true"></span>Suspicious</span>
+      <span class="record-score-label">Risk score <strong>45/100</strong> · High</span>
+    </div>
+    <p class="record-summary">This entry ships code. The report covers every file, the decompiled managed code and the external interfaces it uses. Report tied to the audited bytes; a later Workshop update can change the verdict.</p>
+    <div class="record-actions">
+      <a class="btn btn--primary" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3776968217" target="_blank" rel="noopener noreferrer">Open Workshop<span class="external-mark" aria-hidden="true">↗</span></a>
+      <a class="text-link" href="#report">Read the report</a>
+    </div>
+  </div>
+  <aside class="record-score-panel" aria-label="Record summary">
+    <span class="meta-label">Suspicion score</span>
+    <div class="record-big-score">45<span>/ 100</span></div>
+    <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--high" style="--score:45"></span></div>
+    <div class="record-band">High · Material concern</div>
+    <dl class="record-mini-facts">
+      <div><dt>Kind</dt><dd>managed .NET mod, obfuscated</dd></div>
+      <div><dt>Verdict</dt><dd>SUSPICIOUS</dd></div>
+      <div><dt>Workshop</dt><dd>3776968217</dd></div>
+      <div><dt>Report</dt><dd>4,999 characters</dd></div>
+    </dl>
+  </aside>
+</header>
+<div class="record-layout">
+  <div>
+    <div class="report-head">
+      <div>
+        <p class="kicker">Full audit report</p>
+        <h2 class="report-title">What the bytes do</h2>
+      </div>
+      <p class="report-timestamp"><span class="meta-label">Audit</span> 2026-10-26</p>
+    </div>
+    <section class="report" id="report" aria-label="Audit report">
+      <div class="prose"><p><strong>Verdict:</strong> <code>SUSPICIOUS</code> <strong>Risk score:</strong> <code>45/100 (Moderate)</code> <strong>Kind:</strong> <code>managed .NET mod, obfuscated</code> <strong>Author:</strong> RHL league (see <code>evidence/FACTS.md</code>) · <strong>On-disk size:</strong> <code>~0.9 MB</code></p>
+<h2 id="what-it-is">What it is <a class="heading-anchor" href="#what-it-is" aria-label="Link to What it is">#</a></h2>
+<p>A companion client for a Russian-language Puck league (&quot;RHL&quot;): an in-game locker/shop for league skins and goal effects (premium subscription upsell to <code>rhlpremium.ru</code>), plus a <code>MultiAccountGuard</code> component that fingerprints the machine and reports which plugins/assemblies are loaded, so the league can detect multi-accounting and patched clients.</p>
+<p>It is not malware, but it is the most invasive mod in this collection: <strong>hardware fingerprinting</strong>, <strong>loaded-module enumeration</strong> and <strong>telemetry to a hard-coded raw IP over plain HTTP</strong>, behind <strong>deliberate obfuscation</strong>. That combination is why it is flagged.</p>
+<h2 id="contents">Contents <a class="heading-anchor" href="#contents" aria-label="Link to Contents">#</a></h2>
+<ul><li>4 decompiled C# files, ~914 KB total. <code>MultiAccountGuardClient.dll</code> is obfuscated: every type, method and field is renamed to <code>_00A0</code>, <code>_2004</code>, <code>_2005</code>, … and all strings are stored in an XOR-encrypted blob.</li><li>PE: i386/AnyCPU managed (.NET/Mono), <strong>unsigned</strong>, no overlay.</li><li>Obfuscation: 645-entry string table in a 15,275-byte static array, decoded at runtime with <code>_4[i] = _4[i] ^ i ^ 0xAA</code> (see <code>sources/.../D6DD96C5-…cs</code>, static constructor). This was reversed offline and all 645 strings were recovered to <code>../_harness/rhl_strings_all.txt</code> (filtered highlights in <code>../_harness/rhl_strings.txt</code>).</li><li>Hashes: <code>evidence/hashes_sha256.txt</code>; PE facts: <code>evidence/pe_info.txt</code>; source: <code>sources/</code>.</li></ul>
+<h2 id="code-analysis">Code analysis <a class="heading-anchor" href="#code-analysis" aria-label="Link to Code analysis">#</a></h2>
+<ul><li><strong>Identity / fingerprinting:</strong> <code>GetVolumeInformation</code> (disk volume serial), <code>Environment.GetEnvironmentVariables()</code>, SteamID64 and Unity&#39;s <code>SystemInfo.deviceUniqueIdentifier</code> are combined into an HWID. <code>K32EnumProcessModulesEx</code> + <code>K32GetModuleFileNameExW</code> enumerate the modules loaded into the process (i.e. which other mods/DLLs you have).</li><li><strong>Telemetry endpoints:</strong><ul><li><code>http://155.212.135.111:8081/report</code> — <strong>plain HTTP to a hard-coded IP</strong>, no TLS, no domain.</li><li><code>https://rhladminpanel.morfikgl.beget.tech/puck/report-plugin</code> — loaded-plugin report.</li><li><code>https://rhladminpanel.morfikgl.beget.tech/puck/report-integrity</code> — &quot;Integrity report sent: {0} assemblies, {1} patches, {2} bytes&quot; (client-integrity / anti-cheat snapshot).</li><li><code>X-Api-Key</code> header is attached to these reports.</li></ul></li><li><strong>Content endpoints (normal):</strong> <code>https://rhladminpanel.morfikgl.beget.tech/rhl-models/bundles/</code>, <code>/puck/skins?ids=…</code>, <code>/league-reskins/S7/…png</code>, <code>https://rhlpuck.morfikgl.beget.tech/lk/api/companion/locker?steamId=</code> (fetches your purchased skins/effects).</li><li><strong>Log strings (recovered):</strong> &quot;Client fingerprint reporter started&quot;, &quot;Missing SteamID or HWID — skipping fingerprint send&quot;, &quot;Could not read system volume serial&quot;, &quot;Integrity report sent&quot;, &quot;Plugin report sent for …&quot;.</li><li><strong>Absent:</strong> no file encryption/ransom behaviour, no browser/wallet/credential paths, no keylogging or clipboard capture, no persistence (no Run key / task / service), no process injection, no download-and-execute of binaries (only Unity asset bundles and PNGs).</li></ul>
+<h2 id="findings">Findings <a class="heading-anchor" href="#findings" aria-label="Link to Findings">#</a></h2>
+<ol><li><strong>HWID fingerprint exfiltrated</strong> (volume serial + env vars + device id + SteamID64) to the league&#39;s hosts. Severity: <strong>high-privacy / moderate overall</strong> — a persistent hardware identifier tied to your Steam account, held by a third party.</li><li><strong>Plain-HTTP report to a bare IP</strong> (<code>http://155.212.135.111:8081/report</code>). Severity: <strong>moderate</strong> — anything sent there can be read or modified on-path, and the purpose of that host is not documented.</li><li><strong>Enumerates loaded modules and reports plugin/integrity data.</strong> Severity: <strong>moderate</strong> — effectively an anti-cheat/telemetry agent inside your game, with visibility into every other mod you run.</li><li><strong>Obfuscation</strong> (renamed symbols + XOR string table). Severity: <strong>moderate</strong> — no legitimate reason to hide strings that are just UI text, URLs and log messages; it defeats casual review.</li><li><strong>Undocumented <code>X-Api-Key</code></strong> shipped in the binary. Severity: <strong>low</strong> (key is client-side and therefore not a secret), but it implies a privileged server API.</li><li>No evidence of malware behaviour. Severity: <strong>none</strong>.</li></ol>
+<h2 id="evidence-trail">Evidence trail <a class="heading-anchor" href="#evidence-trail" aria-label="Link to Evidence trail">#</a></h2>
+<ul><li>Method: SHA-256, PE parsing, <code>ilspycmd</code> decompilation, REA <code>inspect_managed_artifact</code> / <code>inspect_managed_members</code>, plus a custom offline decoder for the XOR string table (<code>_harness/rhl_strings_all.txt</code>).</li><li>Not verified: server-side handling at <code>155.212.135.111</code> and <code>*.beget.tech</code> was not tested (no account, and testing would mean sending real data); the obfuscated control flow was reviewed by strings + API surface, not by fully de-obfuscating every method.</li></ul>
+<h2 id="bottom-line">Bottom line <a class="heading-anchor" href="#bottom-line" aria-label="Link to Bottom line">#</a></h2>
+<p><strong>Not malware, but treat it as an anti-cheat/telemetry client.</strong> It reads a hardware ID and the list of your loaded mods and sends them to the league, partly over unencrypted HTTP. Keep it only if you actually play in that league; otherwise remove it.</p></div>
+    </section>
+    <nav class="prev-next" aria-label="Adjacent audit records">
+<a class="prev-next-link" href="3735183385.html">
+<span class="meta-label">Previous record</span>
+<span>Admin Panel</span>
+</a>
+<a class="prev-next-link prev-next-link--next" href="3574337071.html">
+<span class="meta-label">Next record</span>
+<span>PlayerQoL</span>
+</a>
+</nav>
+  </div>
+  <aside class="report-aside" aria-label="Report navigation and actions">
+    <div class="aside-block">
+      <p class="meta-label">Verdict</p>
+      <div class="aside-verdict"><span class="badge badge--suspicious"><span class="badge-dot" aria-hidden="true"></span>Suspicious</span></div>
+      <p class="aside-note">High risk band. A verdict applies to the reviewed build, not to every future update.</p>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">Suspicion score</p>
+      <div class="aside-score-row"><span class="aside-score">45</span><span class="aside-score-denom">/ 100</span></div>
+      <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--high" style="--score:45"></span></div>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">On this page</p>
+      <nav class="toc" aria-label="Report sections"><ol><li><a href="#what-it-is">What it is</a></li><li><a href="#contents">Contents</a></li><li><a href="#code-analysis">Code analysis</a></li><li><a href="#findings">Findings</a></li><li><a href="#evidence-trail">Evidence trail</a></li><li><a href="#bottom-line">Bottom line</a></li></ol></nav>
+    </div>
+    <div class="aside-block aside-block--link">
+      <a class="aside-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3776968217" target="_blank" rel="noopener noreferrer">Steam Workshop <span aria-hidden="true">↗</span></a>
+      <a class="aside-link" href="../method.html">Method &amp; scoring <span aria-hidden="true">→</span></a>
+      <a class="aside-link" href="../requests.html">Request another check <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-mark">PUCK WORKSHOP <span>/</span> AUDIT</p>
+        <p class="footer-note">Static reports tied to file inventories and hashes. Triage, not a guarantee. Read the method before treating a verdict as a clean bill of health.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../index.html">Audit ledger</a>
+        <a href="../method.html">Method &amp; limits</a>
+        <a href="../requests.html">Request a check</a>
+        <a href="https://github.com/praisethefacts/puck-workshop-audit/issues" target="_blank" rel="noopener noreferrer">GitHub issues <span class="external-mark" aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="footer-meta">
+        <p><span class="meta-label">Snapshot</span><span>2026-10-26</span></p>
+        <p><span class="meta-label">Scope</span><span>63 mods · app 2994020</span></p>
+        <p><span class="meta-label">Reports</span><span>Hash-bound, per mod</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>No tracking · no cookies · plain static output</span>
+      <span>Puck · Steam Workshop 2994020</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

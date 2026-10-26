@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#090a08">
+<title>RINK PUGS — With caveats · Puck Workshop audit</title>
+<meta name="description" content="Audit report for RINK PUGS (Workshop 3815478693): With caveats, suspicion score 30/100. Code review included.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="statusbar">
+  <div class="shell statusbar-inner">
+    <span class="status-state"><span class="status-dot" aria-hidden="true"></span>No malware found</span>
+    <span>Independent static audit</span>
+    <span class="statusbar-detail">63 installed mods</span>
+    <span class="statusbar-detail">Snapshot 2026-10-26</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="../index.html" aria-label="Puck Workshop audit home">
+      <span class="brand-mark" aria-hidden="true">PWA</span>
+      <span class="brand-copy">
+        <span class="brand-name">Puck Workshop audit</span>
+        <span class="brand-sub">Forensic mod ledger</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary"><a href="../index.html" aria-current="page">Mods</a><a href="../method.html">Method</a><a href="../requests.html">Requests</a></nav>
+    <span class="header-proof"><span class="status-dot" aria-hidden="true"></span>63 records</span>
+  </div>
+</header>
+<main id="main" class="page-main">
+<div class="shell page-enter">
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">Audit ledger</a></li>
+    <li aria-current="page">RINK PUGS</li>
+  </ol>
+</nav>
+<article>
+<header class="record-hero">
+  <div class="record-copy">
+    <p class="eyebrow"><span class="eyebrow-index">RECORD 3815478693</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Code-bearing entry</span></p>
+    <h1>RINK PUGS</h1>
+    <div class="record-verdict">
+      <span class="badge badge--caveats"><span class="badge-dot" aria-hidden="true"></span>With caveats</span>
+      <span class="record-score-label">Risk score <strong>30/100</strong> · Moderate</span>
+    </div>
+    <p class="record-summary">This entry ships code. The report covers every file, the decompiled managed code and the external interfaces it uses. Report tied to the audited bytes; a later Workshop update can change the verdict.</p>
+    <div class="record-actions">
+      <a class="btn btn--primary" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3815478693" target="_blank" rel="noopener noreferrer">Open Workshop<span class="external-mark" aria-hidden="true">↗</span></a>
+      <a class="text-link" href="#report">Read the report</a>
+    </div>
+  </div>
+  <aside class="record-score-panel" aria-label="Record summary">
+    <span class="meta-label">Suspicion score</span>
+    <div class="record-big-score">30<span>/ 100</span></div>
+    <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:30"></span></div>
+    <div class="record-band">Moderate · Review the caveats</div>
+    <dl class="record-mini-facts">
+      <div><dt>Kind</dt><dd>managed .NET mod</dd></div>
+      <div><dt>Verdict</dt><dd>BENIGN / WITH CAVEATS</dd></div>
+      <div><dt>Workshop</dt><dd>3815478693</dd></div>
+      <div><dt>Report</dt><dd>9,300 characters</dd></div>
+    </dl>
+  </aside>
+</header>
+<div class="record-layout">
+  <div>
+    <div class="report-head">
+      <div>
+        <p class="kicker">Full audit report</p>
+        <h2 class="report-title">What the bytes do</h2>
+      </div>
+      <p class="report-timestamp"><span class="meta-label">Audit</span> 2026-10-26</p>
+    </div>
+    <section class="report" id="report" aria-label="Audit report">
+      <div class="prose"><p><strong>Verdict:</strong> <code>BENIGN / WITH CAVEATS</code> <strong>Risk score:</strong> <code>30/100 (Low)</code> <strong>Kind:</strong> <code>managed .NET mod</code> <strong>Author:</strong> <code>76561199623120582</code> · <strong>Published/updated:</strong> <code>2026-10-07 20:43 UTC</code> · <strong>Subscribers:</strong> <code>15</code> · <strong>On-disk size:</strong> <code>0.08 MB</code></p>
+<h2 id="what-it-is">What it is <a class="heading-anchor" href="#what-it-is" aria-label="Link to What it is">#</a></h2>
+<p>A server-side &quot;PUG&quot; (pick-up game) manager for Puck by the author of Rink and Arena Loader (build B14). On a server whose name starts with <code>RINK | PUG #&lt;n&gt;</code> it fetches that pug&#39;s roster from the author&#39;s Cloudflare Worker, enforces team and position assignment from the roster, holds the match in warm-up until the listed players are seated, and records per-player match statistics (shots, hits, saves, faceoffs, time on ice, &quot;OVR&quot; rating) plus a positional replay. All of that is then POSTed to the author&#39;s stats backend at <code>rinkpuck.com</code>, keyed by a hardcoded shared API key. There are 8 Harmony patches, all gameplay/statistics or roster enforcement, and no local file writes beyond a temporary <code>.glb</code> export that is read and immediately deleted.</p>
+<h2 id="contents">Contents <a class="heading-anchor" href="#contents" aria-label="Link to Contents">#</a></h2>
+<ul><li>1 file, 80,384 B (<code>evidence/inventory.tsv</code>): <code>RinkPugs.dll</code>, sha256 <code>b3863282cee8d1fa59356298e81d066fda24bdbbdafc468f1d019e05d604af9b</code>.</li><li>PE32 (i386/AnyCPU), .NET, unsigned, 3 sections (<code>.text/.rsrc/.reloc</code>), no overlay, entropy 5.93 (<code>evidence/pe_info.txt</code>). Managed, not obfuscated — 27 C# files, 28 types, 0 decompile failures.</li><li>Scan: 1 magic-signature hit (the DLL&#39;s own <code>MZ</code> header), 0 keyword hits, no automated flags (<code>evidence/hits_summary.txt</code>, <code>evidence/scan_hits.tsv</code>).</li></ul>
+<h2 id="code-analysis">Code analysis <a class="heading-anchor" href="#code-analysis" aria-label="Link to Code analysis">#</a></h2>
+<p><strong>Bootstrap.</strong> <code>RinkPugs.Plugin : IPuckPlugin</code> (<code>Plugin.cs:7</code>), Harmony id <code>com.rink.pugs</code> (<code>:11</code>). <code>OnEnable</code> calls <code>Harmony.PatchAll()</code>, <code>StatsTracker.Init()</code>, then creates <code>DontDestroyOnLoad(&quot;RinkPugs&quot;)</code> with <code>StatsTickBehaviour</code> and <code>PressureBehaviour</code> (<code>:22-28</code>); <code>OnDisable</code> shuts the tracker down and <code>UnpatchSelf()</code> (<code>:38-48</code>).</p>
+<p><strong>Harmony patches (8 targets, all benign gameplay/roster plumbing).</strong> <code>GoalNetCollider.OnCollisionEnter</code> postfix feeds shot-on-goal detection (<code>GoalNetColliderEnterPatch.cs:6-20</code>); <code>PlayerBody.Server_OnCollisionDeferred</code> prefix for hit detection (<code>PlayerBodyHitPatch.cs:8-27</code>); <code>Player.Client_RequestClaimPositionRpc</code> to block claiming a position outside your roster role (<code>PlayerClaimPositionPatch.cs:8</code>, uses <code>PugRoster.IsPositionClaimBlocked</code>); <code>Player.Client_RequestTeamRpc</code> to block joining the opponents&#39; team when a roster is active (<code>PlayerRequestTeamPatch.cs:8,22</code>); <code>PlayerManager.RemovePlayer</code> to keep stats bookkeeping (<code>PlayerManagerRemovePlayerPatch.cs:7</code>); <code>Puck.OnCollisionEnter</code>/<code>OnCollisionExit</code> for shot/pass/possession events (<code>PuckCollisionEnterPatch.cs:7</code>, <code>PuckCollisionExitPatch.cs:7</code>); <code>PublicGameMode&lt;PublicGameModeConfig&gt;.OnWarmupTimedOut</code> prefix that re-arms warm-up while the roster is incomplete, announcing why (<code>WarmupHoldPatch.cs:7-35</code>, <code>StartGate.cs:27-…</code>). None of these touch auth, Steam, file, process or network APIs.</p>
+<p><strong>Network — two author-controlled endpoints.</strong></p>
+<ol><li><code>PugRoster.Fetch</code> GETs <code>https://rinkbot.erscup910.workers.dev/pug-roster?pug=&lt;n&gt;</code> every 60 s (15 s while no roster) and parses <code>{blue:[…],red:[…]}</code> — items may be SteamID strings or <code>{sid,name,role}</code> objects (<code>PugRoster.cs:12,41-146</code>). This is the roster used for team/position enforcement and the start gate.</li><li><code>RinkApi.Post</code> POSTs JSON to <code>https://rinkpuck.com/api/stats</code> with header <code>x-rink-key: iZIcx2y-h29cC2GNes4SI03qtNSrK8vh</code> (hardcoded, <code>RinkApi.cs:11-13,59</code>). It uses a plain <code>System.Net.Http.HttpClient</code> (<code>:15</code>) off the main thread with retry backoff 3/10/30/60 s for <code>match_start</code>/<code>match_end</code>/<code>replay</code>; failure only logs a warning (<code>:27-52</code>). Every payload carries <code>time = DateTime.UtcNow</code> in ISO-8601 (<code>:25</code>).</li></ol>
+<p>Actions actually sent (all gated by <code>PugInfo.IsTrackedServer</code>, i.e. <code>NetworkManager.Singleton.IsServer</code> <strong>and</strong> server name starting <code>RINK | PUG #</code> — <code>PugInfo.cs:8-35</code>):</p>
+<ul><li><code>goal</code> — matchId, scorer SteamID + name, score, period, strength (<code>StatsTracker.cs:590-603</code>);</li><li><code>match_start</code> — matchId (<code>:1027-1034</code>);</li><li><code>live</code> — every 15 s or on phase change: matchId, period, tick, score, pressure + pressure history, and a per-player array of SteamID, username, team, goals/assists/±/shots/hits/blocks/takeaways/giveaways/posts/passes/faceoffs/time-on-ice/shifts/possession/top speed/max shot speed/hits received/saves/shots against/OVR (<code>StatsTracker.cs:424-427,1122-1190</code>, <code>LiveState.cs</code>, <code>LivePlayer.cs</code>);</li><li><code>match_end</code> — full <code>_match.Players</code> stats dictionary, team stats, goal list, pressure history, pug number, winning team (<code>:1097-1110</code>);</li><li><code>replay</code> — <code>ReplayRecorder.Snapshot</code>: matchId, 5 Hz flag, player list (<code>sid</code>, <code>name</code>, <code>team</code>, <code>number</code>) and up to 12,000 frames (0.2 s apart, ~40 min) each containing rounded position/rotation for every skater plus the puck, and <code>ReplayModels.Payload()</code> — base64 GLB exports of one skater body, one goalie body and their sticks (<code>ReplayRecorder.cs:118-227</code>, <code>ReplayModels.cs:34-155</code>).</li></ul>
+<p><strong>Local filesystem — temporary only.</strong> <code>ReplayModels.Export</code> writes <code>%TEMP%\rinkpugs_replay_model.glb</code> via GLTFast, reads it into a base64 string, then <code>File.Delete</code>s it (<code>ReplayModels.cs:111,140,150</code>). That is the only file I/O in the mod (<code>evidence/api_surface.txt</code> <code>[FileSystem]</code> shows exactly these four lines). No other directory is created or touched.</p>
+<p><strong>Absent.</strong> No credential, session, cookie or Steam-auth-ticket access (SteamIDs and usernames are read from the game&#39;s <code>Player</code> objects and uploaded as plain identifiers); no registry; no process creation or shell; no <code>DllImport</code>/<code>Marshal</code>; no <code>Assembly.Load</code> of anything; no persistence; no crypto or file encryption of user data; no clipboard, keyboard or screen capture; no update/download of executables (the only URL serving data is a roster JSON).</p>
+<h2 id="findings">Findings <a class="heading-anchor" href="#findings" aria-label="Link to Findings">#</a></h2>
+<ol><li><strong>Full match telemetry, including a positional replay, is uploaded to <code>rinkpuck.com</code> with a hardcoded shared key and no opt-out.</strong> The <code>replay</code> payload is the notable one: per-0.2-second positions and rotations for every player and the puck for up to ~40 minutes, plus base64-encoded GLB models of a player and sticks. It is gameplay data generated by the server, not personal files, and it is gated to servers that opt into the <code>RINK | PUG #</code> naming convention — but any player on such a server is recorded and their SteamID/name uploaded. Severity: moderate.</li><li><strong>Roster comes from <code>rinkbot.erscup910.workers.dev</code></strong> (Cloudflare Worker, author-controlled) every 60 s; the parsed roster controls who may join which team, which position they may claim, and whether warm-up is held (<code>PugRoster.cs:12,182-268</code>, <code>StartGate.cs:27-…</code>). A compromised Worker could therefore gate/reject players on tracked servers but cannot execute code — the response is parsed as JSON strings only. Severity: low.</li><li><strong>Straightforward <code>System.Net.Http.HttpClient</code> with the shared static API key</strong> (<code>RinkApi.cs:13,15,59-60</code>) and retry-with-backoff; response status is checked, body ignored. No proxy, no host switching from config, no dynamic URL construction beyond the pug number. Severity: informational.</li><li><strong>All 8 Harmony patches are statistics/enforcement hooks</strong>, applied in <code>OnEnable</code> and removed in <code>OnDisable</code>; the only &quot;game-blocking&quot; behaviour is re-arming warm-up until the roster is complete (<code>WarmupHoldPatch.cs:15-29</code>). Severity: informational.</li><li><strong>Only transient file I/O</strong>: one temp <code>.glb</code> written, read, deleted (<code>ReplayModels.cs:111-155</code>). No config, no cache, no persistence. Severity: informational.</li><li><strong>Absent categories (checked against <code>evidence/api_surface.txt</code> and all 27 decompiled files):</strong> no registry, no process/shell execution, no P/Invoke or <code>Marshal</code>, no <code>Assembly.Load</code>/reflection-generated code, no persistence mechanism, no credential/token/cookie/keyboard/clipboard/screen access, no user-data encryption. The single <code>[Process]</code> hit is an unused <code>using System.Diagnostics;</code> in <code>Properties/AssemblyInfo.cs:1</code>. Severity: n/a.</li></ol>
+<h2 id="evidence-trail">Evidence trail <a class="heading-anchor" href="#evidence-trail" aria-label="Link to Evidence trail">#</a></h2>
+<ul><li>Method: SHA-256 inventory + PE parse (<code>evidence/inventory.tsv</code>, <code>evidence/pe_info.txt</code>), ilspycmd decompilation of <code>RinkPugs.dll</code> (27/27 files, 0 failures), pattern scan (<code>evidence/api_surface.txt</code>, <code>evidence/scan_hits.tsv</code>), Steam metadata (<code>evidence/FACTS.md</code>).</li><li>Key sources read in full: <code>Plugin.cs</code>, <code>RinkApi.cs</code>, <code>PugRoster.cs</code>, <code>PugInfo.cs</code>, <code>StartGate.cs</code>, <code>ReplayRecorder.cs</code>, <code>ReplayModels.cs</code>, <code>LiveState.cs</code>, <code>StatsTickBehaviour.cs</code>, <code>StatsTracker.cs</code> (payload sections), plus the 8 patch classes&#39; attributes.</li><li>Related-mod context: same author and same backend/API key as mods 3811996661 &quot;Rink&quot; and 3802863574 &quot;Arena Loader&quot;; this mod compiles its own <code>RinkApi</code> class (it does <strong>not</strong> ship <code>deps\RinkApi.dll</code>, despite the identical action/key convention).</li><li>Not verified: the live behaviour of <code>rinkpuck.com</code>/the Worker, retention of uploaded replays, and the in-game effect of the roster gate. No independent REA binary note existed for this mod at review time.</li></ul>
+<h2 id="bottom-line">Bottom line <a class="heading-anchor" href="#bottom-line" aria-label="Link to Bottom line">#</a></h2>
+<p>A PUG-organising and stats-tracking server mod, not malware: it only talks to two author-run hosts, only uploads data generated on PUG-named servers, and executes no downloaded code. Caveat: on such a server it records and uploads everything — SteamIDs, names, full stat lines and a 5 Hz positional replay of the game — with a hardcoded key and no way for players to decline.</p></div>
+    </section>
+    <nav class="prev-next" aria-label="Adjacent audit records">
+<a class="prev-next-link" href="3811996661.html">
+<span class="meta-label">Previous record</span>
+<span>Rink</span>
+</a>
+<a class="prev-next-link prev-next-link--next" href="3497550964.html">
+<span class="meta-label">Next record</span>
+<span>Toaster&#39;s Reskin Loader</span>
+</a>
+</nav>
+  </div>
+  <aside class="report-aside" aria-label="Report navigation and actions">
+    <div class="aside-block">
+      <p class="meta-label">Verdict</p>
+      <div class="aside-verdict"><span class="badge badge--caveats"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></div>
+      <p class="aside-note">Moderate risk band. A verdict applies to the reviewed build, not to every future update.</p>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">Suspicion score</p>
+      <div class="aside-score-row"><span class="aside-score">30</span><span class="aside-score-denom">/ 100</span></div>
+      <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:30"></span></div>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">On this page</p>
+      <nav class="toc" aria-label="Report sections"><ol><li><a href="#what-it-is">What it is</a></li><li><a href="#contents">Contents</a></li><li><a href="#code-analysis">Code analysis</a></li><li><a href="#findings">Findings</a></li><li><a href="#evidence-trail">Evidence trail</a></li><li><a href="#bottom-line">Bottom line</a></li></ol></nav>
+    </div>
+    <div class="aside-block aside-block--link">
+      <a class="aside-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3815478693" target="_blank" rel="noopener noreferrer">Steam Workshop <span aria-hidden="true">↗</span></a>
+      <a class="aside-link" href="../method.html">Method &amp; scoring <span aria-hidden="true">→</span></a>
+      <a class="aside-link" href="../requests.html">Request another check <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-mark">PUCK WORKSHOP <span>/</span> AUDIT</p>
+        <p class="footer-note">Static reports tied to file inventories and hashes. Triage, not a guarantee. Read the method before treating a verdict as a clean bill of health.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../index.html">Audit ledger</a>
+        <a href="../method.html">Method &amp; limits</a>
+        <a href="../requests.html">Request a check</a>
+        <a href="https://github.com/praisethefacts/puck-workshop-audit/issues" target="_blank" rel="noopener noreferrer">GitHub issues <span class="external-mark" aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="footer-meta">
+        <p><span class="meta-label">Snapshot</span><span>2026-10-26</span></p>
+        <p><span class="meta-label">Scope</span><span>63 mods · app 2994020</span></p>
+        <p><span class="meta-label">Reports</span><span>Hash-bound, per mod</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>No tracking · no cookies · plain static output</span>
+      <span>Puck · Steam Workshop 2994020</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

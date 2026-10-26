@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#090a08">
+<title>Puck Workshop mod audit — 63 mods, no malware</title>
+<meta name="description" content="Independent static security audit of 63 installed Puck Workshop mods: verdicts, risk scores, hash-bound reports, key findings and re-audit history.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="statusbar">
+  <div class="shell statusbar-inner">
+    <span class="status-state"><span class="status-dot" aria-hidden="true"></span>No malware found</span>
+    <span>Independent static audit</span>
+    <span class="statusbar-detail">63 installed mods</span>
+    <span class="statusbar-detail">Snapshot 2026-10-26</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="index.html" aria-label="Puck Workshop audit home">
+      <span class="brand-mark" aria-hidden="true">PWA</span>
+      <span class="brand-copy">
+        <span class="brand-name">Puck Workshop audit</span>
+        <span class="brand-sub">Forensic mod ledger</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary"><a href="index.html" aria-current="page">Mods</a><a href="method.html">Method</a><a href="requests.html">Requests</a></nav>
+    <span class="header-proof"><span class="status-dot" aria-hidden="true"></span>63 records</span>
+  </div>
+</header>
+<main id="main" class="page-main">
+<div class="shell page-enter">
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="eyebrow-index">01</span><span>Independent audit</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Puck · Steam Workshop</span></p>
+    <h1 id="hero-title">Puck Workshop<br><span class="hero-title-soft">mod audit</span></h1>
+    <p class="hero-lede">Every one of the <strong>63 installed mods</strong> was unpacked, hashed and reviewed for token grabbers, stealers, ransomware, miners, persistence and the usual Steam-account theft patterns. <strong>No malware found.</strong></p>
+    <div class="hero-actions">
+      <a class="btn btn--primary" href="#ledger">Browse the 63 records</a>
+      <a class="text-link" href="method.html">How the audit was done</a>
+    </div>
+    <p class="hero-scope">Audit date 2026-10-26 · target app 2994020 · 27 asset-only mods · 36 code-bearing mods</p>
+  </div>
+  <aside class="verdict-panel" aria-label="Headline audit verdict">
+    <div class="panel-head">
+      <span class="meta-label">Verdict / 00</span>
+      <span class="panel-date">2026-10-26</span>
+    </div>
+    <div class="zero-lockup">
+      <span class="verdict-zero" aria-hidden="true">0</span>
+      <span class="verdict-word">malware<br>found</span>
+    </div>
+    <p class="panel-proof"><span class="status-dot" aria-hidden="true"></span>No malicious capability identified</p>
+    <div class="panel-split">
+      <div><span class="panel-number panel-number--warn">1</span><span class="panel-label">Suspicious verdict</span></div>
+      <div><span class="panel-number">14</span><span class="panel-label">With caveats</span></div>
+    </div>
+    <p class="panel-note">The single suspicious record is hardware fingerprinting over plain HTTP, not credential theft. One previously suspicious mod was re-audited clean after its B55 fix.</p>
+  </aside>
+</section>
+
+<section class="stats-strip" aria-label="Audit totals">
+  <div class="stats-grid">
+    <div class="stat"><div class="stat-value">63</div><div class="stat-label"><span class="stat-tick" aria-hidden="true"></span>Mods audited</div><p class="stat-note">Every installed file</p></div>
+    <div class="stat stat--clean"><div class="stat-value">46</div><div class="stat-label"><span class="stat-tick" aria-hidden="true"></span>Clean</div><p class="stat-note">Plus 2 benign</p></div>
+    <div class="stat stat--caveats"><div class="stat-value">14</div><div class="stat-label"><span class="stat-tick" aria-hidden="true"></span>With caveats</div><p class="stat-note">Privacy or capability</p></div>
+    <div class="stat stat--suspicious"><div class="stat-value">1</div><div class="stat-label"><span class="stat-tick" aria-hidden="true"></span>Suspicious</div><p class="stat-note">RHL Companion</p></div>
+    <div class="stat"><div class="stat-value">27</div><div class="stat-label"><span class="stat-tick" aria-hidden="true"></span>Asset-only</div><p class="stat-note">No executable code</p></div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="verdict-title">
+  <div class="section-head">
+    <span class="section-num">01</span>
+    <div class="section-head-copy">
+      <p class="kicker">Scope and verdict</p>
+      <h2 id="verdict-title">No malware. Six findings that still matter.</h2>
+    </div>
+  </div>
+  <div class="statement-grid">
+    <div class="statement-main">
+      <p class="statement-lead">The headline is deliberately plain: no token or credential grabber, stealer, ransomware, miner, RAT, persistence mechanism, code injection or evasion was found in any of the 63 installed mods.</p>
+      <p>What the audit did find is more ordinary and more nuanced. One mod deliberately fingerprints machines over plain HTTP. Fourteen carry privacy, telemetry or capability caveats. Two no longer have verifiable Workshop provenance. The rest are game logic, stat trackers, audio packs, reskins and UI tweaks.</p>
+      <p>Every verdict is tied to a file inventory and SHA-256 hashes. Managed code was decompiled and read, not just scanned. The reports are triage: they describe what the reviewed bytes can do, and where a verdict depends on a hash that a future Workshop update can change.</p>
+    </div>
+    <aside class="statement-aside" aria-label="Audit scope facts">
+      <dl class="fact-list">
+        <div><dt>Installed</dt><dd>63 mods on the audited machine</dd></div>
+        <div><dt>Coverage</dt><dd>Every shipped file, per mod</dd></div>
+        <div><dt>Method</dt><dd>Hashes, PE facts, decompilation, API and string review</dd></div>
+        <div><dt>Split</dt><dd>36 code · 27 asset-only</dd></div>
+        <div><dt>Limit</dt><dd>Best-effort static triage, not a guarantee</dd></div>
+      </dl>
+      <a class="text-link" href="method.html">Read method &amp; limitations</a>
+    </aside>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="findings-title">
+  <div class="section-head">
+    <span class="section-num">02</span>
+    <div class="section-head-copy">
+      <p class="kicker">Key findings</p>
+      <h2 id="findings-title">What the clean verdict is not hiding.</h2>
+      <p class="section-lede">Ranked by security relevance, with the affected records linked. A low score is not the same as “nothing to see here”; read the caveats before installing.</p>
+    </div>
+  </div>
+  <ol class="finding-list"><li class="finding-row">
+<span class="finding-index" aria-hidden="true">01</span>
+<div>
+<div class="finding-mods"><a class="mod-ref" href="mods/3735183385.html"><code>3735183385</code></a> Admin Panel</div>
+<div class="finding-body"><p><strong>FIXED - now CLEAN (was SUSPICIOUS).</strong> Admin Panel&#39;s server-side handler used to execute <code>AdminPanelCmd</code> from <strong>any</strong> connected client and trusted a client-supplied SteamID. Build <strong>B55</strong> (updated 2026-10-26 22:17 UTC) resolves the sender to a server-side <code>Player</code>, authorises via <code>AdminLevel</code> / <code>admin_steam_ids.json</code> / <code>AdminManager</code>, refuses and logs non-admins, ignores the client-supplied SteamID, and blocks vote-kicks against admins. Re-audited: no malware capability before or after.</p></div>
+</div>
+<div class="finding-risk"><span class="meta-label">Risk</span><span>12/100</span></div>
+</li>
+<li class="finding-row">
+<span class="finding-index" aria-hidden="true">02</span>
+<div>
+<div class="finding-mods"><a class="mod-ref" href="mods/3776968217.html"><code>3776968217</code></a> RHL Companion</div>
+<div class="finding-body"><p><strong>SUSPICIOUS — deliberate machine fingerprinting.</strong> Obfuscated <code>MultiAccountGuardClient.dll</code> (anti-multi-account guard) reads <code>SystemInfo.deviceUniqueIdentifier</code>, <code>steamId</code>, a <strong>volume serial + enumerated module list</strong>, and POSTs the fingerprint over <strong>plain HTTP to a raw IP</strong> (<code>http://155.212.135.111:8081/report</code>) plus HTTPS to <code>rhladminpanel.morfikgl.beget.tech</code> with an <code>X-Api-Key</code>. The obfuscated string table was decoded offline: no credential, wallet, keylog, screen or file-exfiltration logic exists — it is a hardware-ID ban-evasion check, not a stealer.</p></div>
+</div>
+<div class="finding-risk"><span class="meta-label">Risk</span><span>45/100</span></div>
+</li>
+<li class="finding-row">
+<span class="finding-index" aria-hidden="true">03</span>
+<div>
+<div class="finding-mods">7 mods</div>
+<div class="finding-body"><p><strong>Privacy — third-party uploads.</strong> Seven community mods phone home: full <strong>installed-mod inventory</strong> to the game server (<a class="mod-ref" href="mods/3784458679.html"><code>3784458679</code></a>), <strong>SteamID64 heartbeat to <code>puckstats.io</code> + cached server passwords in a local JSON</strong> (<a class="mod-ref" href="mods/3497550964.html"><code>3497550964</code></a>), <strong>chat lines to Google Translate</strong> (<a class="mod-ref" href="mods/3822871103.html"><code>3822871103</code></a>), <strong>SteamIDs to a logging backend</strong> (<a class="mod-ref" href="mods/3574337071.html"><code>3574337071</code></a>), and <strong>match/positional replay telemetry to <code>rinkpuck.com</code></strong> (<a class="mod-ref" href="mods/3815478693.html"><code>3815478693</code></a>, plus the shared <code>RinkApi.dll</code> heartbeat in <a class="mod-ref" href="mods/3802863574.html"><code>3802863574</code></a>/<a class="mod-ref" href="mods/3811996661.html"><code>3811996661</code></a>), and <strong>SteamID64 + persona name + ranked chat text over plain HTTP to a community matchmaking IP</strong> (<a class="mod-ref" href="mods/3793631096.html"><code>3793631096</code></a> RankUp).</p></div>
+</div>
+<div class="finding-risk"><span class="meta-label">Risk</span><span>15–34/100</span></div>
+</li>
+<li class="finding-row">
+<span class="finding-index" aria-hidden="true">04</span>
+<div>
+<div class="finding-mods"><a class="mod-ref" href="mods/3775350613.html"><code>3775350613</code></a>, <a class="mod-ref" href="mods/3778714545.html"><code>3778714545</code></a></div>
+<div class="finding-body"><p><strong>Unverifiable provenance.</strong> Two TLAN client mods are <strong>no longer listed</strong> in Steam&#39;s Workshop API (<code>result: 9</code>), so author/size cannot be confirmed. Code reviewed and clean.</p></div>
+</div>
+<div class="finding-risk"><span class="meta-label">Risk</span><span>note</span></div>
+</li>
+<li class="finding-row">
+<span class="finding-index" aria-hidden="true">05</span>
+<div>
+<div class="finding-mods">2 mods</div>
+<div class="finding-body"><p><strong>Capability, not malware.</strong> <a class="mod-ref" href="mods/3566470321.html"><code>3566470321</code></a> decrypts third-party <code>.abx</code> map bundles (AES + HMAC-SHA256) and ships base64 chat payloads — a legitimate load-and-sync design, but an arbitrary-bundle loader. <a class="mod-ref" href="mods/3800009738.html"><code>3800009738</code></a> embeds a WebView2 browser plugin plus a script that downloads uBlock Origin into the game folder and renders remote MOTD pages, so it can display anything the operator hosts.</p></div>
+</div>
+<div class="finding-risk"><span class="meta-label">Risk</span><span>24–25/100</span></div>
+</li>
+<li class="finding-row">
+<span class="finding-index" aria-hidden="true">06</span>
+<div>
+<div class="finding-mods">45 mods</div>
+<div class="finding-body"><p><strong>Everything else is ordinary modding</strong> — game logic, stat trackers, audio packs, rink/arena/pad/puck reskins, UI tweaks. All unsigned (normal for Puck), none obfuscated, none touch credential or wallet paths.</p></div>
+</div>
+<div class="finding-risk"><span class="meta-label">Risk</span><span>≤16/100</span></div>
+</li></ol>
+</section>
+
+<section class="section" aria-labelledby="reaudits-title">
+  <div class="section-head">
+    <span class="section-num">03</span>
+    <div class="section-head-copy">
+      <p class="kicker">Re-audit log</p>
+      <h2 id="reaudits-title">Verdicts change when builds change.</h2>
+      <p class="section-lede">Two records were re-checked after the first pass. One fixes a real authorisation flaw; one confirms that re-exported textures did not hide a code change.</p>
+    </div>
+  </div>
+  <ol class="reaudit-list"><li class="reaudit-row">
+<div class="reaudit-time"><time datetime="2026-10-26T23:30:00">2026-10-26 23:30</time></div>
+<div>
+<div class="reaudit-mod"><a class="mod-ref" href="mods/3735183385.html"><code>3735183385</code></a> Admin Panel</div>
+<div class="reaudit-what">77,824 B -&gt; <strong>88,064 B</strong>, sha256 <code>5cd64bd1...</code> -&gt; <code>d14311cc43942704458e245f1cd4464d4bb09b3b60fc39da840760384f98bc0b</code>, build <strong>B55</strong> (added AdminTheme, SmartBotBrain, pause/pre-game patches; <strong>auth fix</strong>: server-side sender + admin check, non-admins refused, client-supplied SteamID ignored, vote-kick protection for admins)</div>
+</div>
+<div class="reaudit-result"><strong>CLEAN 12/100</strong> (was SUSPICIOUS 55/100)</div>
+</li>
+<li class="reaudit-row">
+<div class="reaudit-time"><time datetime="2026-10-26T23:45:00">2026-10-26 23:45</time></div>
+<div>
+<div class="reaudit-mod"><a class="mod-ref" href="mods/3824215759.html"><code>3824215759</code></a> bJ0RKs Sticks</div>
+<div class="reaudit-what">10 of 12 JPEG textures re-downloaded/re-exported (Bauer stick skins; one 154 KB -&gt; 339 KB). No code or JSON change (reskinpack.json hash identical), no new URLs</div>
+</div>
+<div class="reaudit-result">unchanged <strong>BENIGN</strong> (assets only)</div>
+</li></ol>
+  <p class="section-footnote">A verdict is tied to the reviewed bytes. Workshop updates can invalidate it; check the hash and re-run the review when a build changes.</p>
+</section>
+
+<section class="section" id="ledger" aria-labelledby="ledger-title">
+  <div class="section-head">
+    <span class="section-num">04</span>
+    <div class="section-head-copy">
+      <p class="kicker">The ledger</p>
+      <h2 id="ledger-title">All 63 records.</h2>
+      <p class="section-lede">Search by name or Workshop ID, filter by verdict and kind, and sort by risk or name. Scores run from 0 to 100; higher means more concerning.</p>
+      <ul class="legend" aria-label="Verdict colour key">
+        <li class="legend-item"><span class="badge badge--clean badge--mini"><span class="badge-dot" aria-hidden="true"></span>Clean</span>No security finding</li>
+        <li class="legend-item"><span class="badge badge--caveats badge--mini"><span class="badge-dot" aria-hidden="true"></span>With caveats</span>Privacy or capability note</li>
+        <li class="legend-item"><span class="badge badge--suspicious badge--mini"><span class="badge-dot" aria-hidden="true"></span>Suspicious</span>Material concern</li>
+      </ul>
+    </div>
+  </div>
+  <form class="filter-bar" id="ledger-filters" role="search" aria-label="Filter audit records">
+    <div class="filter-field filter-field--search">
+      <label for="filter-q">Search records</label>
+      <input id="filter-q" name="q" type="search" placeholder="Name or Workshop ID" autocomplete="off">
+    </div>
+    <div class="filter-field">
+      <label for="filter-verdict">Verdict</label>
+      <select id="filter-verdict" name="verdict">
+        <option value="all">All verdicts</option>
+        <option value="clean">Clean</option>
+        <option value="benign">Benign</option>
+        <option value="caveats">With caveats</option>
+        <option value="suspicious">Suspicious</option>
+      </select>
+    </div>
+    <div class="filter-field">
+      <label for="filter-kind">Kind</label>
+      <select id="filter-kind" name="kind">
+        <option value="all">All kinds</option>
+        <option value="code">Code-bearing</option>
+        <option value="asset">Asset-only</option>
+      </select>
+    </div>
+    <div class="filter-actions"><button class="btn btn--quiet" type="reset" id="filter-reset">Reset</button></div>
+  </form>
+  <noscript><p class="inline-note">Filters and sorting need JavaScript. All 63 records are listed below in risk order.</p></noscript>
+  <div class="table-meta">
+    <span id="ledger-count" aria-live="polite">Showing 63 of 63 records</span>
+    <span class="table-hint" id="ledger-sort-note">Sorted by risk score, high to low<span class="js-only"> · filters update live</span></span>
+  </div>
+  <div class="table-scroll" tabindex="0" role="region" aria-label="Audit ledger table; scroll horizontally on narrow screens">
+    <table class="mod-table" id="mod-ledger">
+      <caption>All 63 installed Puck Workshop mods. Use the linked mod name to read its full report.</caption>
+      <thead>
+        <tr>
+          <th scope="col" class="th-sortable" data-sort-key="name" aria-sort="none"><span class="sort-fallback">Mod</span><button class="sort-control js-only" type="button" data-sort="name">Mod<span class="sort-arrow" aria-hidden="true"></span></button></th>
+          <th scope="col">Verdict</th>
+          <th scope="col" class="th-sortable th-num" data-sort-key="score" aria-sort="descending"><span class="sort-fallback">Score</span><button class="sort-control js-only" type="button" data-sort="score">Score<span class="sort-arrow" aria-hidden="true">↓</span></button></th>
+          <th scope="col">Kind</th>
+          <th scope="col"><span class="sr-only">Steam Workshop</span><span aria-hidden="true">Link</span></th>
+        </tr>
+      </thead>
+      <tbody id="ledger-body">
+<tr data-name="rhl companion (multiaccountguard)" data-id="3776968217" data-score="45" data-verdict="suspicious" data-kind="code" data-search="rhl companion (multiaccountguard) 3776968217 managed .net mod, obfuscated suspicious">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3776968217.html">RHL Companion (MultiAccountGuard)</a><span class="mod-id">ID 3776968217</span></th>
+<td class="cell-verdict"><span class="badge badge--suspicious badge--table"><span class="badge-dot" aria-hidden="true"></span>Suspicious</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">45</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--high" style="--score:45"></span></span></span><span class="sr-only"> out of 100, high risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod, obfuscated">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3776968217" target="_blank" rel="noopener noreferrer" aria-label="Open RHL Companion (MultiAccountGuard) on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="playerqol" data-id="3574337071" data-score="34" data-verdict="caveats" data-kind="code" data-search="playerqol 3574337071 managed .net mod benign / with caveats">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3574337071.html">PlayerQoL</a><span class="mod-id">ID 3574337071</span></th>
+<td class="cell-verdict"><span class="badge badge--caveats badge--table"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">34</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:34"></span></span></span><span class="sr-only"> out of 100, moderate risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3574337071" target="_blank" rel="noopener noreferrer" aria-label="Open PlayerQoL on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="rink" data-id="3811996661" data-score="32" data-verdict="caveats" data-kind="code" data-search="rink 3811996661 managed .net mod benign / with caveats">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3811996661.html">Rink</a><span class="mod-id">ID 3811996661</span></th>
+<td class="cell-verdict"><span class="badge badge--caveats badge--table"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">32</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:32"></span></span></span><span class="sr-only"> out of 100, moderate risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3811996661" target="_blank" rel="noopener noreferrer" aria-label="Open Rink on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="rink pugs" data-id="3815478693" data-score="30" data-verdict="caveats" data-kind="code" data-search="rink pugs 3815478693 managed .net mod benign / with caveats">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3815478693.html">RINK PUGS</a><span class="mod-id">ID 3815478693</span></th>
+<td class="cell-verdict"><span class="badge badge--caveats badge--table"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">30</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:30"></span></span></span><span class="sr-only"> out of 100, moderate risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3815478693" target="_blank" rel="noopener noreferrer" aria-label="Open RINK PUGS on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="toaster&#39;s reskin loader" data-id="3497550964" data-score="30" data-verdict="caveats" data-kind="code" data-search="toaster&#39;s reskin loader 3497550964 managed .net mod benign / with caveats">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3497550964.html">Toaster&#39;s Reskin Loader</a><span class="mod-id">ID 3497550964</span></th>
+<td class="cell-verdict"><span class="badge badge--caveats badge--table"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">30</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:30"></span></span></span><span class="sr-only"> out of 100, moderate risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3497550964" target="_blank" rel="noopener noreferrer" aria-label="Open Toaster&#39;s Reskin Loader on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="appl cinema studio" data-id="3824708567" data-score="28" data-verdict="caveats" data-kind="code" data-search="appl cinema studio 3824708567 managed .net mod benign / with caveats">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3824708567.html">APPL Cinema Studio</a><span class="mod-id">ID 3824708567</span></th>
+<td class="cell-verdict"><span class="badge badge--caveats badge--table"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">28</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:28"></span></span></span><span class="sr-only"> out of 100, moderate risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3824708567" target="_blank" rel="noopener noreferrer" aria-label="Open APPL Cinema Studio on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="arena loader" data-id="3802863574" data-score="28" data-verdict="caveats" data-kind="code" data-search="arena loader 3802863574 managed .net mod benign / with caveats">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3802863574.html">Arena Loader</a><span class="mod-id">ID 3802863574</span></th>
+<td class="cell-verdict"><span class="badge badge--caveats badge--table"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">28</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:28"></span></span></span><span class="sr-only"> out of 100, moderate risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3802863574" target="_blank" rel="noopener noreferrer" aria-label="Open Arena Loader on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="gpm stats" data-id="3784458679" data-score="26" data-verdict="caveats" data-kind="code" data-search="gpm stats 3784458679 managed .net mod benign / with caveats">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3784458679.html">GPM Stats</a><span class="mod-id">ID 3784458679</span></th>
+<td class="cell-verdict"><span class="badge badge--caveats badge--table"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">26</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:26"></span></span></span><span class="sr-only"> out of 100, moderate risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3784458679" target="_blank" rel="noopener noreferrer" aria-label="Open GPM Stats on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="ponce puck centre" data-id="3800009738" data-score="25" data-verdict="caveats" data-kind="code" data-search="ponce puck centre 3800009738 managed .net mod + one native x64 dll + a powershell dev helper benign / with caveats">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3800009738.html">Ponce Puck Centre</a><span class="mod-id">ID 3800009738</span></th>
+<td class="cell-verdict"><span class="badge badge--caveats badge--table"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">25</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:25"></span></span></span><span class="sr-only"> out of 100, moderate risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod + one native x64 DLL + a PowerShell dev helper">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3800009738" target="_blank" rel="noopener noreferrer" aria-label="Open Ponce Puck Centre on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="rankup" data-id="3793631096" data-score="25" data-verdict="caveats" data-kind="code" data-search="rankup 3793631096 managed .net mod benign / with caveats">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3793631096.html">RankUp</a><span class="mod-id">ID 3793631096</span></th>
+<td class="cell-verdict"><span class="badge badge--caveats badge--table"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">25</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:25"></span></span></span><span class="sr-only"> out of 100, moderate risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3793631096" target="_blank" rel="noopener noreferrer" aria-label="Open RankUp on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="dem&#39;s scenery loader" data-id="3566470321" data-score="24" data-verdict="caveats" data-kind="code" data-search="dem&#39;s scenery loader 3566470321 managed .net mod benign / with caveats">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3566470321.html">dem&#39;s Scenery Loader</a><span class="mod-id">ID 3566470321</span></th>
+<td class="cell-verdict"><span class="badge badge--caveats badge--table"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">24</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:24"></span></span></span><span class="sr-only"> out of 100, moderate risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3566470321" target="_blank" rel="noopener noreferrer" aria-label="Open dem&#39;s Scenery Loader on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="competitiveadjustments" data-id="3689734278" data-score="22" data-verdict="caveats" data-kind="code" data-search="competitiveadjustments 3689734278 managed .net mod benign / with caveats">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3689734278.html">CompetitiveAdjustments</a><span class="mod-id">ID 3689734278</span></th>
+<td class="cell-verdict"><span class="badge badge--caveats badge--table"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">22</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:22"></span></span></span><span class="sr-only"> out of 100, moderate risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3689734278" target="_blank" rel="noopener noreferrer" aria-label="Open CompetitiveAdjustments on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="maxpractice" data-id="3646785422" data-score="22" data-verdict="caveats" data-kind="code" data-search="maxpractice 3646785422 managed .net mod benign / with caveats">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3646785422.html">MaxPractice</a><span class="mod-id">ID 3646785422</span></th>
+<td class="cell-verdict"><span class="badge badge--caveats badge--table"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">22</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:22"></span></span></span><span class="sr-only"> out of 100, moderate risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3646785422" target="_blank" rel="noopener noreferrer" aria-label="Open MaxPractice on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="stats tooltip ui" data-id="3608968085" data-score="16" data-verdict="caveats" data-kind="code" data-search="stats tooltip ui 3608968085 managed .net mod benign / with caveats">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3608968085.html">Stats Tooltip UI</a><span class="mod-id">ID 3608968085</span></th>
+<td class="cell-verdict"><span class="badge badge--caveats badge--table"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">16</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:16"></span></span></span><span class="sr-only"> out of 100, moderate risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3608968085" target="_blank" rel="noopener noreferrer" aria-label="Open Stats Tooltip UI on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="chat translator" data-id="3822871103" data-score="15" data-verdict="caveats" data-kind="code" data-search="chat translator 3822871103 managed .net mod benign / with caveats">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3822871103.html">Chat Translator</a><span class="mod-id">ID 3822871103</span></th>
+<td class="cell-verdict"><span class="badge badge--caveats badge--table"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">15</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:15"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3822871103" target="_blank" rel="noopener noreferrer" aria-label="Open Chat Translator on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="admin panel" data-id="3735183385" data-score="12" data-verdict="clean" data-kind="code" data-search="admin panel 3735183385 managed .net mod (fixed in b55) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3735183385.html">Admin Panel</a><span class="mod-id">ID 3735183385</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">12</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:12"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod (fixed in B55)">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3735183385" target="_blank" rel="noopener noreferrer" aria-label="Open Admin Panel on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="gpm scoreboard" data-id="3818726796" data-score="12" data-verdict="clean" data-kind="code" data-search="gpm scoreboard 3818726796 managed .net mod clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3818726796.html">GPM Scoreboard</a><span class="mod-id">ID 3818726796</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">12</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:12"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3818726796" target="_blank" rel="noopener noreferrer" aria-label="Open GPM Scoreboard on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="sounds" data-id="3574183948" data-score="12" data-verdict="clean" data-kind="code" data-search="sounds 3574183948 managed .net mod clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3574183948.html">Sounds</a><span class="mod-id">ID 3574183948</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">12</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:12"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3574183948" target="_blank" rel="noopener noreferrer" aria-label="Open Sounds on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="tlan client (unlisted in steam metadata)" data-id="3778714545" data-score="12" data-verdict="benign" data-kind="code" data-search="tlan client (unlisted in steam metadata) 3778714545 managed .net mod benign">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3778714545.html">TLAN Client (unlisted in Steam metadata)</a><span class="mod-id">ID 3778714545</span></th>
+<td class="cell-verdict"><span class="badge badge--benign badge--table"><span class="badge-dot" aria-hidden="true"></span>Benign</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">12</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:12"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3778714545" target="_blank" rel="noopener noreferrer" aria-label="Open TLAN Client (unlisted in Steam metadata) on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="tlan rules client (unlisted in steam metadata)" data-id="3775350613" data-score="12" data-verdict="benign" data-kind="code" data-search="tlan rules client (unlisted in steam metadata) 3775350613 managed .net mod benign">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3775350613.html">TLAN Rules Client (unlisted in Steam metadata)</a><span class="mod-id">ID 3775350613</span></th>
+<td class="cell-verdict"><span class="badge badge--benign badge--table"><span class="badge-dot" aria-hidden="true"></span>Benign</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">12</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:12"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3775350613" target="_blank" rel="noopener noreferrer" aria-label="Open TLAN Rules Client (unlisted in Steam metadata) on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="stats" data-id="3561076649" data-score="10" data-verdict="clean" data-kind="code" data-search="stats 3561076649 managed .net mod clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3561076649.html">Stats</a><span class="mod-id">ID 3561076649</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">10</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:10"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3561076649" target="_blank" rel="noopener noreferrer" aria-label="Open Stats on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="shootouts" data-id="3630067097" data-score="9" data-verdict="clean" data-kind="code" data-search="shootouts 3630067097 managed .net mod clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3630067097.html">Shootouts</a><span class="mod-id">ID 3630067097</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">9</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:9"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3630067097" target="_blank" rel="noopener noreferrer" aria-label="Open Shootouts on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="curved stick" data-id="3531395717" data-score="8" data-verdict="clean" data-kind="code" data-search="curved stick 3531395717 managed .net mod clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3531395717.html">Curved Stick</a><span class="mod-id">ID 3531395717</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">8</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:8"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3531395717" target="_blank" rel="noopener noreferrer" aria-label="Open Curved Stick on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="ponce&#39;s extra sound effects" data-id="3724352946" data-score="8" data-verdict="clean" data-kind="code" data-search="ponce&#39;s extra sound effects 3724352946 managed .net mod clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3724352946.html">Ponce&#39;s Extra Sound Effects</a><span class="mod-id">ID 3724352946</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">8</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:8"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3724352946" target="_blank" rel="noopener noreferrer" aria-label="Open Ponce&#39;s Extra Sound Effects on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="replay" data-id="3612637610" data-score="8" data-verdict="clean" data-kind="code" data-search="replay 3612637610 managed .net mod clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3612637610.html">Replay</a><span class="mod-id">ID 3612637610</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">8</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:8"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3612637610" target="_blank" rel="noopener noreferrer" aria-label="Open Replay on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="ruleset" data-id="3501446576" data-score="8" data-verdict="clean" data-kind="code" data-search="ruleset 3501446576 managed .net mod clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3501446576.html">Ruleset</a><span class="mod-id">ID 3501446576</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">8</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:8"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3501446576" target="_blank" rel="noopener noreferrer" aria-label="Open Ruleset on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="ruleset refmode ui" data-id="3769320978" data-score="8" data-verdict="clean" data-kind="code" data-search="ruleset refmode ui 3769320978 managed .net mod clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3769320978.html">Ruleset RefMode UI</a><span class="mod-id">ID 3769320978</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">8</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:8"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3769320978" target="_blank" rel="noopener noreferrer" aria-label="Open Ruleset RefMode UI on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="tlan arena 2.0 (day &amp; night update)" data-id="3739199569" data-score="8" data-verdict="clean" data-kind="code" data-search="tlan arena 2.0 (day &amp; night update) 3739199569 managed .net mod clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3739199569.html">TLAN Arena 2.0 (Day &amp; Night Update)</a><span class="mod-id">ID 3739199569</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">8</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:8"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3739199569" target="_blank" rel="noopener noreferrer" aria-label="Open TLAN Arena 2.0 (Day &amp; Night Update) on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="flamieswarmup v2" data-id="3764816187" data-score="7" data-verdict="clean" data-kind="code" data-search="flamieswarmup v2 3764816187 managed .net mod clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3764816187.html">flamieswarmup v2</a><span class="mod-id">ID 3764816187</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">7</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:7"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3764816187" target="_blank" rel="noopener noreferrer" aria-label="Open flamieswarmup v2 on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="ralph engelstad arena (fighting sioux)" data-id="3826743382" data-score="7" data-verdict="clean" data-kind="code" data-search="ralph engelstad arena (fighting sioux) 3826743382 managed .net mod clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3826743382.html">Ralph Engelstad Arena (Fighting Sioux)</a><span class="mod-id">ID 3826743382</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">7</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:7"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3826743382" target="_blank" rel="noopener noreferrer" aria-label="Open Ralph Engelstad Arena (Fighting Sioux) on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="halloween music pack" data-id="3578513105" data-score="6" data-verdict="clean" data-kind="code" data-search="halloween music pack 3578513105 managed .net mod (audio asset pack + small plugin dll) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3578513105.html">Halloween Music Pack</a><span class="mod-id">ID 3578513105</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">6</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:6"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod (audio asset pack + small plugin DLL)">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3578513105" target="_blank" rel="noopener noreferrer" aria-label="Open Halloween Music Pack on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="pakcompetitiveskating" data-id="3670938826" data-score="6" data-verdict="clean" data-kind="code" data-search="pakcompetitiveskating 3670938826 managed .net mod clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3670938826.html">PakCompetitiveSkating</a><span class="mod-id">ID 3670938826</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">6</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:6"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3670938826" target="_blank" rel="noopener noreferrer" aria-label="Open PakCompetitiveSkating on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="ponce&#39;s custom goal songs and horns pack" data-id="3745510574" data-score="6" data-verdict="clean" data-kind="code" data-search="ponce&#39;s custom goal songs and horns pack 3745510574 managed .net mod (audio asset pack + small plugin dll) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3745510574.html">Ponce&#39;s Custom Goal Songs and Horns Pack</a><span class="mod-id">ID 3745510574</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">6</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:6"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod (audio asset pack + small plugin DLL)">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3745510574" target="_blank" rel="noopener noreferrer" aria-label="Open Ponce&#39;s Custom Goal Songs and Horns Pack on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="(wrt) wabba&#39;s real textures - templates included!" data-id="3498638488" data-score="5" data-verdict="clean" data-kind="asset" data-search="(wrt) wabba&#39;s real textures - templates included! 3498638488 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3498638488.html">(WRT) Wabba&#39;s Real Textures - Templates Included!</a><span class="mod-id">ID 3498638488</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">5</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:5"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3498638488" target="_blank" rel="noopener noreferrer" aria-label="Open (WRT) Wabba&#39;s Real Textures - Templates Included! on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="rink puck indicator" data-id="3814654306" data-score="5" data-verdict="clean" data-kind="code" data-search="rink puck indicator 3814654306 managed .net mod clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3814654306.html">Rink Puck Indicator</a><span class="mod-id">ID 3814654306</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">5</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:5"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3814654306" target="_blank" rel="noopener noreferrer" aria-label="Open Rink Puck Indicator on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="toaster&#39;s quick chat plus" data-id="3494254050" data-score="5" data-verdict="clean" data-kind="code" data-search="toaster&#39;s quick chat plus 3494254050 managed .net mod clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3494254050.html">Toaster&#39;s Quick Chat Plus</a><span class="mod-id">ID 3494254050</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">5</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:5"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3494254050" target="_blank" rel="noopener noreferrer" aria-label="Open Toaster&#39;s Quick Chat Plus on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="aker arena sweden" data-id="3809558882" data-score="4" data-verdict="clean" data-kind="asset" data-search="aker arena sweden 3809558882 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3809558882.html">Aker Arena Sweden</a><span class="mod-id">ID 3809558882</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3809558882" target="_blank" rel="noopener noreferrer" aria-label="Open Aker Arena Sweden on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="arctic norths arena" data-id="3813433617" data-score="4" data-verdict="clean" data-kind="asset" data-search="arctic norths arena 3813433617 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3813433617.html">Arctic Norths Arena</a><span class="mod-id">ID 3813433617</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3813433617" target="_blank" rel="noopener noreferrer" aria-label="Open Arctic Norths Arena on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="beta puck | beta reskin" data-id="3790967280" data-score="4" data-verdict="clean" data-kind="asset" data-search="beta puck | beta reskin 3790967280 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3790967280.html">Beta Puck | Beta Reskin</a><span class="mod-id">ID 3790967280</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3790967280" target="_blank" rel="noopener noreferrer" aria-label="Open Beta Puck | Beta Reskin on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="bj0rk&#39;s sticks" data-id="3824215759" data-score="4" data-verdict="clean" data-kind="asset" data-search="bj0rk&#39;s sticks 3824215759 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3824215759.html">bJ0RK&#39;s Sticks</a><span class="mod-id">ID 3824215759</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3824215759" target="_blank" rel="noopener noreferrer" aria-label="Open bJ0RK&#39;s Sticks on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="brownbears thl s2" data-id="3809558237" data-score="4" data-verdict="clean" data-kind="asset" data-search="brownbears thl s2 3809558237 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3809558237.html">BrownBears THL S2</a><span class="mod-id">ID 3809558237</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3809558237" target="_blank" rel="noopener noreferrer" aria-label="Open BrownBears THL S2 on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="eps scorebug" data-id="3808368422" data-score="4" data-verdict="clean" data-kind="asset" data-search="eps scorebug 3808368422 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3808368422.html">EPS Scorebug</a><span class="mod-id">ID 3808368422</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3808368422" target="_blank" rel="noopener noreferrer" aria-label="Open EPS Scorebug on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="hv71 swedish arena" data-id="3804214284" data-score="4" data-verdict="clean" data-kind="asset" data-search="hv71 swedish arena 3804214284 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3804214284.html">HV71 SWEDISH ARENA</a><span class="mod-id">ID 3804214284</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3804214284" target="_blank" rel="noopener noreferrer" aria-label="Open HV71 SWEDISH ARENA on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="icehl dom zagreb" data-id="3818618849" data-score="4" data-verdict="clean" data-kind="asset" data-search="icehl dom zagreb 3818618849 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3818618849.html">ICEHL Dom Zagreb</a><span class="mod-id">ID 3818618849</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3818618849" target="_blank" rel="noopener noreferrer" aria-label="Open ICEHL Dom Zagreb on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="karlovy vary arena" data-id="3817678069" data-score="4" data-verdict="clean" data-kind="asset" data-search="karlovy vary arena 3817678069 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3817678069.html">Karlovy Vary Arena</a><span class="mod-id">ID 3817678069</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3817678069" target="_blank" rel="noopener noreferrer" aria-label="Open Karlovy Vary Arena on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="michigan dreamers arena" data-id="3812135168" data-score="4" data-verdict="clean" data-kind="asset" data-search="michigan dreamers arena 3812135168 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3812135168.html">Michigan Dreamers Arena</a><span class="mod-id">ID 3812135168</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3812135168" target="_blank" rel="noopener noreferrer" aria-label="Open Michigan Dreamers Arena on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="minsk-arena - dinamo minsk" data-id="3820325968" data-score="4" data-verdict="clean" data-kind="asset" data-search="minsk-arena - dinamo minsk 3820325968 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3820325968.html">MINSK-ARENA - DINAMO MINSK</a><span class="mod-id">ID 3820325968</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3820325968" target="_blank" rel="noopener noreferrer" aria-label="Open MINSK-ARENA - DINAMO MINSK on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="montreal canadiens arena" data-id="3817788820" data-score="4" data-verdict="clean" data-kind="asset" data-search="montreal canadiens arena 3817788820 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3817788820.html">Montreal Canadiens Arena</a><span class="mod-id">ID 3817788820</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3817788820" target="_blank" rel="noopener noreferrer" aria-label="Open Montreal Canadiens Arena on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="nhl" data-id="3604825268" data-score="4" data-verdict="clean" data-kind="asset" data-search="nhl 3604825268 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3604825268.html">NHL</a><span class="mod-id">ID 3604825268</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3604825268" target="_blank" rel="noopener noreferrer" aria-label="Open NHL on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="nhl goalie pad reskin pack" data-id="3774246083" data-score="4" data-verdict="clean" data-kind="asset" data-search="nhl goalie pad reskin pack 3774246083 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3774246083.html">NHL Goalie Pad Reskin Pack</a><span class="mod-id">ID 3774246083</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3774246083" target="_blank" rel="noopener noreferrer" aria-label="Open NHL Goalie Pad Reskin Pack on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="o2 arena czech" data-id="3813686345" data-score="4" data-verdict="clean" data-kind="asset" data-search="o2 arena czech 3813686345 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3813686345.html">O2 ARENA CZECH</a><span class="mod-id">ID 3813686345</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3813686345" target="_blank" rel="noopener noreferrer" aria-label="Open O2 ARENA CZECH on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="ponce&#39;s music pack" data-id="3578502215" data-score="4" data-verdict="clean" data-kind="code" data-search="ponce&#39;s music pack 3578502215 managed .net mod clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3578502215.html">Ponce&#39;s Music Pack</a><span class="mod-id">ID 3578502215</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge" title="managed .NET mod">Code</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3578502215" target="_blank" rel="noopener noreferrer" aria-label="Open Ponce&#39;s Music Pack on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="rhl v2 arena" data-id="3808046457" data-score="4" data-verdict="clean" data-kind="asset" data-search="rhl v2 arena 3808046457 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3808046457.html">RHL V2 ARENA</a><span class="mod-id">ID 3808046457</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3808046457" target="_blank" rel="noopener noreferrer" aria-label="Open RHL V2 ARENA on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="salavat yulaev thl s2" data-id="3809557418" data-score="4" data-verdict="clean" data-kind="asset" data-search="salavat yulaev thl s2 3809557418 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3809557418.html">Salavat Yulaev THL S2</a><span class="mod-id">ID 3809557418</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3809557418" target="_blank" rel="noopener noreferrer" aria-label="Open Salavat Yulaev THL S2 on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="thl arena 2" data-id="3803212261" data-score="4" data-verdict="clean" data-kind="asset" data-search="thl arena 2 3803212261 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3803212261.html">THL ARENA 2</a><span class="mod-id">ID 3803212261</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3803212261" target="_blank" rel="noopener noreferrer" aria-label="Open THL ARENA 2 on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="thl s2 pads pack" data-id="3818583419" data-score="4" data-verdict="clean" data-kind="asset" data-search="thl s2 pads pack 3818583419 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3818583419.html">THL S2 Pads pack</a><span class="mod-id">ID 3818583419</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3818583419" target="_blank" rel="noopener noreferrer" aria-label="Open THL S2 Pads pack on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="thl s2 pucks pack" data-id="3818585342" data-score="4" data-verdict="clean" data-kind="asset" data-search="thl s2 pucks pack 3818585342 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3818585342.html">THL S2 Pucks pack</a><span class="mod-id">ID 3818585342</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3818585342" target="_blank" rel="noopener noreferrer" aria-label="Open THL S2 Pucks pack on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="tlan soundpack (standard)" data-id="3778367058" data-score="4" data-verdict="clean" data-kind="asset" data-search="tlan soundpack (standard) 3778367058 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3778367058.html">TLAN Soundpack (Standard)</a><span class="mod-id">ID 3778367058</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3778367058" target="_blank" rel="noopener noreferrer" aria-label="Open TLAN Soundpack (Standard) on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="u4ia&#39;s dark rinks pack" data-id="3780763267" data-score="4" data-verdict="clean" data-kind="asset" data-search="u4ia&#39;s dark rinks pack 3780763267 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3780763267.html">U4IA&#39;s Dark Rinks Pack</a><span class="mod-id">ID 3780763267</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3780763267" target="_blank" rel="noopener noreferrer" aria-label="Open U4IA&#39;s Dark Rinks Pack on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="u4ia&#39;s red-blue gradient rinks" data-id="3780208142" data-score="4" data-verdict="clean" data-kind="asset" data-search="u4ia&#39;s red-blue gradient rinks 3780208142 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3780208142.html">U4IA&#39;s Red-Blue Gradient Rinks</a><span class="mod-id">ID 3780208142</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3780208142" target="_blank" rel="noopener noreferrer" aria-label="Open U4IA&#39;s Red-Blue Gradient Rinks on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="u4ia&#39;s vibrant pucks pack" data-id="3785546857" data-score="4" data-verdict="clean" data-kind="asset" data-search="u4ia&#39;s vibrant pucks pack 3785546857 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3785546857.html">U4IA&#39;s Vibrant Pucks Pack</a><span class="mod-id">ID 3785546857</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3785546857" target="_blank" rel="noopener noreferrer" aria-label="Open U4IA&#39;s Vibrant Pucks Pack on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="vphl arena official" data-id="3816907375" data-score="4" data-verdict="clean" data-kind="asset" data-search="vphl arena official 3816907375 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3816907375.html">VPHL Arena Official</a><span class="mod-id">ID 3816907375</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3816907375" target="_blank" rel="noopener noreferrer" aria-label="Open VPHL Arena Official on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+<tr data-name="werk arena trinec" data-id="3811825932" data-score="4" data-verdict="clean" data-kind="asset" data-search="werk arena trinec 3811825932 asset-only (no code) clean">
+<th scope="row" class="cell-mod"><a class="mod-link" href="mods/3811825932.html">Werk Arena Třinec</a><span class="mod-id">ID 3811825932</span></th>
+<td class="cell-verdict"><span class="badge badge--clean badge--table"><span class="badge-dot" aria-hidden="true"></span>Clean</span></td>
+<td class="cell-score"><span class="score-cell"><span class="score-number">4</span><span class="score-track" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:4"></span></span></span><span class="sr-only"> out of 100, low risk</span></td>
+<td class="cell-kind"><span class="kind-badge kind-badge--asset" title="asset-only (no code)">Asset only</span></td>
+<td class="cell-workshop"><a class="table-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3811825932" target="_blank" rel="noopener noreferrer" aria-label="Open Werk Arena Třinec on Steam Workshop">Workshop<span class="external-mark" aria-hidden="true">↗</span></a></td>
+</tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="empty-state" id="ledger-empty" hidden>
+    <div class="empty-index" aria-hidden="true">0</div>
+    <h3>No records match those filters.</h3>
+    <p>Try a broader name or ID search, switch the verdict back to all, or reset the ledger.</p>
+    <button class="btn" type="button" id="empty-reset">Reset filters</button>
+  </div>
+</section>
+
+<section class="closing" aria-labelledby="closing-title">
+  <div class="closing-rule"></div>
+  <div class="closing-grid">
+    <div>
+      <p class="kicker">Method before trust</p>
+      <h2 id="closing-title">Read the limits with the verdict.</h2>
+      <p>This is static triage on a single machine, not a sandbox detonation or a guarantee. The method page explains the checks, the scoring bands and the gaps that remain.</p>
+    </div>
+    <div class="closing-actions">
+      <a class="btn" href="method.html">Read the method</a>
+      <a class="text-link" href="requests.html">Request a check</a>
+    </div>
+  </div>
+</section>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-mark">PUCK WORKSHOP <span>/</span> AUDIT</p>
+        <p class="footer-note">Static reports tied to file inventories and hashes. Triage, not a guarantee. Read the method before treating a verdict as a clean bill of health.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="index.html">Audit ledger</a>
+        <a href="method.html">Method &amp; limits</a>
+        <a href="requests.html">Request a check</a>
+        <a href="https://github.com/praisethefacts/puck-workshop-audit/issues" target="_blank" rel="noopener noreferrer">GitHub issues <span class="external-mark" aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="footer-meta">
+        <p><span class="meta-label">Snapshot</span><span>2026-10-26</span></p>
+        <p><span class="meta-label">Scope</span><span>63 mods · app 2994020</span></p>
+        <p><span class="meta-label">Reports</span><span>Hash-bound, per mod</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>No tracking · no cookies · plain static output</span>
+      <span>Puck · Steam Workshop 2994020</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

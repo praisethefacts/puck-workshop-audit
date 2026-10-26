@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#090a08">
+<title>Ponce&#39;s Extra Sound Effects — Clean · Puck Workshop audit</title>
+<meta name="description" content="Audit report for Ponce&#39;s Extra Sound Effects (Workshop 3724352946): Clean, suspicion score 8/100. Code review included.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="statusbar">
+  <div class="shell statusbar-inner">
+    <span class="status-state"><span class="status-dot" aria-hidden="true"></span>No malware found</span>
+    <span>Independent static audit</span>
+    <span class="statusbar-detail">63 installed mods</span>
+    <span class="statusbar-detail">Snapshot 2026-10-26</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="../index.html" aria-label="Puck Workshop audit home">
+      <span class="brand-mark" aria-hidden="true">PWA</span>
+      <span class="brand-copy">
+        <span class="brand-name">Puck Workshop audit</span>
+        <span class="brand-sub">Forensic mod ledger</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary"><a href="../index.html" aria-current="page">Mods</a><a href="../method.html">Method</a><a href="../requests.html">Requests</a></nav>
+    <span class="header-proof"><span class="status-dot" aria-hidden="true"></span>63 records</span>
+  </div>
+</header>
+<main id="main" class="page-main">
+<div class="shell page-enter">
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">Audit ledger</a></li>
+    <li aria-current="page">Ponce&#39;s Extra Sound Effects</li>
+  </ol>
+</nav>
+<article>
+<header class="record-hero">
+  <div class="record-copy">
+    <p class="eyebrow"><span class="eyebrow-index">RECORD 3724352946</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Code-bearing entry</span></p>
+    <h1>Ponce&#39;s Extra Sound Effects</h1>
+    <div class="record-verdict">
+      <span class="badge badge--clean"><span class="badge-dot" aria-hidden="true"></span>Clean</span>
+      <span class="record-score-label">Risk score <strong>8/100</strong> · Low</span>
+    </div>
+    <p class="record-summary">This entry ships code. The report covers every file, the decompiled managed code and the external interfaces it uses. Report tied to the audited bytes; a later Workshop update can change the verdict.</p>
+    <div class="record-actions">
+      <a class="btn btn--primary" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3724352946" target="_blank" rel="noopener noreferrer">Open Workshop<span class="external-mark" aria-hidden="true">↗</span></a>
+      <a class="text-link" href="#report">Read the report</a>
+    </div>
+  </div>
+  <aside class="record-score-panel" aria-label="Record summary">
+    <span class="meta-label">Suspicion score</span>
+    <div class="record-big-score">8<span>/ 100</span></div>
+    <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:8"></span></div>
+    <div class="record-band">Low · Minimal capability</div>
+    <dl class="record-mini-facts">
+      <div><dt>Kind</dt><dd>managed .NET mod</dd></div>
+      <div><dt>Verdict</dt><dd>CLEAN</dd></div>
+      <div><dt>Workshop</dt><dd>3724352946</dd></div>
+      <div><dt>Report</dt><dd>4,910 characters</dd></div>
+    </dl>
+  </aside>
+</header>
+<div class="record-layout">
+  <div>
+    <div class="report-head">
+      <div>
+        <p class="kicker">Full audit report</p>
+        <h2 class="report-title">What the bytes do</h2>
+      </div>
+      <p class="report-timestamp"><span class="meta-label">Audit</span> 2026-10-26</p>
+    </div>
+    <section class="report" id="report" aria-label="Audit report">
+      <div class="prose"><p><strong>Verdict:</strong> <code>CLEAN</code> <strong>Risk score:</strong> <code>8/100 (Low)</code> <strong>Kind:</strong> <code>managed .NET mod</code> + audio asset payload (21 WAV effects) <strong>Author:</strong> <code>76561198057883682</code> · <strong>Published/updated:</strong> <code>2026-05-11 20:21 UTC</code> · <strong>Subscribers:</strong> <code>22,502</code> · <strong>On-disk size:</strong> <code>3.38 MB</code></p>
+<h2 id="what-it-is">What it is <a class="heading-anchor" href="#what-it-is" aria-label="Link to What it is">#</a></h2>
+<p>A sound-effect pack that replaces/augments stick and puck impact sounds (grounded/ungrounded stick, puck collisions) with its own <code>.wav</code> files. The DLL hooks the relevant game sound trigger points and loads its WAVs from a local <code>StreamingAssets/sounds</code> folder; a JSON file configures the mapping. It does not talk to any network or perform any file access outside the game/mod folders.</p>
+<h2 id="contents">Contents <a class="heading-anchor" href="#contents" aria-label="Link to Contents">#</a></h2>
+<ul><li>24 files / 3,539,395 bytes: 1 DLL (<code>SoundModWorkshop.dll</code>, 27,136 B), 21 <code>.wav</code> effects, 1 <code>.json</code> config, 1 <code>preview.png</code> (Workshop preview image).</li><li><code>SoundModWorkshop.dll</code> — managed .NET (<code>dotnet=1</code>), PE32 <code>machine=i386</code>, <code>signed=0</code>, sections <code>.text/.rsrc/.reloc</code>, overlay 0, entropy 5.48 (normal IL).</li><li>All hashes are in <code>evidence/hashes_sha256.txt</code>; PE facts in <code>evidence/pe_info.txt</code>; decompiled source in <code>sources/</code>.</li></ul>
+<h2 id="code-analysis">Code analysis <a class="heading-anchor" href="#code-analysis" aria-label="Link to Code analysis">#</a></h2>
+<ul><li>5 decompiled files: <code>SoundModWorkshop</code>, <code>GameSoundPatches_Workshop</code>, <code>SoundRuntime</code>, <code>SoundType</code>, <code>CoroutineHost</code>. Harmony patches:<ul><li><code>StickPositioner.OnGrounded(GameObject)</code> — <code>GameSoundPatches_Workshop.cs:44</code>;</li><li><code>StickPositioner.OnUngrounded</code> — <code>GameSoundPatches_Workshop.cs:87</code>;</li><li><code>Puck.OnCollisionDeferred</code> — <code>GameSoundPatches_Workshop.cs:160</code>. All three are sound-trigger points; the patches substitute the clip that is played.</li></ul></li><li>Audio loading: local files only — <code>SoundModWorkshop.cs:43</code> (<code>UnityWebRequestMultimedia.GetAudioClip(...)</code>), <code>:46</code> (<code>SendWebRequest()</code>), with the target path built at <code>:73</code> and <code>:85</code> (<code>Path.Combine(...)</code>), and the sound folder resolved at <code>:555</code> (<code>Path.Combine(&lt;assembly dir&gt;, &quot;StreamingAssets&quot;, &quot;sounds&quot;)</code>) and <code>:556</code> (<code>Path.GetFullPath(Path.Combine(Application.dataPath, &quot;..&quot;, &quot;StreamingAssets&quot;, &quot;sounds&quot;))</code>). This is a <code>file://</code> load of the pack&#39;s own WAVs, not a download; no absolute/arbitrary paths are constructed.</li><li>Config: the mod&#39;s own <code>.json</code> in its folder (read at startup, used to map sound types); no writes outside its directory were found in the decompiled files.</li><li>Scanner hits explained: <code>evidence/FACTS.md</code> reports 104 &quot;magic signature&quot; hits, including <code>http://</code> strings at offsets 237-693 of <code>preview.png</code>. Those are the PNG&#39;s embedded <code>tEXt</code>/metadata text chunks (image descriptions/URLs baked into the preview artwork), not code and not fetched by the mod; the rest are byte patterns inside the WAV/PCM data.</li><li><strong>Absent:</strong> no network APIs of any kind (no <code>HttpClient</code>/<code>WebClient</code>/<code>Socket</code>/remote <code>UnityWebRequest</code> URL — the only <code>UnityWebRequest</code> use targets a local file URI); no registry, no <code>Process.Start</code>, no <code>Assembly.Load</code>, no <code>DllImport</code>, no crypto, no base64, no clipboard/keylogging/screen capture, no Steam auth-ticket access, no persistence.</li></ul>
+<h2 id="findings">Findings <a class="heading-anchor" href="#findings" aria-label="Link to Findings">#</a></h2>
+<ol><li><strong>Three Harmony patches on stick/puck sound trigger points</strong> — <code>GameSoundPatches_Workshop.cs:44,87,160</code>. Exactly the advertised feature (custom impact sounds); no gameplay-authority or host-level effect. Severity: informational.</li><li><strong>WAVs loaded from a local <code>StreamingAssets/sounds</code> folder</strong> — <code>SoundModWorkshop.cs:43-46,73,85,555-556</code>. Uses Unity&#39;s <code>UnityWebRequestMultimedia</code> on a <code>file://</code> target, which trips keyword scanners but performs no network I/O. Severity: informational.</li><li><strong><code>http://</code> strings inside <code>preview.png</code></strong> — <code>evidence/FACTS.md</code> binary hits. Image metadata text chunks in the Workshop preview art; no code path references the PNG. Severity: informational.</li><li><strong>No network/registry/process/crypto capability</strong> — 0 risky-API hits across the 5 source files; <code>evidence/api_surface.txt</code> shows no network category except the local-media load.</li></ol>
+<h2 id="evidence-trail">Evidence trail <a class="heading-anchor" href="#evidence-trail" aria-label="Link to Evidence trail">#</a></h2>
+<ul><li>SHA-256 inventory: <code>evidence/hashes_sha256.txt</code>, <code>evidence/inventory.tsv</code>, <code>evidence/FACTS.md</code> (24 files, 21 <code>.wav</code>).</li><li>PE facts: <code>evidence/pe_info.txt</code> (managed, unsigned, no overlay, entropy 5.48). Binary scan: <code>evidence/scan_hits.tsv</code> (104 hits in WAV/PNG payloads, explained above).</li><li>Decompilation: complete <code>ilspycmd</code> output, 5 files (<code>sources/</code>); all five files are short and were read in full.</li><li>No independent REA binary note exists for this DLL (<code>_harness/rea/</code> has none for 3724352946) — conclusions rest on decompiled source + PE facts, so confidence in &quot;no hidden native code&quot; is slightly reduced (though PE facts show no native sections/overlay).</li><li>Not verified: sound replacement behaviour in a live game (not run by instruction); the 21 WAVs were not decoded, treated as media by extension/magic/absence of loader logic.</li></ul>
+<h2 id="bottom-line">Bottom line <a class="heading-anchor" href="#bottom-line" aria-label="Link to Bottom line">#</a></h2>
+<p>Keep. It hooks three in-game sound triggers and plays its own local WAV files; the <code>http://</code> hits are text inside the preview image, and there is no networking or OS-level access.</p></div>
+    </section>
+    <nav class="prev-next" aria-label="Adjacent audit records">
+<a class="prev-next-link" href="3531395717.html">
+<span class="meta-label">Previous record</span>
+<span>Curved Stick</span>
+</a>
+<a class="prev-next-link prev-next-link--next" href="3612637610.html">
+<span class="meta-label">Next record</span>
+<span>Replay</span>
+</a>
+</nav>
+  </div>
+  <aside class="report-aside" aria-label="Report navigation and actions">
+    <div class="aside-block">
+      <p class="meta-label">Verdict</p>
+      <div class="aside-verdict"><span class="badge badge--clean"><span class="badge-dot" aria-hidden="true"></span>Clean</span></div>
+      <p class="aside-note">Low risk band. A verdict applies to the reviewed build, not to every future update.</p>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">Suspicion score</p>
+      <div class="aside-score-row"><span class="aside-score">8</span><span class="aside-score-denom">/ 100</span></div>
+      <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:8"></span></div>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">On this page</p>
+      <nav class="toc" aria-label="Report sections"><ol><li><a href="#what-it-is">What it is</a></li><li><a href="#contents">Contents</a></li><li><a href="#code-analysis">Code analysis</a></li><li><a href="#findings">Findings</a></li><li><a href="#evidence-trail">Evidence trail</a></li><li><a href="#bottom-line">Bottom line</a></li></ol></nav>
+    </div>
+    <div class="aside-block aside-block--link">
+      <a class="aside-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3724352946" target="_blank" rel="noopener noreferrer">Steam Workshop <span aria-hidden="true">↗</span></a>
+      <a class="aside-link" href="../method.html">Method &amp; scoring <span aria-hidden="true">→</span></a>
+      <a class="aside-link" href="../requests.html">Request another check <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-mark">PUCK WORKSHOP <span>/</span> AUDIT</p>
+        <p class="footer-note">Static reports tied to file inventories and hashes. Triage, not a guarantee. Read the method before treating a verdict as a clean bill of health.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../index.html">Audit ledger</a>
+        <a href="../method.html">Method &amp; limits</a>
+        <a href="../requests.html">Request a check</a>
+        <a href="https://github.com/praisethefacts/puck-workshop-audit/issues" target="_blank" rel="noopener noreferrer">GitHub issues <span class="external-mark" aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="footer-meta">
+        <p><span class="meta-label">Snapshot</span><span>2026-10-26</span></p>
+        <p><span class="meta-label">Scope</span><span>63 mods · app 2994020</span></p>
+        <p><span class="meta-label">Reports</span><span>Hash-bound, per mod</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>No tracking · no cookies · plain static output</span>
+      <span>Puck · Steam Workshop 2994020</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

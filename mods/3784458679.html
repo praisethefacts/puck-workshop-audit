@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#090a08">
+<title>GPM Stats — With caveats · Puck Workshop audit</title>
+<meta name="description" content="Audit report for GPM Stats (Workshop 3784458679): With caveats, suspicion score 26/100. Code review included.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="statusbar">
+  <div class="shell statusbar-inner">
+    <span class="status-state"><span class="status-dot" aria-hidden="true"></span>No malware found</span>
+    <span>Independent static audit</span>
+    <span class="statusbar-detail">63 installed mods</span>
+    <span class="statusbar-detail">Snapshot 2026-10-26</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="../index.html" aria-label="Puck Workshop audit home">
+      <span class="brand-mark" aria-hidden="true">PWA</span>
+      <span class="brand-copy">
+        <span class="brand-name">Puck Workshop audit</span>
+        <span class="brand-sub">Forensic mod ledger</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary"><a href="../index.html" aria-current="page">Mods</a><a href="../method.html">Method</a><a href="../requests.html">Requests</a></nav>
+    <span class="header-proof"><span class="status-dot" aria-hidden="true"></span>63 records</span>
+  </div>
+</header>
+<main id="main" class="page-main">
+<div class="shell page-enter">
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">Audit ledger</a></li>
+    <li aria-current="page">GPM Stats</li>
+  </ol>
+</nav>
+<article>
+<header class="record-hero">
+  <div class="record-copy">
+    <p class="eyebrow"><span class="eyebrow-index">RECORD 3784458679</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Code-bearing entry</span></p>
+    <h1>GPM Stats</h1>
+    <div class="record-verdict">
+      <span class="badge badge--caveats"><span class="badge-dot" aria-hidden="true"></span>With caveats</span>
+      <span class="record-score-label">Risk score <strong>26/100</strong> · Moderate</span>
+    </div>
+    <p class="record-summary">This entry ships code. The report covers every file, the decompiled managed code and the external interfaces it uses. Report tied to the audited bytes; a later Workshop update can change the verdict.</p>
+    <div class="record-actions">
+      <a class="btn btn--primary" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3784458679" target="_blank" rel="noopener noreferrer">Open Workshop<span class="external-mark" aria-hidden="true">↗</span></a>
+      <a class="text-link" href="#report">Read the report</a>
+    </div>
+  </div>
+  <aside class="record-score-panel" aria-label="Record summary">
+    <span class="meta-label">Suspicion score</span>
+    <div class="record-big-score">26<span>/ 100</span></div>
+    <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:26"></span></div>
+    <div class="record-band">Moderate · Review the caveats</div>
+    <dl class="record-mini-facts">
+      <div><dt>Kind</dt><dd>managed .NET mod</dd></div>
+      <div><dt>Verdict</dt><dd>BENIGN / WITH CAVEATS</dd></div>
+      <div><dt>Workshop</dt><dd>3784458679</dd></div>
+      <div><dt>Report</dt><dd>6,506 characters</dd></div>
+    </dl>
+  </aside>
+</header>
+<div class="record-layout">
+  <div>
+    <div class="report-head">
+      <div>
+        <p class="kicker">Full audit report</p>
+        <h2 class="report-title">What the bytes do</h2>
+      </div>
+      <p class="report-timestamp"><span class="meta-label">Audit</span> 2026-10-26</p>
+    </div>
+    <section class="report" id="report" aria-label="Audit report">
+      <div class="prose"><p><strong>Verdict:</strong> <code>BENIGN / WITH CAVEATS</code> <strong>Risk score:</strong> <code>26/100 (Moderate)</code> <strong>Kind:</strong> <code>managed .NET mod</code> (Stats fork + installed-mod inventory reporter) <strong>Author:</strong> <code>76561198936609274</code> · <strong>Published/updated:</strong> <code>2026-08-16 11:28 UTC</code> · <strong>Subscribers:</strong> <code>737</code> · <strong>On-disk size:</strong> <code>0.10 MB</code></p>
+<h2 id="what-it-is">What it is <a class="heading-anchor" href="#what-it-is" aria-label="Link to What it is">#</a></h2>
+<p>A fork of the &quot;Stats&quot; mod (same namespace, same assembly name <code>oomtm450PuckMod_Stats</code>, same stats patches) with an added &quot;GPM&quot; subsystem that inspects which mods a connecting client has loaded and reports that list to the game server. The server stores the per-player mod inventory in a JSON file. It is a server-owner moderation/visibility tool; it does not contact any internet host.</p>
+<h2 id="contents">Contents <a class="heading-anchor" href="#contents" aria-label="Link to Contents">#</a></h2>
+<ul><li>1 file / 106,496 bytes: only <code>oomtm450PuckMod_Stats.dll</code> — note the same filename as the official Stats mod (3561076649), so the two cannot coexist and this fork also overwrites/conflicts by assembly identity.</li><li><code>oomtm450PuckMod_Stats.dll</code> — 106,496 B, managed .NET (<code>dotnet=1</code>), PE32 <code>machine=i386</code>, <code>signed=0</code>, sections <code>.text/.rsrc/.reloc</code>, overlay 0, entropy 5.83 (normal IL).</li><li>All hashes are in <code>evidence/hashes_sha256.txt</code>; PE facts in <code>evidence/pe_info.txt</code>; decompiled source in <code>sources/</code>.</li></ul>
+<h2 id="code-analysis">Code analysis <a class="heading-anchor" href="#code-analysis" aria-label="Link to Code analysis">#</a></h2>
+<ul><li>34 decompiled files. Two subsystems:<ol><li><strong>Stats</strong> (inherited from upstream): Harmony patches at <code>Stats.cs:24,48,217,242,333,362,555,614,643,851,935,990,1071,1104,1193,1211,1231</code> (spawn, score, scoreboard, voting, physics, collisions, chat prefix, ticking) with Netcode counters via <code>NetworkCommunication.cs:34,59</code>.</li><li><strong>GPMMods</strong> (the fork&#39;s addition): <code>ModScan</code>, <code>ModsNet</code>, <code>ModsSrv</code>, <code>ModsLog</code>, <code>ModsConst</code> and patch <code>Gpm_ModScan_Update_Patch</code>.</li></ol></li><li><strong>Mod enumeration</strong> — <code>sources/oomtm450PuckMod_Stats/GPMMods/ModScan.cs</code>:<ul><li><code>ScanModManager</code> (<code>ModScan.cs:59-76</code>) resolves the game&#39;s <code>ModManager</code> type via <code>AccessTools.TypeByName</code>, instantiates it (<code>InstanceOf</code>), walks all public/non-public properties and fields and feeds any enumerable whose elements&#39; type name contains &quot;Mod&quot; into <code>TryCollection</code> (<code>:78-103</code>), which extracts each mod&#39;s <code>Id</code>/<code>IsEnabled</code> and classifies numeric IDs as workshop IDs (<code>:96-99</code>).</li><li><code>ScanChainloader</code> (<code>:105-123</code>) additionally enumerates BepInEx <code>Chainloader.PluginInfos</code> and takes plugin <code>Metadata.GUID</code>/<code>Name</code>.</li><li>Payload built as tab-separated id / enabled / local / workshop / source (<code>ModScan.cs:40-57</code>, <code>Merge</code> at <code>:125</code>).</li><li>This is read-only reflection over already-loaded mods — no assembly loading of new code, no file scanning of arbitrary directories.</li></ul></li><li><strong>Transmission</strong> — <code>Gpm_ModScan_Update_Patch.cs</code> (Harmony postfix on <code>PhysicsManager.Update</code>, <code>:8</code>): on a server it registers the named-message handler <code>&quot;GPMStat_client&quot;</code> (<code>:52</code>); on a client, 3 seconds after connecting (<code>:72</code>) it builds the payload and sends it to the server via <code>ModsNet.SendToServer(&quot;mods&quot;, payload)</code> (<code>:75-76</code>).</li><li><strong>Storage (server side)</strong> — <code>ModsSrv.cs:126-157</code>: writes <code>gpm_client_mods.json</code> into the server&#39;s current working directory, atomically via <code>.tmp</code> + move (<code>:144-151</code>), containing <code>written_at</code> and a <code>players</code> map keyed by the player (SteamID) with each mod&#39;s <code>id</code>, <code>workshop_id</code>, <code>name</code>, <code>file</code>, <code>local</code>, <code>enabled</code>, <code>source</code> (<code>:100-119</code>).</li><li>Also inherited: live stats file <code>oomtm450_stats_live.json</code> (<code>Stats.cs:1589</code>), Stats config JSONs, <code>NetworkCommunication</code> Netcode messaging.</li><li><strong>Absent:</strong> no HTTP/<code>WebClient</code>/<code>Socket</code> of any kind — the only transport is Unity Netcode inside the game session (0 risky-API hits across 34 source files); no registry, no <code>Process.Start</code>, no <code>DllImport</code>, no crypto, no base64, no clipboard/keylogging, no Steam auth-ticket/credential access, no persistence, no downloads or execution of fetched code.</li></ul>
+<h2 id="findings">Findings <a class="heading-anchor" href="#findings" aria-label="Link to Findings">#</a></h2>
+<ol><li><strong>Client uploads its complete installed-mod inventory to whatever server it joins</strong> — <code>ModScan.cs:16-57</code> (build payload), <code>Gpm_ModScan_Update_Patch.cs:75-76</code> (send after connect), <code>ModsNet</code> wrapper. Sent content is mod IDs/workshop IDs/names plus enabled/local flags. Severity: medium (privacy). It is not credentials or files, but it lets any server operator fingerprint a client&#39;s mod set, including private/local (non-workshop) mods.</li><li><strong>Server writes a persistent per-player profile to disk</strong> — <code>ModsSrv.cs:126-157</code>, file <code>gpm_client_mods.json</code> in the server CWD, keyed by player identity, including local (non-workshop) mod names. Severity: medium (retention of user-mod data on third-party servers).</li><li><strong>Reflection-based mod enumeration</strong> — <code>ModScan.cs:59-123</code> walks <code>ModManager</code> and BepInEx <code>Chainloader</code> internals. Read-only, but coupled to game internals and can silently break on updates; no code is loaded or executed from the scan. Severity: low.</li><li><strong>Assembly/DLL name collision with upstream Stats</strong> — <code>evidence/FACTS.md</code> (same <code>oomtm450PuckMod_Stats.dll</code>, same namespaces/types). Installing both will produce duplicate-type/load conflicts; only one should be used. Severity: low (stability, not security).</li><li><strong>Fork is otherwise identical in behaviour to upstream Stats</strong> — same patches and Netcode stats counters; no additional network or filesystem capability beyond the mod-list reporter. Severity: informational.</li><li><strong>Suspicious-looking metadata date</strong> — workshop &quot;published&quot; is <code>2026-08-16</code>, later than the current analysis date; treat the timestamp as unreliable metadata rather than a behavioural signal. Severity: informational.</li></ol>
+<h2 id="evidence-trail">Evidence trail <a class="heading-anchor" href="#evidence-trail" aria-label="Link to Evidence trail">#</a></h2>
+<ul><li>SHA-256 inventory: <code>evidence/hashes_sha256.txt</code>, <code>evidence/inventory.tsv</code>, <code>evidence/FACTS.md</code>; <code>evidence/api_surface.txt</code> (53 types incl. <code>ModScan</code>, <code>ModsNet</code>, <code>ModsSrv</code>, <code>Gpm_ModScan_Update_Patch</code>).</li><li>PE facts: <code>evidence/pe_info.txt</code> (managed, unsigned, no overlay, entropy 5.83). Binary scan: 1 hit (<code>MZ</code> header at 0).</li><li>Decompilation: complete <code>ilspycmd</code> output, 34 files (<code>sources/</code>); the <code>GPMMods</code> folder is small and was read line-by-line.</li><li>No independent REA binary note exists for this DLL (<code>_harness/rea/</code> has none for 3784458679) — conclusions rest on decompiled source + PE facts, so the IL-to-source identity is trusted through <code>ilspycmd</code> output only.</li><li>Not verified: actual payload on the wire, and what a live server does with <code>gpm_client_mods.json</code> afterwards (consumed by a separate server-side tool, not in this DLL).</li></ul>
+<h2 id="bottom-line">Bottom line <a class="heading-anchor" href="#bottom-line" aria-label="Link to Bottom line">#</a></h2>
+<p>Keep only if you accept the caveat: when you join a server, this mod tells that server the list of mods you have installed (including local ones), and the server saves it to a file; it does not talk to the internet or touch anything else.</p></div>
+    </section>
+    <nav class="prev-next" aria-label="Adjacent audit records">
+<a class="prev-next-link" href="3824708567.html">
+<span class="meta-label">Previous record</span>
+<span>APPL Cinema Studio</span>
+</a>
+<a class="prev-next-link prev-next-link--next" href="3800009738.html">
+<span class="meta-label">Next record</span>
+<span>Ponce Puck Centre</span>
+</a>
+</nav>
+  </div>
+  <aside class="report-aside" aria-label="Report navigation and actions">
+    <div class="aside-block">
+      <p class="meta-label">Verdict</p>
+      <div class="aside-verdict"><span class="badge badge--caveats"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></div>
+      <p class="aside-note">Moderate risk band. A verdict applies to the reviewed build, not to every future update.</p>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">Suspicion score</p>
+      <div class="aside-score-row"><span class="aside-score">26</span><span class="aside-score-denom">/ 100</span></div>
+      <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:26"></span></div>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">On this page</p>
+      <nav class="toc" aria-label="Report sections"><ol><li><a href="#what-it-is">What it is</a></li><li><a href="#contents">Contents</a></li><li><a href="#code-analysis">Code analysis</a></li><li><a href="#findings">Findings</a></li><li><a href="#evidence-trail">Evidence trail</a></li><li><a href="#bottom-line">Bottom line</a></li></ol></nav>
+    </div>
+    <div class="aside-block aside-block--link">
+      <a class="aside-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3784458679" target="_blank" rel="noopener noreferrer">Steam Workshop <span aria-hidden="true">↗</span></a>
+      <a class="aside-link" href="../method.html">Method &amp; scoring <span aria-hidden="true">→</span></a>
+      <a class="aside-link" href="../requests.html">Request another check <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-mark">PUCK WORKSHOP <span>/</span> AUDIT</p>
+        <p class="footer-note">Static reports tied to file inventories and hashes. Triage, not a guarantee. Read the method before treating a verdict as a clean bill of health.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../index.html">Audit ledger</a>
+        <a href="../method.html">Method &amp; limits</a>
+        <a href="../requests.html">Request a check</a>
+        <a href="https://github.com/praisethefacts/puck-workshop-audit/issues" target="_blank" rel="noopener noreferrer">GitHub issues <span class="external-mark" aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="footer-meta">
+        <p><span class="meta-label">Snapshot</span><span>2026-10-26</span></p>
+        <p><span class="meta-label">Scope</span><span>63 mods · app 2994020</span></p>
+        <p><span class="meta-label">Reports</span><span>Hash-bound, per mod</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>No tracking · no cookies · plain static output</span>
+      <span>Puck · Steam Workshop 2994020</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

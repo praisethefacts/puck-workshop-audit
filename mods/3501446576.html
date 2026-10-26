@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#090a08">
+<title>Ruleset — Clean · Puck Workshop audit</title>
+<meta name="description" content="Audit report for Ruleset (Workshop 3501446576): Clean, suspicion score 8/100. Code review included.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="statusbar">
+  <div class="shell statusbar-inner">
+    <span class="status-state"><span class="status-dot" aria-hidden="true"></span>No malware found</span>
+    <span>Independent static audit</span>
+    <span class="statusbar-detail">63 installed mods</span>
+    <span class="statusbar-detail">Snapshot 2026-10-26</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="../index.html" aria-label="Puck Workshop audit home">
+      <span class="brand-mark" aria-hidden="true">PWA</span>
+      <span class="brand-copy">
+        <span class="brand-name">Puck Workshop audit</span>
+        <span class="brand-sub">Forensic mod ledger</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary"><a href="../index.html" aria-current="page">Mods</a><a href="../method.html">Method</a><a href="../requests.html">Requests</a></nav>
+    <span class="header-proof"><span class="status-dot" aria-hidden="true"></span>63 records</span>
+  </div>
+</header>
+<main id="main" class="page-main">
+<div class="shell page-enter">
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">Audit ledger</a></li>
+    <li aria-current="page">Ruleset</li>
+  </ol>
+</nav>
+<article>
+<header class="record-hero">
+  <div class="record-copy">
+    <p class="eyebrow"><span class="eyebrow-index">RECORD 3501446576</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Code-bearing entry</span></p>
+    <h1>Ruleset</h1>
+    <div class="record-verdict">
+      <span class="badge badge--clean"><span class="badge-dot" aria-hidden="true"></span>Clean</span>
+      <span class="record-score-label">Risk score <strong>8/100</strong> · Low</span>
+    </div>
+    <p class="record-summary">This entry ships code. The report covers every file, the decompiled managed code and the external interfaces it uses. Report tied to the audited bytes; a later Workshop update can change the verdict.</p>
+    <div class="record-actions">
+      <a class="btn btn--primary" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3501446576" target="_blank" rel="noopener noreferrer">Open Workshop<span class="external-mark" aria-hidden="true">↗</span></a>
+      <a class="text-link" href="#report">Read the report</a>
+    </div>
+  </div>
+  <aside class="record-score-panel" aria-label="Record summary">
+    <span class="meta-label">Suspicion score</span>
+    <div class="record-big-score">8<span>/ 100</span></div>
+    <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:8"></span></div>
+    <div class="record-band">Low · Minimal capability</div>
+    <dl class="record-mini-facts">
+      <div><dt>Kind</dt><dd>managed .NET mod</dd></div>
+      <div><dt>Verdict</dt><dd>CLEAN</dd></div>
+      <div><dt>Workshop</dt><dd>3501446576</dd></div>
+      <div><dt>Report</dt><dd>5,614 characters</dd></div>
+    </dl>
+  </aside>
+</header>
+<div class="record-layout">
+  <div>
+    <div class="report-head">
+      <div>
+        <p class="kicker">Full audit report</p>
+        <h2 class="report-title">What the bytes do</h2>
+      </div>
+      <p class="report-timestamp"><span class="meta-label">Audit</span> 2026-10-26</p>
+    </div>
+    <section class="report" id="report" aria-label="Audit report">
+      <div class="prose"><p><strong>Verdict:</strong> <code>CLEAN</code> <strong>Risk score:</strong> <code>8/100 (Low)</code> <strong>Kind:</strong> <code>managed .NET mod</code> + asset payload (PNG signals, OGG whistle, UI asset) <strong>Author:</strong> <code>76561198025378067</code> · <strong>Published/updated:</strong> <code>2025-06-17 02:23 UTC</code> · <strong>Subscribers:</strong> <code>142,369</code> · <strong>On-disk size:</strong> <code>1.22 MB</code></p>
+<h2 id="what-it-is">What it is <a class="heading-anchor" href="#what-it-is" aria-label="Link to What it is">#</a></h2>
+<p>A referee/rules-enforcement mod: offside, icing, high-stick and interference detection, penalties, referee votes, and on-ice referee signal graphics and whistle sounds. The managed DLL does all of the detection and rule state; the PNG/OGG/UI files are the visuals and audio it loads. It runs on a dedicated server (authority) with thin client-side patches for display, and it communicates with clients solely through the game&#39;s own Unity Netcode named-message API.</p>
+<h2 id="contents">Contents <a class="heading-anchor" href="#contents" aria-label="Link to Contents">#</a></h2>
+<ul><li>18 files / 1,279,321 bytes: 1 DLL, 15 <code>.png</code> (<code>images/refsignals/*</code> e.g. <code>highstick_ref.png</code>, <code>icing_linesman.png</code>, <code>offside_linesman.png</code>), 1 <code>.ogg</code> (<code>sounds/whistle.ogg</code>), 1 UI asset (<code>ui/penlabelui</code>), 1 extensionless file.</li><li><code>oomtm450PuckMod_Ruleset.dll</code> — 240,128 B, managed .NET (<code>dotnet=1</code>), PE32 <code>machine=i386</code>, <code>signed=0</code>, sections <code>.text/.rsrc/.reloc</code>, overlay 0, entropy 6.00 (normal for a large IL assembly). No native DLLs.</li><li>All hashes are in <code>evidence/hashes_sha256.txt</code>; PE facts in <code>evidence/pe_info.txt</code>; decompiled source in <code>sources/</code>.</li></ul>
+<h2 id="code-analysis">Code analysis <a class="heading-anchor" href="#code-analysis" aria-label="Link to Code analysis">#</a></h2>
+<ul><li>62 decompiled C# files, namespaces <code>oomtm450PuckMod_Ruleset</code>, <code>...Configs</code>, <code>Codebase</code>, <code>Codebase.Configs</code>. ~55 Harmony patch classes, all on gameplay/UI/server methods: <code>Puck.OnCollisionEnter/Stay/Exit</code> (<code>Ruleset.cs:26,196,370</code>), <code>PlayerBody.OnCollisionEnter</code> (<code>:527</code>), <code>BaseGameMode.OnGameStateChanged</code> (<code>:826</code>), <code>PuckManager.Server_SpawnPuck</code> (<code>:1144</code>), <code>PlayerPosition.Server_Claim/Server_Unclaim</code> (<code>:1188,1215</code>), <code>Player.Server_SetGameState</code> (<code>:1242</code>), <code>StandardGameMode.OnPreGameTimedOut</code> (<code>:1276</code>), <code>ChatManager.Client_SendChatMessage</code> (<code>:1300</code>), plus <code>Goal</code>, <code>Stick</code>, <code>GameManager</code>, <code>UITeamSelect</code>, <code>UIChat</code>, <code>UIManager.PlayNotificationSound</code> patches listed in <code>evidence/api_surface.txt</code>. This is authoritative game-rule logic, which is exactly what the mod is for.</li><li>Network: <strong>in-game Unity Netcode only.</strong> <code>Codebase/NetworkCommunication.cs:40,65</code> wrap <code>CustomMessagingManager</code> named messages (<code>SendData</code>/<code>SendDataToAll</code>, listeners <code>oomtm450_ruleset_server</code> / <code>oomtm450_ruleset_client</code>, <code>NetworkDelivery=4</code>). Examples: referee signal broadcasts <code>Ruleset.cs:1343-1503</code> (<code>offside_linesman</code>, <code>icing_linesman</code>, <code>highstick_linesman</code>, <code>refintentionaloff</code>, <code>pen</code>, <code>addrefsteamid</code>…), <code>stoprefsignal</code> at <code>:935,1004</code>, <code>refvotecooldown</code> at <code>RefVote.cs:69,79</code>. No public internet endpoints, no HTTP, no sockets.</li><li>Filesystem: reads its own sprite files and loads them through Unity&#39;s local-file path — <code>RefSignals.cs:92</code> (<code>Path.Combine(&lt;dll dir&gt;, &quot;images&quot;, &quot;refsignals&quot;)</code>), <code>:116</code> (<code>Directory.GetFiles(path, &quot;*.png&quot;, ...)</code>), <code>:120-130</code> (<code>UnityWebRequestTexture.GetTexture(fileUri)</code> on a <code>file://</code> URI, i.e. local disk read, not a download). Config read/write for <code>oomtm450_ruleset_clientconfig.json</code> / <code>..._serverconfig.json</code> under <code>config/</code>.</li><li><strong>Absent:</strong> no external network APIs (<code>HttpClient</code>/<code>WebClient</code>/<code>Socket</code>/<code>TcpClient</code> — 0 hits across 62 files), no registry access, no <code>Process.Start</code>, no <code>Assembly.Load</code>, no <code>DllImport</code>, no crypto, no base64 decoders, no clipboard/keylogging/screen capture, no Steam auth-ticket or credential access, no persistence (no Run key / task / service creation).</li></ul>
+<h2 id="findings">Findings <a class="heading-anchor" href="#findings" aria-label="Link to Findings">#</a></h2>
+<ol><li><strong>Very large Harmony patch surface (~55 patches) including collision, goal, penalty and server-spawn paths</strong> — <code>Ruleset.cs</code> and the <code>*_Patch</code> types in <code>evidence/api_surface.txt</code>. Justified by the mod&#39;s rules-enforcement purpose; all changes are game-rule state, not host-system access. Severity: informational.</li><li><strong>Netcode named messages used for referee state</strong> — <code>NetworkCommunication.cs:40,65</code>; traffic stays inside the game&#39;s own session transport, addressed to the connected players. Severity: informational.</li><li><strong>Local PNG loading via <code>UnityWebRequestTexture</code> on a <code>file://</code> URI</strong> — <code>RefSignals.cs:116-130</code>. Looks like &quot;web request&quot; in string scans; it resolves to the mod&#39;s own <code>images/refsignals</code> folder. Not a download. Severity: informational.</li><li><strong>Automated scan noise explained</strong> — <code>evidence/FACTS.md</code> lists 36 binary hits (&quot;MZ&quot;/&quot;7Z&quot;/&quot;ZIP&quot; magic at offsets) inside <code>images/refsignals/*.png</code>, <code>sounds/whistle.ogg</code> and <code>ui/penlabelui</code>. These are compressed-payload magic bytes occurring inside legitimate media files; they are not embedded executables (entropy of the DLL is 6.0, no overlay, no second <code>MZ</code>/PE structure in the media files).</li><li><strong>No network/registry/process/crypto capability at all</strong> — 0 risky-API hits across 62 files; confirmed against <code>evidence/api_surface.txt</code>.</li></ol>
+<h2 id="evidence-trail">Evidence trail <a class="heading-anchor" href="#evidence-trail" aria-label="Link to Evidence trail">#</a></h2>
+<ul><li>SHA-256 inventory: <code>evidence/hashes_sha256.txt</code>, <code>evidence/inventory.tsv</code>, <code>evidence/FACTS.md</code>.</li><li>PE facts: <code>evidence/pe_info.txt</code> (managed, unsigned, no overlay). Binary scan: <code>evidence/scan_hits.tsv</code> / <code>evidence/findings.md</code> (35 &quot;magic signature&quot; hits, all inside media files — noise).</li><li>Decompilation: complete <code>ilspycmd</code> output for all 62 files in <code>sources/</code>.</li><li>Independent binary REA notes reviewed: <code>_harness/rea/3501446576__oomtm450PuckMod_Ruleset.dll.md</code>.</li><li>Not verified: live in-game referee behaviour and server-side rule arbitration were not executed (game not run by instruction); only static code paths were read.</li></ul>
+<h2 id="bottom-line">Bottom line <a class="heading-anchor" href="#bottom-line" aria-label="Link to Bottom line">#</a></h2>
+<p>Keep. It is a large but legitimate refereeing mod: it only patches game rules, talks to players through the game&#39;s own network session, and loads its own local PNG/OGG files.</p></div>
+    </section>
+    <nav class="prev-next" aria-label="Adjacent audit records">
+<a class="prev-next-link" href="3612637610.html">
+<span class="meta-label">Previous record</span>
+<span>Replay</span>
+</a>
+<a class="prev-next-link prev-next-link--next" href="3769320978.html">
+<span class="meta-label">Next record</span>
+<span>Ruleset RefMode UI</span>
+</a>
+</nav>
+  </div>
+  <aside class="report-aside" aria-label="Report navigation and actions">
+    <div class="aside-block">
+      <p class="meta-label">Verdict</p>
+      <div class="aside-verdict"><span class="badge badge--clean"><span class="badge-dot" aria-hidden="true"></span>Clean</span></div>
+      <p class="aside-note">Low risk band. A verdict applies to the reviewed build, not to every future update.</p>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">Suspicion score</p>
+      <div class="aside-score-row"><span class="aside-score">8</span><span class="aside-score-denom">/ 100</span></div>
+      <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:8"></span></div>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">On this page</p>
+      <nav class="toc" aria-label="Report sections"><ol><li><a href="#what-it-is">What it is</a></li><li><a href="#contents">Contents</a></li><li><a href="#code-analysis">Code analysis</a></li><li><a href="#findings">Findings</a></li><li><a href="#evidence-trail">Evidence trail</a></li><li><a href="#bottom-line">Bottom line</a></li></ol></nav>
+    </div>
+    <div class="aside-block aside-block--link">
+      <a class="aside-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3501446576" target="_blank" rel="noopener noreferrer">Steam Workshop <span aria-hidden="true">↗</span></a>
+      <a class="aside-link" href="../method.html">Method &amp; scoring <span aria-hidden="true">→</span></a>
+      <a class="aside-link" href="../requests.html">Request another check <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-mark">PUCK WORKSHOP <span>/</span> AUDIT</p>
+        <p class="footer-note">Static reports tied to file inventories and hashes. Triage, not a guarantee. Read the method before treating a verdict as a clean bill of health.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../index.html">Audit ledger</a>
+        <a href="../method.html">Method &amp; limits</a>
+        <a href="../requests.html">Request a check</a>
+        <a href="https://github.com/praisethefacts/puck-workshop-audit/issues" target="_blank" rel="noopener noreferrer">GitHub issues <span class="external-mark" aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="footer-meta">
+        <p><span class="meta-label">Snapshot</span><span>2026-10-26</span></p>
+        <p><span class="meta-label">Scope</span><span>63 mods · app 2994020</span></p>
+        <p><span class="meta-label">Reports</span><span>Hash-bound, per mod</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>No tracking · no cookies · plain static output</span>
+      <span>Puck · Steam Workshop 2994020</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

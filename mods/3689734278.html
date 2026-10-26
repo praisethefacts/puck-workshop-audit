@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#090a08">
+<title>CompetitiveAdjustments — With caveats · Puck Workshop audit</title>
+<meta name="description" content="Audit report for CompetitiveAdjustments (Workshop 3689734278): With caveats, suspicion score 22/100. Code review included.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="statusbar">
+  <div class="shell statusbar-inner">
+    <span class="status-state"><span class="status-dot" aria-hidden="true"></span>No malware found</span>
+    <span>Independent static audit</span>
+    <span class="statusbar-detail">63 installed mods</span>
+    <span class="statusbar-detail">Snapshot 2026-10-26</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="../index.html" aria-label="Puck Workshop audit home">
+      <span class="brand-mark" aria-hidden="true">PWA</span>
+      <span class="brand-copy">
+        <span class="brand-name">Puck Workshop audit</span>
+        <span class="brand-sub">Forensic mod ledger</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary"><a href="../index.html" aria-current="page">Mods</a><a href="../method.html">Method</a><a href="../requests.html">Requests</a></nav>
+    <span class="header-proof"><span class="status-dot" aria-hidden="true"></span>63 records</span>
+  </div>
+</header>
+<main id="main" class="page-main">
+<div class="shell page-enter">
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">Audit ledger</a></li>
+    <li aria-current="page">CompetitiveAdjustments</li>
+  </ol>
+</nav>
+<article>
+<header class="record-hero">
+  <div class="record-copy">
+    <p class="eyebrow"><span class="eyebrow-index">RECORD 3689734278</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Code-bearing entry</span></p>
+    <h1>CompetitiveAdjustments</h1>
+    <div class="record-verdict">
+      <span class="badge badge--caveats"><span class="badge-dot" aria-hidden="true"></span>With caveats</span>
+      <span class="record-score-label">Risk score <strong>22/100</strong> · Moderate</span>
+    </div>
+    <p class="record-summary">This entry ships code. The report covers every file, the decompiled managed code and the external interfaces it uses. Report tied to the audited bytes; a later Workshop update can change the verdict.</p>
+    <div class="record-actions">
+      <a class="btn btn--primary" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3689734278" target="_blank" rel="noopener noreferrer">Open Workshop<span class="external-mark" aria-hidden="true">↗</span></a>
+      <a class="text-link" href="#report">Read the report</a>
+    </div>
+  </div>
+  <aside class="record-score-panel" aria-label="Record summary">
+    <span class="meta-label">Suspicion score</span>
+    <div class="record-big-score">22<span>/ 100</span></div>
+    <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:22"></span></div>
+    <div class="record-band">Moderate · Review the caveats</div>
+    <dl class="record-mini-facts">
+      <div><dt>Kind</dt><dd>managed .NET mod</dd></div>
+      <div><dt>Verdict</dt><dd>BENIGN / WITH CAVEATS</dd></div>
+      <div><dt>Workshop</dt><dd>3689734278</dd></div>
+      <div><dt>Report</dt><dd>12,187 characters</dd></div>
+    </dl>
+  </aside>
+</header>
+<div class="record-layout">
+  <div>
+    <div class="report-head">
+      <div>
+        <p class="kicker">Full audit report</p>
+        <h2 class="report-title">What the bytes do</h2>
+      </div>
+      <p class="report-timestamp"><span class="meta-label">Audit</span> 2026-10-26</p>
+    </div>
+    <section class="report" id="report" aria-label="Audit report">
+      <div class="prose"><p><strong>Verdict:</strong> <code>BENIGN / WITH CAVEATS</code> <strong>Risk score:</strong> <code>22/100 (Low)</code> <strong>Kind:</strong> <code>managed .NET mod</code> <strong>Author:</strong> <code>76561198067045734</code> · <strong>Published/updated:</strong> <code>2026-03-22 06:34 UTC</code> · <strong>Subscribers:</strong> <code>55,181</code> · <strong>On-disk size:</strong> <code>0.39 MB</code></p>
+<h2 id="what-it-is">What it is <a class="heading-anchor" href="#what-it-is" aria-label="Link to What it is">#</a></h2>
+<p>A large competitive-tuning mod for Puck: it exposes server- and client-side sliders for rule/competition settings (goal size and net tweaks, dash and spin behaviour, stick physics, arena tweaks), adds a &quot;DashFall&quot; server-editor UI so a server owner can change the live config, and syncs the resulting config to connected clients.</p>
+<p>The DLL is the whole mod — no assets, no native libraries.</p>
+<h2 id="contents">Contents <a class="heading-anchor" href="#contents" aria-label="Link to Contents">#</a></h2>
+<ul><li>1 file / 0.39 MB: <code>CompetitiveAdjustments.dll</code>.</li><li>DLL: <code>CompetitiveAdjustments.dll</code>, 409,088 B, sha256 <code>0de47ba9fbeaa9cc568e3158b20668bf8d4a16d1bdd533321071af301a676c88</code>, <strong>managed .NET</strong> (dotnet=1), <strong>unsigned</strong>, PE32 i386, subsystem CUI, 3 sections (<code>.text/.rsrc/.reloc</code>), overlay 0, entropy 5.85 — normal compiled .NET assembly, <strong>not obfuscated</strong> (118 source files / 147 types decompile to readable C# with real member names and full comments).</li><li>All hashes are in <code>evidence/hashes_sha256.txt</code>; PE facts in <code>evidence/pe_info.txt</code>; decompiled source in <code>sources/</code>.</li></ul>
+<h2 id="code-analysis">Code analysis <a class="heading-anchor" href="#code-analysis" aria-label="Link to Code analysis">#</a></h2>
+<p><strong>Bootstrap.</strong> <code>CompetitiveAdjustments/CompetitiveAdjustmentsGameMod.cs</code> and <code>DashFallMod/DashFallGameMod.cs</code> implement <code>IPuckPlugin</code>. They register lifecycle patches explicitly — <code>:11 [HarmonyPatch(typeof(NetworkManager), &quot;StartHost&quot;)]</code>, <code>:24 [HarmonyPatch(typeof(NetworkManager), &quot;StartServer&quot;)]</code>, applied via <code>:76 _lifecycleHarmony.CreateClassProcessor(typeof(StartHostPatch)).Patch()</code> and <code>:77</code>, removed at <code>:140 lifecycleHarmony.UnpatchSelf()</code>. <code>HarmonyPatchHelper.cs:15 Assembly.GetExecutingAssembly().GetTypes()</code> + <code>:39 harmony.CreateClassProcessor(type).Patch()</code> patches the mod&#39;s <strong>own</strong> patch classes — this is the standard way to apply a large attribute-patch set from a BepInEx-style plugin, <strong>not</strong> dynamic assembly loading.</p>
+<p><strong>Harmony footprint: 183 patch attributes across many game types</strong> (rules, goal, puck, stick, dash, spin, arena, scoreboard, chat, vote manager, and the game&#39;s <code>SynchronizedObjectRegistry</code> sync path). That is the biggest behavioural surface in this set. It is a tuning mod, so this is expected — but it is a lot of game code being rewritten.</p>
+<p><strong>Admin/authorisation model — this is the part worth reading, and it is done properly.</strong></p>
+<ul><li><code>AdminAuth.cs</code> resolves admin status <strong>server-side only</strong>: host client 0 is admin; otherwise <code>PlayerManager.GetPlayerByClientId(clientId)</code> → <code>AdminLevel.Value &gt; 0</code>; otherwise the game&#39;s own <code>AdminManager.IsSteamIdAdmin(steamId)</code> (<code>NetworkBehaviourSingleton&lt;ServerManager&gt;.Instance.AdminManager</code>, falling back to <code>MonoBehaviourSingleton&lt;AdminManager&gt;</code>). A client cannot assert that it is an admin.</li><li>The DashFall server editor is protected by an editor password: <code>AdminAuth.GeneratePassword()</code> produces 12 bytes from <code>RandomNumberGenerator.Create()</code> over a confusion-free charset, <code>AdminAuth.VerifyPassword</code> compares with a hand-written constant-time loop (<code>num |= a[i] ^ b[i]</code>), and <code>AdminAuth.IsAllowed(clientId, password)</code> grants access to admins or to a correctly-passworded client.</li><li>The admin config-set channel is verified on the server: <code>PoncePuck.Keybinds/ServerBridge.cs:1083 OnAdminConfigSetMsg(ulong senderId, …)</code> returns unless <code>singleton.IsServer</code> (<code>:1090</code>), reassembles the chunked payload, and then <strong><code>ServerBridge.cs:1105 if (!_authedClients.Contains(senderId)) { Debug.LogWarning(&quot;[COMPADJUST] Rejected PPKB/AdminConfigSet from un-authed client …&quot;); … } else { ConfigApplyService.ApplyServerConfigEdit(text); … }</code></strong> — a real server-side authorisation check on the privileged path.</li><li><code>AdminAuth.AssertNoCredentials(string wireJson)</code> refuses to transmit a config payload that contains <code>&quot;Admin&quot;</code> / <code>&quot;EditorPassword&quot;</code> keys, logging <code>&quot;BLOCKED: config wire payload contains credential keys; refusing to transmit.&quot;</code> — the mod actively prevents its own credential from leaving the machine.</li><li><code>ChatManagerCommandPatch.cs:87 return AdminAuth.IsAdmin(clientId);</code> gates mod chat commands server-side.</li></ul>
+<p><strong>Network — netcode named messages only, no internet transport.</strong> The mod&#39;s channels are registered in <code>ServerBridge.cs:106–:205</code>: <code>PPKB/Hello</code>, <code>PPKB/Action</code>, <code>PPKB/Features</code>, <code>PPKB/GoalTweaks</code>, <code>PPKB/AdminAuth</code>, <code>PPKB/AdminAuthResult</code>, <code>PPKB/AdminConfigSet</code>, <code>PPKB/ConfigFull</code>, <code>PPKB/ConfigReq</code>, <code>PPKB/ClientVersion</code>, <code>PPKB/BuildRejected</code>, <code>PPKB/PosSeed</code>, plus <code>PluginCore.cs:123 &quot;CPT_sync_config&quot;</code>, <code>:290 &quot;CPT_request_sync&quot;</code>, <code>GoalieDashExtend.cs:172 &quot;DashFall/VelocityExtend3&quot;</code>, <code>Stances.cs:167 &quot;DashFall/HalfButterfly&quot;</code>, all unregistered cleanly on disable (<code>ServerBridge.cs:234–:245</code>, <code>:381–:386</code>). There is <strong>no <code>HttpClient</code>, <code>WebClient</code>, <code>WebRequest</code>, <code>UnityWebRequest</code>, <code>Socket</code>, <code>TcpClient</code> or <code>UdpClient</code> anywhere</strong> — <code>evidence/api_surface.txt</code> has <strong>no <code>[Network]</code> section</strong> — and no hostname, URL or port is hard-coded in the source.</p>
+<p><strong>Filesystem — config files inside the game tree, plus explicit cleanup.</strong> <code>ConfigManager.cs:2 using System.IO</code>, <code>:58 Directory.GetParent</code>, <code>:61–:63</code> create the config folder, <code>:116–:118</code> create <code>ConfigDir</code>. Cleanup: <code>ConfigManager.cs:234 File.Delete(text3)</code>, <code>:271 File.Delete(files[num])</code>, <code>DashFallConfigLoader.cs:88 File.Delete(text)</code> — these remove the mod&#39;s own stale/duplicate config JSONs. Nothing is written outside the game&#39;s config folder; no user documents, no AppData beyond the game&#39;s own, no temp.</p>
+<p><strong>Clipboard — write-out only, never read.</strong> <code>DashFallClientRunner.cs:3330</code> sets the status text to <code>&quot;Config copied to clipboard (password redacted).&quot;</code> after copying the <strong>config JSON</strong> (with the editor password stripped) so an admin can paste it into a ticket or a file. There is no <code>Clipboard.GetText</code>-style read anywhere.</p>
+<p><strong>Reflection / assembly enumeration — menu discovery only.</strong> <code>AppDomain.CurrentDomain.GetAssemblies()</code> appears at <code>GoalNetTweaks.cs:994</code>, <code>DashFallClientRunner.cs:873</code>/<code>:2361</code>, <code>ModMenuHub.cs:171/:199/:258/:306</code>, <code>ModMenuHubRunner.cs:515</code> — the same Ponce-family shared-menu idiom used by the author&#39;s other mods (<code>MaxPractice</code>): find the <code>PonceMods.Shared.ModMenuHub</code> type in already-loaded assemblies and refresh its entries. No external DLL is loaded, no code is emitted.</p>
+<p><strong>Absent categories (verified).</strong> No HTTP/socket/upload of any kind. <strong>No Windows registry access</strong> — the two <code>[Registry]</code> matches are <code>WrapSyncEncode.cs:217 { &quot;Registry.Clear&quot;, methodInfo7 }</code> and <code>:569 Disarm(&quot;SynchronizedObjectRegistry.Clear&quot;, ex)</code>, which are <strong>Puck game method names</strong> on its <code>SynchronizedObjectRegistry</code> class, not <code>Microsoft.Win32</code>. No obfuscation — the <code>[Obfuscation]</code> matches are <code>DashFallClientRunner.cs:3705/:3783/:3839 ParseHexOrWhite(...)</code>, a colour parser. No crypto beyond the <code>RandomNumberGenerator</code> inside <code>AdminAuth</code> (the other two <code>[Crypto]</code> hits are the words &quot;Save&quot;/&quot;apply&quot; in a UI button label). No base64. No <code>Assembly.Load</code>/<code>LoadFrom</code>/<code>Emit</code>. No real P/Invoke — the single <code>[P-Invoke/unmanaged]</code> line is <code>ConfigSyncPackage.cs:27 public unsafe void NetworkSerialize&lt;T&gt;(BufferSerializer&lt;T&gt; serializer)</code>, i.e. <code>unsafe</code> pointer use inside a Unity Netcode serializer, not a native import. No input capture, no screen capture, no credential/token/session/cookie access — no <code>GetAuthTicket</code>, no CSteamID, and despite <code>DashFallClientRunner.cs:14 using Steamworks;</code> there is <strong>no Steamworks API call anywhere in the 118 files</strong> (a full-text search for <code>Steamworks|SteamUser.|SteamFriends|SteamMatchmaking|SteamUtils|CSteamID|SteamClient.</code> returns only that unused <code>using</code>). No persistence (no Run key, no scheduled task, no service). No AV/AMSI/ETW evasion, no anti-debug.</p>
+<h2 id="findings">Findings <a class="heading-anchor" href="#findings" aria-label="Link to Findings">#</a></h2>
+<ol><li><strong>A privileged &quot;server config edit&quot; channel exists, but it is correctly authorised server-side</strong> (<code>ServerBridge.cs:1083–:1123</code>, <code>:1105 _authedClients.Contains(senderId)</code>). Only an admin (game admin list / <code>AdminLevel &gt; 0</code> / host) or a client that presented the correct editor password can push a config change. This is the design that <code>3735183385_Admin_Panel</code> gets wrong. <strong>Severity: informational (positive).</strong></li><li><strong>Editor password is stored in plaintext in the mod&#39;s config JSON</strong> (<code>ConfigManager.cs:166 cfg.Admin.EditorPassword = AdminAuth.GeneratePassword()</code>, generated with <code>RandomNumberGenerator</code> and compared in constant time). Plaintext-at-rest for a <em>server settings</em> password is normal for game mods, but it means anyone with read access to the server&#39;s config file can unlock the editor UI. Mitigated by <code>AdminAuth.AssertNoCredentials</code> refusing to transmit it. <strong>Severity: low.</strong></li><li><strong>Copies the config JSON to the clipboard with the password redacted</strong> (<code>DashFallClientRunner.cs:3330</code>). Write-only; the mod never reads the clipboard. <strong>Severity: low.</strong></li><li><strong>Deletes config files</strong> (<code>ConfigManager.cs:234</code>, <code>:271</code>, <code>DashFallConfigLoader.cs:88</code>). Scoped to the mod&#39;s own config JSONs under the game&#39;s config folder, but it is a delete path a user should be aware of. <strong>Severity: low.</strong></li><li><strong>183 Harmony patches across the game&#39;s rules, sync and physics code.</strong> Expected for a competitive-tuning mod, but it is the broadest patch surface in this set, can change match outcomes, and will break after a game update. <strong>Severity: moderate (the caveat in the verdict).</strong></li><li><strong>One internal <code>unsafe</code> Netcode serializer</strong> (<code>ConfigSyncPackage.cs:27</code>). Managed <code>unsafe</code> pointer arithmetic inside a Unity serializer, not unmanaged code — but worth noting it is the only memory-unsafe code in the mod. <strong>Severity: low.</strong></li><li><strong>Automated scan artefacts explained.</strong> <code>hits_summary.txt</code> records 2 magic-signature hits (<code>CompetitiveAdjustments.dll</code> offset 0 <code>MZ</code> — the DLL&#39;s own header — and offset 212,026 <code>ZIP</code>, an ordinary byte coincidence in compressed .NET metadata) and 0 keyword hits; <code>text hits: 0</code>. The binary string <code>&quot;Cryptography&quot;</code> at offset 299,037 is the metadata reference to <code>System.Security.Cryptography</code> pulled in by <code>AdminAuth.cs:2</code>. <strong>Severity: informational.</strong></li></ol>
+<h2 id="evidence-trail">Evidence trail <a class="heading-anchor" href="#evidence-trail" aria-label="Link to Evidence trail">#</a></h2>
+<ul><li>Method: SHA-256 inventory (<code>evidence/inventory.tsv</code>, <code>evidence/hashes_sha256.txt</code>), PE header parsing (<code>evidence/pe_info.txt</code>), <code>ilspycmd</code> decompilation of the single managed DLL into 118 C# files across 11 namespaces (<code>sources/CompetitiveAdjustments/</code>), automated signature/keyword scan (<code>evidence/scan_hits.tsv</code>, <code>hits_summary.txt</code>), then a source audit of every <code>api_surface.txt</code> category plus a full-tree keyword sweep.</li><li>Read in full: <code>AdminAuth.cs</code>, <code>PoncePuck.Keybinds/ServerBridge.cs</code> (authorisation and channel registration), <code>ConfigManager.cs</code>, <code>ConfigSyncPackage.cs</code>, <code>DashFallClientRunner.cs</code> clipboard/status paths, <code>CompetitiveAdjustmentsGameMod.cs</code>.</li><li>Category audit of <code>evidence/api_surface.txt</code>: <code>[Clipboard/Input] 1</code> (status text only), <code>[Crypto] 3</code> (1 real: <code>using System.Security.Cryptography</code>; 2 keyword noise), <code>[FileSystem] 50</code>, <code>[Harmony] 183</code>, <code>[Obfuscation] 3</code> (all <code>ParseHexOrWhite</code>), <code>[Persistence] 6</code> (all <code>_versionStartupChecked</code> / <code>_nextStatsAt</code> timers), <code>[P-Invoke/unmanaged] 1</code> (<code>unsafe</code> serializer), <code>[Process] 1</code> (unused <code>using System.Diagnostics;</code> in AssemblyInfo), <code>[Reflection] 119</code>, <code>[Registry] 2</code> (game <code>SynchronizedObjectRegistry</code>), <code>[Steam/Net] 1</code> (unused <code>using Steamworks;</code>), <code>[Unity] 277</code>. Absent: <code>[Network]</code>.</li><li>What could NOT be verified: live behaviour was not executed (game not run) — the DashFall editor UI, config application and chunked config transfer were assessed statically. <code>ApplyServerConfigEdit</code>&#39;s downstream effects on game rules were skimmed, not fully audited. No REA binary note exists for this DLL.</li></ul>
+<h2 id="bottom-line">Bottom line <a class="heading-anchor" href="#bottom-line" aria-label="Link to Bottom line">#</a></h2>
+<p>Keep, with a caveat. It is a big tuning mod with a lot of Harmony patches, but its privileged paths are properly built: admin status comes from the game&#39;s server-side admin list, the editor password is random and compared in constant time, the admin config-set channel checks the sender on the server, and the mod refuses to transmit its own credential. The caveats are ordinary ones — 183 patches, it deletes its own stale config files, it copies a password-redacted config to the clipboard, and the editor password lives in plaintext in the server&#39;s config file.</p></div>
+    </section>
+    <nav class="prev-next" aria-label="Adjacent audit records">
+<a class="prev-next-link" href="3566470321.html">
+<span class="meta-label">Previous record</span>
+<span>dem&#39;s Scenery Loader</span>
+</a>
+<a class="prev-next-link prev-next-link--next" href="3646785422.html">
+<span class="meta-label">Next record</span>
+<span>MaxPractice</span>
+</a>
+</nav>
+  </div>
+  <aside class="report-aside" aria-label="Report navigation and actions">
+    <div class="aside-block">
+      <p class="meta-label">Verdict</p>
+      <div class="aside-verdict"><span class="badge badge--caveats"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></div>
+      <p class="aside-note">Moderate risk band. A verdict applies to the reviewed build, not to every future update.</p>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">Suspicion score</p>
+      <div class="aside-score-row"><span class="aside-score">22</span><span class="aside-score-denom">/ 100</span></div>
+      <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:22"></span></div>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">On this page</p>
+      <nav class="toc" aria-label="Report sections"><ol><li><a href="#what-it-is">What it is</a></li><li><a href="#contents">Contents</a></li><li><a href="#code-analysis">Code analysis</a></li><li><a href="#findings">Findings</a></li><li><a href="#evidence-trail">Evidence trail</a></li><li><a href="#bottom-line">Bottom line</a></li></ol></nav>
+    </div>
+    <div class="aside-block aside-block--link">
+      <a class="aside-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3689734278" target="_blank" rel="noopener noreferrer">Steam Workshop <span aria-hidden="true">↗</span></a>
+      <a class="aside-link" href="../method.html">Method &amp; scoring <span aria-hidden="true">→</span></a>
+      <a class="aside-link" href="../requests.html">Request another check <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-mark">PUCK WORKSHOP <span>/</span> AUDIT</p>
+        <p class="footer-note">Static reports tied to file inventories and hashes. Triage, not a guarantee. Read the method before treating a verdict as a clean bill of health.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../index.html">Audit ledger</a>
+        <a href="../method.html">Method &amp; limits</a>
+        <a href="../requests.html">Request a check</a>
+        <a href="https://github.com/praisethefacts/puck-workshop-audit/issues" target="_blank" rel="noopener noreferrer">GitHub issues <span class="external-mark" aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="footer-meta">
+        <p><span class="meta-label">Snapshot</span><span>2026-10-26</span></p>
+        <p><span class="meta-label">Scope</span><span>63 mods · app 2994020</span></p>
+        <p><span class="meta-label">Reports</span><span>Hash-bound, per mod</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>No tracking · no cookies · plain static output</span>
+      <span>Puck · Steam Workshop 2994020</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

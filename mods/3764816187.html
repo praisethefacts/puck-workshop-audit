@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#090a08">
+<title>flamieswarmup v2 — Clean · Puck Workshop audit</title>
+<meta name="description" content="Audit report for flamieswarmup v2 (Workshop 3764816187): Clean, suspicion score 7/100. Code review included.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="statusbar">
+  <div class="shell statusbar-inner">
+    <span class="status-state"><span class="status-dot" aria-hidden="true"></span>No malware found</span>
+    <span>Independent static audit</span>
+    <span class="statusbar-detail">63 installed mods</span>
+    <span class="statusbar-detail">Snapshot 2026-10-26</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="../index.html" aria-label="Puck Workshop audit home">
+      <span class="brand-mark" aria-hidden="true">PWA</span>
+      <span class="brand-copy">
+        <span class="brand-name">Puck Workshop audit</span>
+        <span class="brand-sub">Forensic mod ledger</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary"><a href="../index.html" aria-current="page">Mods</a><a href="../method.html">Method</a><a href="../requests.html">Requests</a></nav>
+    <span class="header-proof"><span class="status-dot" aria-hidden="true"></span>63 records</span>
+  </div>
+</header>
+<main id="main" class="page-main">
+<div class="shell page-enter">
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">Audit ledger</a></li>
+    <li aria-current="page">flamieswarmup v2</li>
+  </ol>
+</nav>
+<article>
+<header class="record-hero">
+  <div class="record-copy">
+    <p class="eyebrow"><span class="eyebrow-index">RECORD 3764816187</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Code-bearing entry</span></p>
+    <h1>flamieswarmup v2</h1>
+    <div class="record-verdict">
+      <span class="badge badge--clean"><span class="badge-dot" aria-hidden="true"></span>Clean</span>
+      <span class="record-score-label">Risk score <strong>7/100</strong> · Low</span>
+    </div>
+    <p class="record-summary">This entry ships code. The report covers every file, the decompiled managed code and the external interfaces it uses. Report tied to the audited bytes; a later Workshop update can change the verdict.</p>
+    <div class="record-actions">
+      <a class="btn btn--primary" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3764816187" target="_blank" rel="noopener noreferrer">Open Workshop<span class="external-mark" aria-hidden="true">↗</span></a>
+      <a class="text-link" href="#report">Read the report</a>
+    </div>
+  </div>
+  <aside class="record-score-panel" aria-label="Record summary">
+    <span class="meta-label">Suspicion score</span>
+    <div class="record-big-score">7<span>/ 100</span></div>
+    <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:7"></span></div>
+    <div class="record-band">Low · Minimal capability</div>
+    <dl class="record-mini-facts">
+      <div><dt>Kind</dt><dd>managed .NET mod</dd></div>
+      <div><dt>Verdict</dt><dd>CLEAN</dd></div>
+      <div><dt>Workshop</dt><dd>3764816187</dd></div>
+      <div><dt>Report</dt><dd>6,620 characters</dd></div>
+    </dl>
+  </aside>
+</header>
+<div class="record-layout">
+  <div>
+    <div class="report-head">
+      <div>
+        <p class="kicker">Full audit report</p>
+        <h2 class="report-title">What the bytes do</h2>
+      </div>
+      <p class="report-timestamp"><span class="meta-label">Audit</span> 2026-10-26</p>
+    </div>
+    <section class="report" id="report" aria-label="Audit report">
+      <div class="prose"><p><strong>Verdict:</strong> <code>CLEAN</code> <strong>Risk score:</strong> <code>7/100 (Low)</code> <strong>Kind:</strong> <code>managed .NET mod</code> <strong>Author:</strong> <code>76561199121352861</code> · <strong>Published/updated:</strong> <code>2026-07-14 18:25 UTC</code> · <strong>Subscribers:</strong> <code>1552</code> · <strong>On-disk size:</strong> <code>0.82 MB</code></p>
+<h2 id="what-it-is">What it is <a class="heading-anchor" href="#what-it-is" aria-label="Link to What it is">#</a></h2>
+<p>A small ice-hockey training/practice mod: it loads a custom AssetBundle of training prefabs (goal tarps, wall targets, circular targets, a half-rink hockey setup, puck passers) and lets the server spawn them with chat commands (<code>/goaltarps</code>, <code>/cleargoaltarps</code>, <code>/targetpractise</code>, <code>/cleartargetpractise</code>, <code>/passer</code>), plus local puck-drill hotkeys (middle mouse to place the puck, V to pass, B for an incoming-puck drill, X for a lob pass). The DLL is required. It is a hobby-quality Debug build (assembly still named <code>MyMod</code>, <code>AssemblyConfiguration(&quot;Debug&quot;)</code>), but its behaviour is entirely in-game.</p>
+<h2 id="contents">Contents <a class="heading-anchor" href="#contents" aria-label="Link to Contents">#</a></h2>
+<ul><li>2 files, 864,221 B (<code>evidence/inventory.tsv</code>).</li><li><code>MyMod.dll</code> — 44,032 B, sha256 <code>795446893dd07edcd3969ddc665e28722c87bf7373dcade55f08815aa452607a</code>; PE32 (i386/AnyCPU), .NET, unsigned, entropy 5.38, no overlay. Managed, not obfuscated (10 types decompiled, 0 failures).</li><li><code>trainingprefabs</code> — 820,189 B (<code>0c04446d…</code>) extension-less Unity AssetBundle. The 64 &quot;binary hits&quot; in <code>evidence/scan_hits.tsv</code> are magic signatures inside this bundle (<code>evidence/hits_summary.txt</code>); keyword hits 0.</li><li>All hashes in <code>evidence/hashes_sha256.txt</code>; PE facts in <code>evidence/pe_info.txt</code>; sources in <code>sources/MyMod/</code>.</li></ul>
+<h2 id="code-analysis">Code analysis <a class="heading-anchor" href="#code-analysis" aria-label="Link to Code analysis">#</a></h2>
+<p><strong>Bootstrap.</strong> <code>MyMod.Class1 : IPuckPlugin</code> (<code>Class1.cs:10</code>). <code>OnEnable</code> resolves its own directory, then loads every file in it that is named <code>trainingprefabs*</code> or has <code>.bundle</code>/<code>.assetbundle</code>/<code>.unity3d</code> (<code>:29-46</code>), calls <code>AssetBundle.LoadFromFile</code> on each (<code>:56</code>), registers the four known prefab names <code>&lt;TrainingPrefab, Goaltarp, WallTarget, halfrinkhockey&gt;</code> (<code>:18</code>) plus every GameObject asset in the bundle (<code>:82-133</code>), and creates a <code>DontDestroyOnLoad(&quot;FlamiePrac_Manager&quot;)</code> with <code>TrainingObjectManager</code> + <code>PuckSpawner</code> (<code>:139-142</code>). <code>OnDisable</code> unloads cleanly (<code>:153-171</code>). No Harmony at all — the mod subscribes to the game&#39;s public events instead.</p>
+<p><strong>Game integration.</strong> <code>TrainingObjectManager.Start</code> registers a listener for <code>Event_Server_OnChatCommand</code> (<code>TrainingObjectManager.cs:64</code>); the handler requires <code>NetworkManager.Singleton.IsServer</code> (<code>:90</code>) and dispatches the five chat commands (<code>:106-123</code>), spawning <code>Object.Instantiate</code> clones of the registered prefabs named <code>Training_&lt;prefab&gt;_&lt;n&gt;</code>, capped at 50 objects (<code>:31</code>, <code>:315</code>), tracked per player (<code>playerObjects</code>). Chat replies go through <code>ChatManager.Server_BroadcastChatMessage</code> (<code>:852-869</code>). Local drills are in <code>PuckSpawner.Update</code>: reads Unity Input System keys — middle mouse, <code>V</code>, <code>B</code>, <code>X</code> (<code>PuckSpawner.cs:36-52</code>) — and teleports the local puck / spawns a drill. This is ordinary game input reading through Unity&#39;s input API, not a keyboard hook.</p>
+<p><strong>Network: none of its own.</strong> No <code>HttpClient</code>, <code>WebClient</code>, <code>WebRequest</code>, <code>Socket</code>, <code>TcpClient</code>, <code>UdpClient</code>, <code>Dns</code>, no <code>UnityWebRequest</code> at all (verified by source-wide grep; <code>evidence/api_surface.txt</code> has no <code>[Network]</code> section for this DLL). Everything happens over the game&#39;s existing Netcode connection. No Steamworks API, no <code>GetAuthTicket</code>, no credentials/tokens/cookies.</p>
+<p><strong>Filesystem.</strong> Only reads: enumerates its own mod directory and loads the bundle files (<code>Class1.cs:29-56</code>). Nothing is written, deleted, or created on disk. No registry access, no <code>Process</code>/<code>ProcessStartInfo</code> (the single <code>[Process]</code> hit is an unused <code>using System.Diagnostics;</code> in <code>Properties/AssemblyInfo.cs:1</code>), no <code>DllImport</code>/<code>Marshal</code>, no <code>Assembly.Load</code>, no injection or thread manipulation, no persistence, no crypto or obfuscation (the 3 <code>[Crypto]</code> hits are <code>Shader.Find(&quot;Universal Render Pipeline/Lit&quot;)</code> substring false positives), no clipboard/screen capture, no environment variable access.</p>
+<h2 id="findings">Findings <a class="heading-anchor" href="#findings" aria-label="Link to Findings">#</a></h2>
+<ol><li><strong>Only network surface is the game&#39;s own Netcode + chat event.</strong> <code>NetworkManager.Singleton.IsServer</code> gate (<code>TrainingObjectManager.cs:90</code>); no sockets or HTTP. Severity: informational.</li><li><strong>Chat commands are not admin-gated.</strong> Any client whose <code>/</code> command reaches <code>Event_Server_OnChatCommand</code> can spawn/clear training props on the server (<code>:106-123</code>), capped at 50 objects and tracked per SteamID/owning client. Social/abuse surface at most, not a security issue: it cannot touch files, network, or other processes. Severity: low.</li><li><strong>Dead &quot;safe mode&quot;/teleport helpers exist but are never called.</strong> <code>DisableEverythingExceptPlayers</code> (<code>:153-174</code>) and <code>HandleTeleportCommand</code> (<code>:259-281</code>) are defined but not wired to any command or event — worth noting only because they read dangerously by name (they would disable scene renderers/colliders locally). Severity: informational.</li><li><strong>Local input reads are Unity Input System scancodes</strong> (middle mouse / V / B / X) for puck drills (<code>PuckSpawner.cs:36-52</code>). No <code>GetAsyncKeyState</code>, no global hook, no logging of keystrokes. Severity: informational.</li><li><strong>Bundle discovery accepts arbitrary <code>.bundle</code>/<code>.assetbundle</code>/<code>.unity3d</code> files placed next to the DLL</strong> (<code>Class1.cs:42</code>). That is a local-folder trust issue only — whoever can already write into the mod folder owns the game install; the loaded content is Unity assets, never code. Severity: informational.</li><li><strong>Absent categories (checked in sources + <code>evidence/api_surface.txt</code>):</strong> no network APIs of any kind, no Steamworks auth, no credential/token/cookie/clipboard/screen access, no registry, no process creation, no P/Invoke, no <code>Assembly.Load</code>, no persistence, no crypto, no downloads.</li></ol>
+<h2 id="evidence-trail">Evidence trail <a class="heading-anchor" href="#evidence-trail" aria-label="Link to Evidence trail">#</a></h2>
+<ul><li>Method: SHA-256 inventory, PE parsing, ilspycmd decompilation (10/10, 0 failures), pattern scan (<code>evidence/api_surface.txt</code>, <code>evidence/scan_hits.tsv</code>), Steam Web API metadata (<code>evidence/FACTS.md</code>). No independent REA note existed for this mod at review time (<code>_harness/rea/</code> none), so binary conclusions rest on sources + PE facts.</li><li>Files: <code>evidence/FACTS.md</code>, <code>evidence/inventory.tsv</code>, <code>evidence/hashes_sha256.txt</code>, <code>evidence/pe_info.txt</code>, <code>evidence/api_surface.txt</code>, <code>evidence/hits_summary.txt</code>, <code>evidence/findings.md</code>, <code>sources/MyMod/**</code>.</li><li>Not verified: bundle contents beyond asset names; live multiplayer behaviour of spawned props. Game not run. Magic-signature hits inside the asset bundle are false positives (keyword hits 0).</li></ul>
+<h2 id="bottom-line">Bottom line <a class="heading-anchor" href="#bottom-line" aria-label="Link to Bottom line">#</a></h2>
+<p>Keep it. A small, slightly rough training-tools mod that loads its own Unity prefab bundle and adds five chat commands plus four local drill hotkeys — no network code, no file writes, no registry, process, token or persistence behaviour.</p></div>
+    </section>
+    <nav class="prev-next" aria-label="Adjacent audit records">
+<a class="prev-next-link" href="3739199569.html">
+<span class="meta-label">Previous record</span>
+<span>TLAN Arena 2.0 (Day &amp; Night Update)</span>
+</a>
+<a class="prev-next-link prev-next-link--next" href="3826743382.html">
+<span class="meta-label">Next record</span>
+<span>Ralph Engelstad Arena (Fighting Sioux)</span>
+</a>
+</nav>
+  </div>
+  <aside class="report-aside" aria-label="Report navigation and actions">
+    <div class="aside-block">
+      <p class="meta-label">Verdict</p>
+      <div class="aside-verdict"><span class="badge badge--clean"><span class="badge-dot" aria-hidden="true"></span>Clean</span></div>
+      <p class="aside-note">Low risk band. A verdict applies to the reviewed build, not to every future update.</p>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">Suspicion score</p>
+      <div class="aside-score-row"><span class="aside-score">7</span><span class="aside-score-denom">/ 100</span></div>
+      <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:7"></span></div>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">On this page</p>
+      <nav class="toc" aria-label="Report sections"><ol><li><a href="#what-it-is">What it is</a></li><li><a href="#contents">Contents</a></li><li><a href="#code-analysis">Code analysis</a></li><li><a href="#findings">Findings</a></li><li><a href="#evidence-trail">Evidence trail</a></li><li><a href="#bottom-line">Bottom line</a></li></ol></nav>
+    </div>
+    <div class="aside-block aside-block--link">
+      <a class="aside-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3764816187" target="_blank" rel="noopener noreferrer">Steam Workshop <span aria-hidden="true">↗</span></a>
+      <a class="aside-link" href="../method.html">Method &amp; scoring <span aria-hidden="true">→</span></a>
+      <a class="aside-link" href="../requests.html">Request another check <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-mark">PUCK WORKSHOP <span>/</span> AUDIT</p>
+        <p class="footer-note">Static reports tied to file inventories and hashes. Triage, not a guarantee. Read the method before treating a verdict as a clean bill of health.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../index.html">Audit ledger</a>
+        <a href="../method.html">Method &amp; limits</a>
+        <a href="../requests.html">Request a check</a>
+        <a href="https://github.com/praisethefacts/puck-workshop-audit/issues" target="_blank" rel="noopener noreferrer">GitHub issues <span class="external-mark" aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="footer-meta">
+        <p><span class="meta-label">Snapshot</span><span>2026-10-26</span></p>
+        <p><span class="meta-label">Scope</span><span>63 mods · app 2994020</span></p>
+        <p><span class="meta-label">Reports</span><span>Hash-bound, per mod</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>No tracking · no cookies · plain static output</span>
+      <span>Puck · Steam Workshop 2994020</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

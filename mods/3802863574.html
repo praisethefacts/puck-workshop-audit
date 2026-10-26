@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#090a08">
+<title>Arena Loader — With caveats · Puck Workshop audit</title>
+<meta name="description" content="Audit report for Arena Loader (Workshop 3802863574): With caveats, suspicion score 28/100. Code review included.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="statusbar">
+  <div class="shell statusbar-inner">
+    <span class="status-state"><span class="status-dot" aria-hidden="true"></span>No malware found</span>
+    <span>Independent static audit</span>
+    <span class="statusbar-detail">63 installed mods</span>
+    <span class="statusbar-detail">Snapshot 2026-10-26</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="../index.html" aria-label="Puck Workshop audit home">
+      <span class="brand-mark" aria-hidden="true">PWA</span>
+      <span class="brand-copy">
+        <span class="brand-name">Puck Workshop audit</span>
+        <span class="brand-sub">Forensic mod ledger</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary"><a href="../index.html" aria-current="page">Mods</a><a href="../method.html">Method</a><a href="../requests.html">Requests</a></nav>
+    <span class="header-proof"><span class="status-dot" aria-hidden="true"></span>63 records</span>
+  </div>
+</header>
+<main id="main" class="page-main">
+<div class="shell page-enter">
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">Audit ledger</a></li>
+    <li aria-current="page">Arena Loader</li>
+  </ol>
+</nav>
+<article>
+<header class="record-hero">
+  <div class="record-copy">
+    <p class="eyebrow"><span class="eyebrow-index">RECORD 3802863574</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Code-bearing entry</span></p>
+    <h1>Arena Loader</h1>
+    <div class="record-verdict">
+      <span class="badge badge--caveats"><span class="badge-dot" aria-hidden="true"></span>With caveats</span>
+      <span class="record-score-label">Risk score <strong>28/100</strong> · Moderate</span>
+    </div>
+    <p class="record-summary">This entry ships code. The report covers every file, the decompiled managed code and the external interfaces it uses. Report tied to the audited bytes; a later Workshop update can change the verdict.</p>
+    <div class="record-actions">
+      <a class="btn btn--primary" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3802863574" target="_blank" rel="noopener noreferrer">Open Workshop<span class="external-mark" aria-hidden="true">↗</span></a>
+      <a class="text-link" href="#report">Read the report</a>
+    </div>
+  </div>
+  <aside class="record-score-panel" aria-label="Record summary">
+    <span class="meta-label">Suspicion score</span>
+    <div class="record-big-score">28<span>/ 100</span></div>
+    <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:28"></span></div>
+    <div class="record-band">Moderate · Review the caveats</div>
+    <dl class="record-mini-facts">
+      <div><dt>Kind</dt><dd>managed .NET mod</dd></div>
+      <div><dt>Verdict</dt><dd>BENIGN / WITH CAVEATS</dd></div>
+      <div><dt>Workshop</dt><dd>3802863574</dd></div>
+      <div><dt>Report</dt><dd>9,827 characters</dd></div>
+    </dl>
+  </aside>
+</header>
+<div class="record-layout">
+  <div>
+    <div class="report-head">
+      <div>
+        <p class="kicker">Full audit report</p>
+        <h2 class="report-title">What the bytes do</h2>
+      </div>
+      <p class="report-timestamp"><span class="meta-label">Audit</span> 2026-10-26</p>
+    </div>
+    <section class="report" id="report" aria-label="Audit report">
+      <div class="prose"><p><strong>Verdict:</strong> <code>BENIGN / WITH CAVEATS</code> <strong>Risk score:</strong> <code>28/100 (Low)</code> <strong>Kind:</strong> <code>managed .NET mod</code> <strong>Author:</strong> <code>76561199623120582</code> · <strong>Published/updated:</strong> <code>2026-09-16 20:57 UTC</code> · <strong>Subscribers:</strong> <code>2974</code> · <strong>On-disk size:</strong> <code>0.08 MB</code></p>
+<h2 id="what-it-is">What it is <a class="heading-anchor" href="#what-it-is" aria-label="Link to What it is">#</a></h2>
+<p>A custom-arena loader/rink-builder for Puck (&quot;B25&quot;). It scans for arena packs — its own <code>Arenas</code> folder next to the DLL and every Steam Workshop item you are subscribed to — reads each pack&#39;s <code>.al.json</code> manifest, and replaces the shipped rink scene with the pack&#39;s <code>.glb</code> model (via GLTFast) or Unity <code>.unity3d</code> bundle, repositioning the crowd, goal lights, glass and ice. It adds an &quot;Arena Loader&quot; button to the pause/main menus. It performs <strong>no Harmony patching at all</strong>; it works through the game&#39;s public event API, <code>SaveManager</code> prefs and a small amount of reflection into the game&#39;s <code>CrowdManager</code>.</p>
+<p>The caveat is bundled analytics: the mod ships <code>deps\RinkApi.dll</code>, a shared heartbeat client (byte-identical to the one in mod 3811996661 &quot;Rink&quot;) that POSTs a small &quot;mod is loaded&quot; record to <code>https://rinkpuck.com/api/stats</code> every ~60 s.</p>
+<h2 id="contents">Contents <a class="heading-anchor" href="#contents" aria-label="Link to Contents">#</a></h2>
+<ul><li>2 files, 84,480 B (<code>evidence/inventory.tsv</code>): <code>ArenaLoader.dll</code> (72,704 B, sha256 <code>1609238417845acfea6a748c50e7d527680b7f039f260822c0340143afde11c1</code>) and <code>deps\RinkApi.dll</code> (11,776 B, sha256 <code>14d99d294e39568245eac5a3dea1f07ab3c9608e10e134b0ec8fc887c5c3346a</code>).</li><li>Both are PE32 (i386/AnyCPU), .NET, unsigned, 3 sections, no overlay, entropy 5.68 / 5.19 (<code>evidence/pe_info.txt</code>); managed, not obfuscated. 15 + 2 C# files decompiled, 0 failures.</li><li>The 3 &quot;binary hits&quot; (<code>evidence/scan_hits.tsv</code>) are the two DLLs&#39; own <code>MZ</code> headers; keyword hits 0 (<code>evidence/hits_summary.txt</code>).</li></ul>
+<h2 id="code-analysis">Code analysis <a class="heading-anchor" href="#code-analysis" aria-label="Link to Code analysis">#</a></h2>
+<p><strong>Bootstrap.</strong> <code>ArenaLoader.Plugin : IPuckPlugin</code> (<code>Plugin.cs:9</code>), build <code>B25</code> (<code>BuildInfo.cs:5</code>). A static constructor installs an <code>AppDomain.AssemblyResolve</code> handler: if a reference to <code>RinkApi</code> cannot be resolved normally it reads the manifest resource <code>ArenaLoader.RinkApi.dll</code> and returns <code>Assembly.Load(bytes)</code> (<code>Plugin.cs:24-46</code>). <code>OnEnable</code> creates a <code>DontDestroyOnLoad(&quot;ArenaLoader&quot;)</code> object, adds <code>ArenaScene</code>, and calls <code>RinkApi.Register(&quot;ArenaLoader&quot;, &quot;B25&quot;)</code> (<code>Plugin.cs:63-67</code>). <code>OnDisable</code> unregisters, destroys the object (<code>:77-86</code>).</p>
+<p><strong>Arena discovery.</strong> <code>ArenaRegistry.Refresh</code> loads <code>&lt;plugin dir&gt;\Arenas\</code> (creating it if missing) and then walks <code>SteamWorkshopManager.GetSubscribedItemIds()</code> + <code>GetItemInstallInfo</code> for every subscribed item, one directory level deep (<code>ArenaRegistry.cs:18-96</code>). Each <code>*.al.json</code> manifest is deserialised into <code>ArenaDefinition</code>, must name a model (<code>.glb</code>) or bundle (<code>.unity3d</code>), and encrypted <code>.abx</code> bundles are explicitly rejected with &quot;encrypted .abx bundle, the plain .unity3d one is needed&quot; (<code>ArenaRegistry.cs:128-131</code>). Note this is a <em>materials/asset</em> convention, not a crypto routine: there is no decryption code in this mod.</p>
+<p><strong>Loading and scene work.</strong> <code>ArenaContent.Instantiate</code> dispatches to <code>InstantiateBundle</code> (<code>AssetBundle.LoadFromFileAsync</code> then <code>LoadPrefab</code>, unloading the bundle afterwards — <code>ArenaContent.cs:55-78</code>) or <code>InstantiateModel</code> (<code>File.ReadAllBytes(modelPath)</code> → GLTFast <code>GltfImport.Load</code> → instantiate — <code>ArenaContent.cs:33-45</code>). <code>ArenaScene</code> listens for <code>Event_Everyone_OnLevelSpawned</code> / <code>OnLevelDespawned</code> / <code>Event_OnSceneUnloaded</code> on <code>level_default</code> (<code>ArenaScene.cs:40-66</code>) and applies the arena: <code>ArenaShipped.Apply</code> hides the shipped <code>Hangar</code>, <code>Spectator Booth</code>, <code>Crowd</code>, <code>Barrier Glass</code>, <code>Ice Top/Bottom</code> renderers, disables probes, tunes lights from <code>AssetInformation.json</code> options, and rebuilds the crowd (<code>ArenaShipped.cs:11-45,100-133</code>), restoring everything on unload (<code>:198</code>). Crowd density/seat placement is done by reflecting private <code>CrowdManager</code> members <code>crowdDensity</code> and <code>crowdPositionMemberMap</code> (<code>ArenaShipped.cs:54,190,203</code>) — reads and writes inside the game&#39;s own object graph, nothing else. <code>ArenaTheme.cs:85</code> likewise pokes <code>PanelSettings.m_FallbackDynamicFonts</code> for the injected UI font. <code>ArenaMenuAccess</code> inserts a <code>Button</code> into <code>UIManager.Instance.PauseMenu</code>/<code>MainMenu</code> UI Toolkit views (<code>ArenaMenuAccess.cs:19-56</code>); <code>ArenaMenu</code> is the settings screen. Selected arena and crowd percent are stored through the game&#39;s <code>SaveManager</code> (<code>ArenaSettings.cs:5-31</code>); per-pack options are read from the pack&#39;s own <code>AssetInformation.json</code> (<code>ArenaOptions.cs:41-69</code>).</p>
+<p><strong>Network: one call site, all of it analytics.</strong> The only networking in either assembly is <code>RinkApi.Beat</code> (<code>RinkApi.cs:69-157</code>), reached from <code>RinkApi.Runner.Update</code> roughly every 60 s while the mod is enabled (<code>:14-27</code>). It builds</p>
+<pre tabindex="0"><code>{&quot;action&quot;:&quot;mod_heartbeat&quot;,
+ &quot;data&quot;:{&quot;api&quot;:1,&quot;kind&quot;:&quot;client|server&quot;,&quot;sid&quot;:&lt;SteamID64&gt;,&quot;name&quot;:&lt;player name&gt;,
+         &quot;server&quot;:&lt;MachineName or server name on dedicated servers&gt;,&quot;mods&quot;:{&quot;&lt;mod&gt;&quot;:&quot;&lt;build&gt;&quot;}},
+ &quot;time&quot;:&lt;UTC ISO-8601&gt;}</code></pre>
+<p>and POSTs it to <code>https://rinkpuck.com/api/stats</code> with header <code>x-rink-key: iZIcx2y-h29cC2GNes4SI03qtNSrK8vh</code> (a shared constant, <code>RinkApi.cs:29-31,144-151</code>). Client identity comes from <code>SteamIntegrationManager.GetSteamId()</code> and the local <code>Player.Username</code> (<code>:101-127</code>); on dedicated servers it sends <code>Environment.MachineName</code> (overridden by the server&#39;s public name when available) instead. The response body is never read or parsed — there is no remote control channel. No opt-out switch exists: <code>Register</code> is called unconditionally in <code>OnEnable</code>.</p>
+<p><strong>Filesystem / other.</strong> Creates <code>&lt;plugin dir&gt;\Arenas\</code> (<code>ArenaRegistry.cs:43-52</code>); reads manifests, <code>.glb</code>/<code>.unity3d</code>/<code>AssetInformation.json</code> from local and Workshop packs. No writes outside the game&#39;s own prefs. No registry, <code>Process</code>, <code>DllImport</code>/<code>Marshal</code>, <code>Assembly.LoadFile</code>, injection, persistence, crypto, clipboard, keyboard or screen access (source-wide grep; the single <code>[Process]</code> hit is an unused <code>using System.Diagnostics;</code> in <code>Properties/AssemblyInfo.cs:1</code>, the <code>[Ransom/Miner]</code> hit is the literal string &quot;encrypted .abx bundle…&quot; at <code>ArenaRegistry.cs:130</code>).</p>
+<h2 id="findings">Findings <a class="heading-anchor" href="#findings" aria-label="Link to Findings">#</a></h2>
+<ol><li><strong>Unconditional analytics heartbeat containing SteamID64, player name and mod list to <code>rinkpuck.com</code> every ~60 s</strong> (<code>RinkApi.cs:101-151</code>, shared component <code>deps\RinkApi.dll</code> sha256 <code>14d99d29…</code>, identical to the copy in mod 3811996661). On dedicated servers it reports the machine/server name instead of a player. Nothing secret is sent (no ticket, token, cookie, IP logging is server-side), the API key is a public constant, and the reply is ignored, so this is telemetry, not a control channel — but there is no way to turn it off. Severity: moderate.</li><li><strong>Embedded-assembly load at runtime.</strong> <code>Plugin.cs:24-46</code> calls <code>Assembly.Load</code> on a resource named <code>ArenaLoader.RinkApi.dll</code> when the <code>RinkApi</code> reference cannot be resolved from <code>deps\</code>. The shipped <code>deps\RinkApi.dll</code> is benign and fully reviewed; the embedded copy&#39;s bytes could not be extracted/hashed from the evidence set, so treat &quot;same file&quot; as likely but unproven. No download, no encryption, no reflection-generated code. Severity: low.</li><li><strong>Private-field reflection into <code>CrowdManager</code> and <code>PanelSettings</code></strong> (<code>ArenaShipped.cs:54,190,203</code>, <code>ArenaTheme.cs:85</code>) to set crowd density, seat maps and fallback fonts. Local game state only; this is how a non-Harmony mod reaches internals. Severity: informational.</li><li><strong>No Harmony patches.</strong> All integration is via <code>EventManager</code> listeners and UI Toolkit button injection (<code>ArenaScene.cs:40-66</code>, <code>ArenaMenuAccess.cs:19-32</code>), and everything is unsubscribed/removed in <code>OnDisable</code>/<code>OnDestroy</code>. Severity: informational.</li><li><strong>Content trust is local/Workshop only.</strong> Any <code>.al.json</code> + model found in the <code>Arenas</code> folder or a subscribed Workshop item will be loaded and its options applied; <code>.glb</code> is parsed by GLTFast and bundles by Unity <code>AssetBundle.LoadFromFileAsync</code>, i.e. assets only, never assemblies. A malicious Workspace pack cannot execute code through this mod. Severity: low.</li><li><strong>Absent categories (checked against <code>evidence/api_surface.txt</code> + all 17 decompiled files):</strong> no <code>HttpClient</code>/<code>WebClient</code>/raw socket/DNS APIs besides the single <code>UnityWebRequest</code> heartbeat; no registry access; no process creation or shell; no P/Invoke or <code>Marshal</code>; no <code>Assembly.Load(file/bytes)</code> of downloaded code; no persistence (Run keys, tasks, services); no crypto/obfuscation of user files; no credential/token/Steam-ticket/cookie/clipboard/keyboard/screen access; no stealth or AV-evasion behaviour.</li></ol>
+<h2 id="evidence-trail">Evidence trail <a class="heading-anchor" href="#evidence-trail" aria-label="Link to Evidence trail">#</a></h2>
+<ul><li>Method: SHA-256 inventory + PE parsing (<code>evidence/inventory.tsv</code>, <code>evidence/pe_info.txt</code>), ilspycmd decompilation of both managed DLLs (17/17 files, 0 failures), pattern scan (<code>evidence/api_surface.txt</code>, <code>evidence/scan_hits.tsv</code>), Steam metadata (<code>evidence/FACTS.md</code>).</li><li>Files reviewed: <code>sources/ArenaLoader/ArenaLoader/{Plugin,ArenaScene,ArenaRegistry,ArenaContent,ArenaShipped,ArenaGoal,ArenaMarkers,ArenaMenu,ArenaMenuAccess,ArenaOptions,ArenaSettings,ArenaTheme,ArenaDefinition,BuildInfo}.cs</code>, <code>sources/RinkApi/Rink/RinkApi.cs</code>.</li><li>Shared-component note: <code>deps\RinkApi.dll</code> is <strong>byte-identical</strong> (sha256 <code>14d99d294e39568245eac5a3dea1f07ab3c9608e10e134b0ec8fc887c5c3346a</code>) to the <code>deps\RinkApi.dll</code> shipped in mod 3811996661 &quot;Rink&quot;; analysed once here and in that report.</li><li>Not verified: the embedded <code>ArenaLoader.dll</code>→<code>RinkApi.dll</code> resource bytes (no managed-resource extraction was performed); shipped <code>*.al.json</code>/<code>AssetInformation.json</code> payloads (only <code>evidence/</code> + <code>sources/</code> are present, no raw Workshop files); live behaviour in game. No independent REA binary note existed for this mod at review time.</li></ul>
+<h2 id="bottom-line">Bottom line <a class="heading-anchor" href="#bottom-line" aria-label="Link to Bottom line">#</a></h2>
+<p>Install-safe arena loader with no code-execution, persistence or file-encryption behaviour — its one real caveat is that it phones home to the author&#39;s site (<code>rinkpuck.com</code>) every minute with your SteamID64, display name and installed-mod list, with no toggle to disable it.</p></div>
+    </section>
+    <nav class="prev-next" aria-label="Adjacent audit records">
+<a class="prev-next-link" href="3497550964.html">
+<span class="meta-label">Previous record</span>
+<span>Toaster&#39;s Reskin Loader</span>
+</a>
+<a class="prev-next-link prev-next-link--next" href="3824708567.html">
+<span class="meta-label">Next record</span>
+<span>APPL Cinema Studio</span>
+</a>
+</nav>
+  </div>
+  <aside class="report-aside" aria-label="Report navigation and actions">
+    <div class="aside-block">
+      <p class="meta-label">Verdict</p>
+      <div class="aside-verdict"><span class="badge badge--caveats"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></div>
+      <p class="aside-note">Moderate risk band. A verdict applies to the reviewed build, not to every future update.</p>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">Suspicion score</p>
+      <div class="aside-score-row"><span class="aside-score">28</span><span class="aside-score-denom">/ 100</span></div>
+      <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:28"></span></div>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">On this page</p>
+      <nav class="toc" aria-label="Report sections"><ol><li><a href="#what-it-is">What it is</a></li><li><a href="#contents">Contents</a></li><li><a href="#code-analysis">Code analysis</a></li><li><a href="#findings">Findings</a></li><li><a href="#evidence-trail">Evidence trail</a></li><li><a href="#bottom-line">Bottom line</a></li></ol></nav>
+    </div>
+    <div class="aside-block aside-block--link">
+      <a class="aside-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3802863574" target="_blank" rel="noopener noreferrer">Steam Workshop <span aria-hidden="true">↗</span></a>
+      <a class="aside-link" href="../method.html">Method &amp; scoring <span aria-hidden="true">→</span></a>
+      <a class="aside-link" href="../requests.html">Request another check <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-mark">PUCK WORKSHOP <span>/</span> AUDIT</p>
+        <p class="footer-note">Static reports tied to file inventories and hashes. Triage, not a guarantee. Read the method before treating a verdict as a clean bill of health.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../index.html">Audit ledger</a>
+        <a href="../method.html">Method &amp; limits</a>
+        <a href="../requests.html">Request a check</a>
+        <a href="https://github.com/praisethefacts/puck-workshop-audit/issues" target="_blank" rel="noopener noreferrer">GitHub issues <span class="external-mark" aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="footer-meta">
+        <p><span class="meta-label">Snapshot</span><span>2026-10-26</span></p>
+        <p><span class="meta-label">Scope</span><span>63 mods · app 2994020</span></p>
+        <p><span class="meta-label">Reports</span><span>Hash-bound, per mod</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>No tracking · no cookies · plain static output</span>
+      <span>Puck · Steam Workshop 2994020</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#090a08">
+<title>Ponce Puck Centre — With caveats · Puck Workshop audit</title>
+<meta name="description" content="Audit report for Ponce Puck Centre (Workshop 3800009738): With caveats, suspicion score 25/100. Code review included.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="statusbar">
+  <div class="shell statusbar-inner">
+    <span class="status-state"><span class="status-dot" aria-hidden="true"></span>No malware found</span>
+    <span>Independent static audit</span>
+    <span class="statusbar-detail">63 installed mods</span>
+    <span class="statusbar-detail">Snapshot 2026-10-26</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="../index.html" aria-label="Puck Workshop audit home">
+      <span class="brand-mark" aria-hidden="true">PWA</span>
+      <span class="brand-copy">
+        <span class="brand-name">Puck Workshop audit</span>
+        <span class="brand-sub">Forensic mod ledger</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary"><a href="../index.html" aria-current="page">Mods</a><a href="../method.html">Method</a><a href="../requests.html">Requests</a></nav>
+    <span class="header-proof"><span class="status-dot" aria-hidden="true"></span>63 records</span>
+  </div>
+</header>
+<main id="main" class="page-main">
+<div class="shell page-enter">
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">Audit ledger</a></li>
+    <li aria-current="page">Ponce Puck Centre</li>
+  </ol>
+</nav>
+<article>
+<header class="record-hero">
+  <div class="record-copy">
+    <p class="eyebrow"><span class="eyebrow-index">RECORD 3800009738</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Code-bearing entry</span></p>
+    <h1>Ponce Puck Centre</h1>
+    <div class="record-verdict">
+      <span class="badge badge--caveats"><span class="badge-dot" aria-hidden="true"></span>With caveats</span>
+      <span class="record-score-label">Risk score <strong>25/100</strong> · Moderate</span>
+    </div>
+    <p class="record-summary">This entry ships code. The report covers every file, the decompiled managed code and the external interfaces it uses. Report tied to the audited bytes; a later Workshop update can change the verdict.</p>
+    <div class="record-actions">
+      <a class="btn btn--primary" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3800009738" target="_blank" rel="noopener noreferrer">Open Workshop<span class="external-mark" aria-hidden="true">↗</span></a>
+      <a class="text-link" href="#report">Read the report</a>
+    </div>
+  </div>
+  <aside class="record-score-panel" aria-label="Record summary">
+    <span class="meta-label">Suspicion score</span>
+    <div class="record-big-score">25<span>/ 100</span></div>
+    <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:25"></span></div>
+    <div class="record-band">Moderate · Review the caveats</div>
+    <dl class="record-mini-facts">
+      <div><dt>Kind</dt><dd>managed .NET mod + one native x64 DLL + a PowerShell dev helper</dd></div>
+      <div><dt>Verdict</dt><dd>BENIGN / WITH CAVEATS</dd></div>
+      <div><dt>Workshop</dt><dd>3800009738</dd></div>
+      <div><dt>Report</dt><dd>4,859 characters</dd></div>
+    </dl>
+  </aside>
+</header>
+<div class="record-layout">
+  <div>
+    <div class="report-head">
+      <div>
+        <p class="kicker">Full audit report</p>
+        <h2 class="report-title">What the bytes do</h2>
+      </div>
+      <p class="report-timestamp"><span class="meta-label">Audit</span> 2026-10-26</p>
+    </div>
+    <section class="report" id="report" aria-label="Audit report">
+      <div class="prose"><p><strong>Verdict:</strong> <code>BENIGN / WITH CAVEATS</code> <strong>Risk score:</strong> <code>25/100 (Low–Moderate)</code> <strong>Kind:</strong> <code>managed .NET mod + one native x64 DLL + a PowerShell dev helper</code> <strong>Author:</strong> Ponce (SteamID64 in <code>evidence/pe_info.txt</code> and workshop metadata) · <strong>On-disk size:</strong> <code>47.5 MB</code></p>
+<h2 id="what-it-is">What it is <a class="heading-anchor" href="#what-it-is" aria-label="Link to What it is">#</a></h2>
+<p>A large &quot;centre&quot; mod for Puck that bundles several quality-of-life features plus an in-game web panel: custom hats/boards/crowd bundles, a goal-horn/media pack, an MOTD/news browser and a league-registration UI. The bulk of the 47.5 MB is media (<code>.webm</code>, <code>.mp4</code>, <code>.mp3</code>) and Unity <code>.bundle</code> files; only three files contain executable logic: <code>PonceArenaTweaks.dll</code> (managed), <code>native/x64/WebView.dll</code> (native, third-party) and <code>native/fetch-ublock.ps1</code> (helper script).</p>
+<h2 id="contents">Contents <a class="heading-anchor" href="#contents" aria-label="Link to Contents">#</a></h2>
+<ul><li>108 files. Notable: <code>PonceArenaTweaks.dll</code> (14,370,304 B), <code>native/x64/WebView.dll</code> (140,288 B), <code>native/fetch-ublock.ps1</code> (3,101 B), <code>tags/*.mp3</code>, <code>media/*.webm|*.mp4</code>, <code>hats.bundle</code>, <code>boardads</code>, <code>crowdmod</code>, <code>AssetBundles</code>.</li><li><code>PonceArenaTweaks.dll</code>: PE32, i386/AnyCPU, .NET (Mono), <strong>unsigned</strong>, no overlay, no P/Invoke. Large but conventional managed mod code (Unity, Harmony, Newtonsoft.Json, Steamworks.NET).</li><li><code>native/x64/WebView.dll</code>: genuine third-party <code>gree/unity-webview</code> plugin (exports <code>_CWebViewPlugin_*</code>), renamed but byte-compatible with the open-source project. It is the embedded browser used by the in-game panel.</li><li>All hashes: <code>evidence/hashes_sha256.txt</code>; PE facts: <code>evidence/pe_info.txt</code>; decompiled C#: <code>sources/</code>; REA note: <code>../_harness/rea/3800009738__WebView.dll.md</code>.</li></ul>
+<h2 id="code-analysis">Code analysis <a class="heading-anchor" href="#code-analysis" aria-label="Link to Code analysis">#</a></h2>
+<ul><li><strong>Network:</strong> only HTTPS to the author&#39;s own backend <code>poncepuck.net</code> — <code>staff_ids.php</code>, <code>tag_prefs.php</code>, <code>reminders.php</code>, <code>commend.php</code>, <code>friends.php</code>. Custom <code>SimpleHttpsClient</code> with certificate validation (<code>ServicePointManager</code> + TLS). No analytics, no third-party hosts, no webhooks, no paste sites.</li><li><strong>Filesystem:</strong> writes only under the game&#39;s <code>config/ModHub/PonceArenaTweaks/</code> folder (settings, cached staff/tag lists) and <code>ponce_account.json</code>, which stores the mod&#39;s own account token for <code>poncepuck.net</code>. No reads of browser/app data, no credential stores.</li><li><strong>Process / registry:</strong> <code>Process.Start(&quot;explorer.exe&quot;, …)</code> is used only to open/reveal exported media packs. A single registry read detects WebView2 (<code>…\EdgeUpdate\Clients\…</code>) — normal runtime detection, nothing written.</li><li><strong>Native DLL:</strong> performs HTML/JS rendering via WebView2; it can evaluate script inside its own panel and read/write cookies for pages it loads. Capability exists, but it is only ever pointed at <code>poncepuck.net</code> and locally generated <code>file://</code> content; no evidence of it being aimed at Steam/browser sessions.</li><li><strong><code>fetch-ublock.ps1</code> (read in full):</strong> purely a developer utility — queries the GitHub releases API, downloads a uBlock Origin Chromium <code>.zip</code>, and expands it into <code>native/x64/extensions/ublock0</code>. It is never invoked by the DLL at runtime and does not run on install. Benign, but it is a script that downloads code, so it is worth knowing about.</li><li><strong>Absent:</strong> no P/Invoke or shellcode, no Steam auth-ticket access, no keylogging/clipboard/ screen capture, no crypto-wallet or browser-credential paths, no persistence (no Run key / scheduled task / service), no packing or anti-debug, no auto-updater that executes downloaded binaries.</li></ul>
+<h2 id="findings">Findings <a class="heading-anchor" href="#findings" aria-label="Link to Findings">#</a></h2>
+<ol><li><strong>WebView plugin is a full in-game browser</strong> (<code>native/x64/WebView.dll</code>) — renamed open-source <code>gree/unity-webview</code>. Severity: <strong>info/low</strong>. It is legitimate, but any compromise of <code>poncepuck.net</code> would gain script execution inside the mod&#39;s panel scope.</li><li><strong>PowerShell helper downloads third-party code</strong> (<code>native/fetch-ublock.ps1</code>) — not called by the mod, but present on disk and user-runnable. Severity: <strong>low</strong>.</li><li><strong>Account token stored in plaintext</strong> (<code>config/ModHub/PonceArenaTweaks/ponce_account.json</code>) — token for the mod&#39;s own site, not Steam. Severity: <strong>low</strong>.</li><li>No malicious indicator of any malware class (grabber, ransomware, miner, stealer, RAT, persistence) was found. Severity: <strong>none</strong>.</li></ol>
+<h2 id="evidence-trail">Evidence trail <a class="heading-anchor" href="#evidence-trail" aria-label="Link to Evidence trail">#</a></h2>
+<ul><li>Method: SHA-256 inventory of all 108 files, PE header parsing (<code>pe_info.txt</code>), <code>ilspycmd</code> decompilation of the managed DLL, full byte-pattern + string scan (<code>scan_hits.tsv</code>, <code>text_hits.txt</code>), manual read of <code>fetch-ublock.ps1</code>, REA <code>open_binary</code> / <code>inspect_managed_artifact</code> on <code>WebView.dll</code>.</li><li>Not verified: the native WebView2 hosting code was not decompiled instruction-by-instruction; <code>poncepuck.net</code> server behaviour was not tested (no account to log in with).</li></ul>
+<h2 id="bottom-line">Bottom line <a class="heading-anchor" href="#bottom-line" aria-label="Link to Bottom line">#</a></h2>
+<p><strong>Keep.</strong> It is a legitimate large content+UI mod by a known Puck creator; the only real caveats are the embedded browser pointed at the author&#39;s site and the presence of a download-helper script that never runs on its own.</p></div>
+    </section>
+    <nav class="prev-next" aria-label="Adjacent audit records">
+<a class="prev-next-link" href="3784458679.html">
+<span class="meta-label">Previous record</span>
+<span>GPM Stats</span>
+</a>
+<a class="prev-next-link prev-next-link--next" href="3793631096.html">
+<span class="meta-label">Next record</span>
+<span>RankUp</span>
+</a>
+</nav>
+  </div>
+  <aside class="report-aside" aria-label="Report navigation and actions">
+    <div class="aside-block">
+      <p class="meta-label">Verdict</p>
+      <div class="aside-verdict"><span class="badge badge--caveats"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></div>
+      <p class="aside-note">Moderate risk band. A verdict applies to the reviewed build, not to every future update.</p>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">Suspicion score</p>
+      <div class="aside-score-row"><span class="aside-score">25</span><span class="aside-score-denom">/ 100</span></div>
+      <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:25"></span></div>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">On this page</p>
+      <nav class="toc" aria-label="Report sections"><ol><li><a href="#what-it-is">What it is</a></li><li><a href="#contents">Contents</a></li><li><a href="#code-analysis">Code analysis</a></li><li><a href="#findings">Findings</a></li><li><a href="#evidence-trail">Evidence trail</a></li><li><a href="#bottom-line">Bottom line</a></li></ol></nav>
+    </div>
+    <div class="aside-block aside-block--link">
+      <a class="aside-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3800009738" target="_blank" rel="noopener noreferrer">Steam Workshop <span aria-hidden="true">↗</span></a>
+      <a class="aside-link" href="../method.html">Method &amp; scoring <span aria-hidden="true">→</span></a>
+      <a class="aside-link" href="../requests.html">Request another check <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-mark">PUCK WORKSHOP <span>/</span> AUDIT</p>
+        <p class="footer-note">Static reports tied to file inventories and hashes. Triage, not a guarantee. Read the method before treating a verdict as a clean bill of health.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../index.html">Audit ledger</a>
+        <a href="../method.html">Method &amp; limits</a>
+        <a href="../requests.html">Request a check</a>
+        <a href="https://github.com/praisethefacts/puck-workshop-audit/issues" target="_blank" rel="noopener noreferrer">GitHub issues <span class="external-mark" aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="footer-meta">
+        <p><span class="meta-label">Snapshot</span><span>2026-10-26</span></p>
+        <p><span class="meta-label">Scope</span><span>63 mods · app 2994020</span></p>
+        <p><span class="meta-label">Reports</span><span>Hash-bound, per mod</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>No tracking · no cookies · plain static output</span>
+      <span>Puck · Steam Workshop 2994020</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

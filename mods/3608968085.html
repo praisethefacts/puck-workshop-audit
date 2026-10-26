@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#090a08">
+<title>Stats Tooltip UI — With caveats · Puck Workshop audit</title>
+<meta name="description" content="Audit report for Stats Tooltip UI (Workshop 3608968085): With caveats, suspicion score 16/100. Code review included.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="statusbar">
+  <div class="shell statusbar-inner">
+    <span class="status-state"><span class="status-dot" aria-hidden="true"></span>No malware found</span>
+    <span>Independent static audit</span>
+    <span class="statusbar-detail">63 installed mods</span>
+    <span class="statusbar-detail">Snapshot 2026-10-26</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="../index.html" aria-label="Puck Workshop audit home">
+      <span class="brand-mark" aria-hidden="true">PWA</span>
+      <span class="brand-copy">
+        <span class="brand-name">Puck Workshop audit</span>
+        <span class="brand-sub">Forensic mod ledger</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary"><a href="../index.html" aria-current="page">Mods</a><a href="../method.html">Method</a><a href="../requests.html">Requests</a></nav>
+    <span class="header-proof"><span class="status-dot" aria-hidden="true"></span>63 records</span>
+  </div>
+</header>
+<main id="main" class="page-main">
+<div class="shell page-enter">
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">Audit ledger</a></li>
+    <li aria-current="page">Stats Tooltip UI</li>
+  </ol>
+</nav>
+<article>
+<header class="record-hero">
+  <div class="record-copy">
+    <p class="eyebrow"><span class="eyebrow-index">RECORD 3608968085</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Code-bearing entry</span></p>
+    <h1>Stats Tooltip UI</h1>
+    <div class="record-verdict">
+      <span class="badge badge--caveats"><span class="badge-dot" aria-hidden="true"></span>With caveats</span>
+      <span class="record-score-label">Risk score <strong>16/100</strong> · Moderate</span>
+    </div>
+    <p class="record-summary">This entry ships code. The report covers every file, the decompiled managed code and the external interfaces it uses. Report tied to the audited bytes; a later Workshop update can change the verdict.</p>
+    <div class="record-actions">
+      <a class="btn btn--primary" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3608968085" target="_blank" rel="noopener noreferrer">Open Workshop<span class="external-mark" aria-hidden="true">↗</span></a>
+      <a class="text-link" href="#report">Read the report</a>
+    </div>
+  </div>
+  <aside class="record-score-panel" aria-label="Record summary">
+    <span class="meta-label">Suspicion score</span>
+    <div class="record-big-score">16<span>/ 100</span></div>
+    <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:16"></span></div>
+    <div class="record-band">Moderate · Review the caveats</div>
+    <dl class="record-mini-facts">
+      <div><dt>Kind</dt><dd>managed .NET mod</dd></div>
+      <div><dt>Verdict</dt><dd>BENIGN / WITH CAVEATS</dd></div>
+      <div><dt>Workshop</dt><dd>3608968085</dd></div>
+      <div><dt>Report</dt><dd>5,959 characters</dd></div>
+    </dl>
+  </aside>
+</header>
+<div class="record-layout">
+  <div>
+    <div class="report-head">
+      <div>
+        <p class="kicker">Full audit report</p>
+        <h2 class="report-title">What the bytes do</h2>
+      </div>
+      <p class="report-timestamp"><span class="meta-label">Audit</span> 2026-10-26</p>
+    </div>
+    <section class="report" id="report" aria-label="Audit report">
+      <div class="prose"><p><strong>Verdict:</strong> <code>BENIGN / WITH CAVEATS</code> <strong>Risk score:</strong> <code>16/100 (Low)</code> <strong>Kind:</strong> <code>managed .NET mod</code> (stats tooltip/UI + chat-command layer) <strong>Author:</strong> <code>76561198065416196</code> · <strong>Published/updated:</strong> <code>2025-11-20 07:18 UTC</code> · <strong>Subscribers:</strong> <code>33,234</code> · <strong>On-disk size:</strong> <code>0.24 MB</code></p>
+<h2 id="what-it-is">What it is <a class="heading-anchor" href="#what-it-is" aria-label="Link to What it is">#</a></h2>
+<p>Displays a rich per-player statistics tooltip and play-by-play feed on the scoreboard (shots, saves, goals, zone events), styled through the game&#39;s UI Toolkit, and adds stats chat commands. It computes stats from collisions/game events on the server and pushes them to clients over the game&#39;s network session. Its one notable global behaviour is a Harmony prefix on <code>Application.OpenURL</code> that redirects Steam-community links into the Steam overlay instead of the system browser.</p>
+<h2 id="contents">Contents <a class="heading-anchor" href="#contents" aria-label="Link to Contents">#</a></h2>
+<ul><li>1 file / 248,320 bytes: only <code>StatsTooltip.dll</code>.</li><li><code>StatsTooltip.dll</code> — 248,320 B, managed .NET (<code>dotnet=1</code>), PE32 <code>machine=i386</code>, <code>signed=0</code>, sections <code>.text/.rsrc/.reloc</code>, overlay 0, entropy 5.95 (normal IL). The second <code>MZ</code> match at offset 92,969 reported by the scanner is an <code>MZ</code> byte sequence inside IL metadata/resources, not a second embedded PE (no valid PE header/overlay at that offset; entropy is uniform IL).</li><li>All hashes are in <code>evidence/hashes_sha256.txt</code>; PE facts in <code>evidence/pe_info.txt</code>; decompiled source in <code>sources/</code>.</li></ul>
+<h2 id="code-analysis">Code analysis <a class="heading-anchor" href="#code-analysis" aria-label="Link to Code analysis">#</a></h2>
+<ul><li>24 decompiled files, namespace <code>StatsTooltip</code> (+ <code>Codebase</code>). Harmony patches:<ul><li><code>PuckManager.Server_SpawnPuck</code> (<code>Stats.cs:31</code>), <code>GameManager.Server_NotifyGoalScoredRpc</code> (<code>:70</code>), <code>UIScoreboard.RemovePlayer</code> (<code>:301</code>), <code>GameManager.Server_Tick</code> (<code>:341</code>), <code>UIScoreboard.StylePlayer</code> (<code>:992</code>), <code>UIScoreboard.SortPlayers</code> (<code>:1029</code>), <code>Puck.OnCollisionEnter/Stay/Exit</code> (<code>:1050,1263,1486</code>), <code>PlayerBody.OnCollisionEnter/OnStandUp</code> (<code>:1669,1757</code>), <code>UIChat.GetChatMessagePrefix</code> (<code>:1791</code>), <code>Application.OpenURL</code> (<code>:1810</code>), <code>ChatManager.Client_SendChatMessageRpc</code> (<code>:1853</code>), and four chat-suppression patches (<code>:1883,1897,1907,1922</code>).</li><li><code>Application.OpenURL</code> prefix (<code>Stats.cs:1810-1851</code>): if the URL is non-empty <strong>and contains <code>steamcommunity.com</code></strong>, it reflects over loaded assemblies for <code>Steamworks.SteamFriends.ActivateGameOverlayToWebPage</code> / <code>OpenWebOverlay</code> and invokes it, returning <code>false</code> to suppress the default browser open; for every other URL it returns <code>true</code> (normal behaviour). It opens the Steam overlay to that URL; it does not fetch or read anything and cannot redirect arbitrary URLs elsewhere.</li></ul></li><li>Network: <strong>in-game Unity Netcode named messages only</strong> — <code>Codebase/NetworkCommunication.cs:32,70</code> with size guards (<code>:51,89</code>), listeners <code>oomtm450_stats_server</code> / <code>oomtm450_stats_client</code>, batch/streaming of tooltip data (<code>StreamString</code> type) and startup handshake <code>oomtm450_statsASKDATA</code> at <code>Stats.cs:1017</code>. No internet endpoints.</li><li>Filesystem: writes its server config <code>oomtm450_stats_serverconfig.json</code> (<code>Stats.cs:3925</code>); standard client/server config read/write in <code>ClientConfig.cs</code> / <code>ServerConfig.cs</code>; constants file <code>Constants.cs:7</code> holds the workshop URL string <code>https://steamcommunity.com/sharedfiles/filedetails/?id=3608968085</code> (used for the in-game &quot;open mod page&quot; action, not fetched).</li><li><strong>Absent:</strong> no <code>HttpClient</code>/<code>WebClient</code>/<code>Socket</code>/<code>UnityWebRequest</code> — 0 hits across 24 files; no registry, no <code>Process.Start</code>, no <code>Assembly.Load</code> (only <code>GetAssemblies()</code> + <code>GetType</code> for the Steam overlay call), no <code>DllImport</code>, no crypto, no base64, no clipboard/keylogging, no Steam auth-ticket access, no persistence.</li></ul>
+<h2 id="findings">Findings <a class="heading-anchor" href="#findings" aria-label="Link to Findings">#</a></h2>
+<ol><li><strong>Global Harmony prefix on <code>Application.OpenURL</code></strong> — <code>Stats.cs:1810-1851</code>. Any <code>steamcommunity.com</code> URL opened by any mod/game code in the process is routed to the Steam overlay and the browser launch is suppressed; everything else passes through. Not exfiltration, but it is process-wide interception of URL opening, and it makes behaviour depend on substring matching (<code>url.Contains(&quot;steamcommunity.com&quot;)</code> also matches lookalike substrings). Severity: low.</li><li><strong>Chat-command suppression patches on <code>ChatManager</code></strong> — <code>Stats.cs:1883,1897,1907,1922</code> plus <code>Client_SendChatMessageRpc</code> (<code>:1853</code>). Stats command text is intercepted instead of broadcast; intended, server-gated by <code>IsDedicatedServer()</code>/command check. Severity: informational.</li><li><strong>Stats data streamed to clients via Netcode</strong> — <code>NetworkCommunication.cs:32,70</code>, <code>Stats.cs:1017,4188</code>. Inside the game session only. Severity: informational.</li><li><strong>Writes <code>oomtm450_stats_serverconfig.json</code></strong> — <code>Stats.cs:3925</code>. Server-side config next to the server binary. Severity: informational.</li><li><strong>Scanner <code>MZ</code> hit at offset 92,969 is inside IL/metadata, not a second PE</strong> — <code>evidence/FACTS.md</code> and <code>evidence/scan_hits.tsv</code>; no overlay, no extra section headers. Severity: informational.</li><li><strong>No external network or host-level API use</strong> — 0 risky-API hits across 24 files.</li></ol>
+<h2 id="evidence-trail">Evidence trail <a class="heading-anchor" href="#evidence-trail" aria-label="Link to Evidence trail">#</a></h2>
+<ul><li>SHA-256 inventory: <code>evidence/hashes_sha256.txt</code>, <code>evidence/inventory.tsv</code>, <code>evidence/FACTS.md</code>; types list in <code>evidence/api_surface.txt</code>.</li><li>PE facts: <code>evidence/pe_info.txt</code> (managed, unsigned, no overlay, entropy 5.95). Binary scan: <code>evidence/scan_hits.tsv</code> (2 hits, both <code>MZ</code>, one explained above).</li><li>Decompilation: complete <code>ilspycmd</code> output, 24 files (<code>sources/</code>); the <code>OpenURL</code> patch was read in full.</li><li>No independent REA binary note exists for this DLL (<code>_harness/rea/</code> has none for 3608968085) — conclusions rest on decompiled source + PE facts; IL/source fidelity is trusted through <code>ilspycmd</code> output only (confidence slightly reduced for the &quot;no hidden native code&quot; claim, though PE facts show no native sections or overlay).</li><li>Not verified: live tooltip rendering and whether the Steam overlay call succeeds in every client configuration (game not run by instruction).</li></ul>
+<h2 id="bottom-line">Bottom line <a class="heading-anchor" href="#bottom-line" aria-label="Link to Bottom line">#</a></h2>
+<p>Keep with the small caveat that it hooks the game&#39;s &quot;open URL&quot; function so Steam-community links open in the Steam overlay — otherwise it is local stats/UI work that only talks to your own game server.</p></div>
+    </section>
+    <nav class="prev-next" aria-label="Adjacent audit records">
+<a class="prev-next-link" href="3646785422.html">
+<span class="meta-label">Previous record</span>
+<span>MaxPractice</span>
+</a>
+<a class="prev-next-link prev-next-link--next" href="3822871103.html">
+<span class="meta-label">Next record</span>
+<span>Chat Translator</span>
+</a>
+</nav>
+  </div>
+  <aside class="report-aside" aria-label="Report navigation and actions">
+    <div class="aside-block">
+      <p class="meta-label">Verdict</p>
+      <div class="aside-verdict"><span class="badge badge--caveats"><span class="badge-dot" aria-hidden="true"></span>With caveats</span></div>
+      <p class="aside-note">Moderate risk band. A verdict applies to the reviewed build, not to every future update.</p>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">Suspicion score</p>
+      <div class="aside-score-row"><span class="aside-score">16</span><span class="aside-score-denom">/ 100</span></div>
+      <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--moderate" style="--score:16"></span></div>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">On this page</p>
+      <nav class="toc" aria-label="Report sections"><ol><li><a href="#what-it-is">What it is</a></li><li><a href="#contents">Contents</a></li><li><a href="#code-analysis">Code analysis</a></li><li><a href="#findings">Findings</a></li><li><a href="#evidence-trail">Evidence trail</a></li><li><a href="#bottom-line">Bottom line</a></li></ol></nav>
+    </div>
+    <div class="aside-block aside-block--link">
+      <a class="aside-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3608968085" target="_blank" rel="noopener noreferrer">Steam Workshop <span aria-hidden="true">↗</span></a>
+      <a class="aside-link" href="../method.html">Method &amp; scoring <span aria-hidden="true">→</span></a>
+      <a class="aside-link" href="../requests.html">Request another check <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-mark">PUCK WORKSHOP <span>/</span> AUDIT</p>
+        <p class="footer-note">Static reports tied to file inventories and hashes. Triage, not a guarantee. Read the method before treating a verdict as a clean bill of health.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../index.html">Audit ledger</a>
+        <a href="../method.html">Method &amp; limits</a>
+        <a href="../requests.html">Request a check</a>
+        <a href="https://github.com/praisethefacts/puck-workshop-audit/issues" target="_blank" rel="noopener noreferrer">GitHub issues <span class="external-mark" aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="footer-meta">
+        <p><span class="meta-label">Snapshot</span><span>2026-10-26</span></p>
+        <p><span class="meta-label">Scope</span><span>63 mods · app 2994020</span></p>
+        <p><span class="meta-label">Reports</span><span>Hash-bound, per mod</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>No tracking · no cookies · plain static output</span>
+      <span>Puck · Steam Workshop 2994020</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

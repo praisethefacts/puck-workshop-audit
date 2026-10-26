@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#090a08">
+<title>Shootouts — Clean · Puck Workshop audit</title>
+<meta name="description" content="Audit report for Shootouts (Workshop 3630067097): Clean, suspicion score 9/100. Code review included.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="statusbar">
+  <div class="shell statusbar-inner">
+    <span class="status-state"><span class="status-dot" aria-hidden="true"></span>No malware found</span>
+    <span>Independent static audit</span>
+    <span class="statusbar-detail">63 installed mods</span>
+    <span class="statusbar-detail">Snapshot 2026-10-26</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="../index.html" aria-label="Puck Workshop audit home">
+      <span class="brand-mark" aria-hidden="true">PWA</span>
+      <span class="brand-copy">
+        <span class="brand-name">Puck Workshop audit</span>
+        <span class="brand-sub">Forensic mod ledger</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary"><a href="../index.html" aria-current="page">Mods</a><a href="../method.html">Method</a><a href="../requests.html">Requests</a></nav>
+    <span class="header-proof"><span class="status-dot" aria-hidden="true"></span>63 records</span>
+  </div>
+</header>
+<main id="main" class="page-main">
+<div class="shell page-enter">
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">Audit ledger</a></li>
+    <li aria-current="page">Shootouts</li>
+  </ol>
+</nav>
+<article>
+<header class="record-hero">
+  <div class="record-copy">
+    <p class="eyebrow"><span class="eyebrow-index">RECORD 3630067097</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Code-bearing entry</span></p>
+    <h1>Shootouts</h1>
+    <div class="record-verdict">
+      <span class="badge badge--clean"><span class="badge-dot" aria-hidden="true"></span>Clean</span>
+      <span class="record-score-label">Risk score <strong>9/100</strong> · Low</span>
+    </div>
+    <p class="record-summary">This entry ships code. The report covers every file, the decompiled managed code and the external interfaces it uses. Report tied to the audited bytes; a later Workshop update can change the verdict.</p>
+    <div class="record-actions">
+      <a class="btn btn--primary" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3630067097" target="_blank" rel="noopener noreferrer">Open Workshop<span class="external-mark" aria-hidden="true">↗</span></a>
+      <a class="text-link" href="#report">Read the report</a>
+    </div>
+  </div>
+  <aside class="record-score-panel" aria-label="Record summary">
+    <span class="meta-label">Suspicion score</span>
+    <div class="record-big-score">9<span>/ 100</span></div>
+    <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:9"></span></div>
+    <div class="record-band">Low · Minimal capability</div>
+    <dl class="record-mini-facts">
+      <div><dt>Kind</dt><dd>managed .NET mod</dd></div>
+      <div><dt>Verdict</dt><dd>CLEAN</dd></div>
+      <div><dt>Workshop</dt><dd>3630067097</dd></div>
+      <div><dt>Report</dt><dd>10,016 characters</dd></div>
+    </dl>
+  </aside>
+</header>
+<div class="record-layout">
+  <div>
+    <div class="report-head">
+      <div>
+        <p class="kicker">Full audit report</p>
+        <h2 class="report-title">What the bytes do</h2>
+      </div>
+      <p class="report-timestamp"><span class="meta-label">Audit</span> 2026-10-26</p>
+    </div>
+    <section class="report" id="report" aria-label="Audit report">
+      <div class="prose"><p><strong>Verdict:</strong> <code>CLEAN</code> <strong>Risk score:</strong> <code>9/100 (Low)</code> <strong>Kind:</strong> <code>managed .NET mod</code> <strong>Author:</strong> <code>76561198057883682</code> · <strong>Published/updated:</strong> <code>2025-12-24 02:51 UTC</code> · <strong>Subscribers:</strong> <code>91,931</code> · <strong>On-disk size:</strong> <code>0.67 MB</code></p>
+<h2 id="what-it-is">What it is <a class="heading-anchor" href="#what-it-is" aria-label="Link to What it is">#</a></h2>
+<p>A penalty-shootout / mini-game mode for Puck. It takes over the game state machine, positions shooters and goalies, scores individual attempts, runs an order-vote system, and draws its own HUD and menus. It ships a config example pair, a banner image and a whistle sound effect alongside the DLL.</p>
+<p>The DLL is required; the <code>.json</code> files are example configs for server owners, and the <code>.wav</code>/<code>.png</code> are cosmetic.</p>
+<h2 id="contents">Contents <a class="heading-anchor" href="#contents" aria-label="Link to Contents">#</a></h2>
+<ul><li>6 files / 0.67 MB (no folders): <code>ShootoutMod.dll</code> (198,144 B), <code>preview.png</code> (366,922 B), <code>Whistle.wav</code> (131,278 B), <code>shootout_config_EXAMPLE.json</code> (935 B), <code>server_configuration_EXAMPLE.json</code> (907 B), <code>readme</code> (102 B, no extension).</li><li>DLL: <code>ShootoutMod.dll</code>, 198,144 B, sha256 <code>145543f5783d6ee646c667b537b2a7b7c7a34929b43ec9e2e5398f98c4e235fd</code>, <strong>managed .NET</strong> (dotnet=1), <strong>unsigned</strong>, PE32 i386, subsystem CUI, 3 sections (<code>.text/.rsrc/.reloc</code>), overlay 0, entropy 5.75 — normal compiled .NET assembly, <strong>not obfuscated</strong> (29 source files / 37 types, readable C# with real names).</li><li>All hashes are in <code>evidence/hashes_sha256.txt</code>; PE facts in <code>evidence/pe_info.txt</code>; decompiled source in <code>sources/</code>.</li></ul>
+<h2 id="code-analysis">Code analysis <a class="heading-anchor" href="#code-analysis" aria-label="Link to Code analysis">#</a></h2>
+<p><strong>Bootstrap.</strong> <code>PoncePuck.Shootout/ShootoutPlugin.cs</code> + <code>ShootoutMod.cs</code> implement <code>IPuckPlugin</code>; <code>OnEnable()</code> creates a <code>Harmony</code>, patches, and initialises a UI game object; <code>OnDisable()</code> unpatches and tears down. On a dedicated server (<code>Application.isBatchMode</code>) the UI paths are skipped (<code>ShootoutMod.cs:75</code>, <code>:81</code>, <code>:87</code>, <code>:128</code>).</p>
+<p><strong>Harmony patches — 5 game methods.</strong> <code>Puck_OnCollisionEnter_Patch.cs:7</code> (<code>Puck.OnCollisionEnter</code>), <code>BaseGameMode_ScoreGoal_Patch.cs:9</code> (<code>[HarmonyPatch]</code> / target resolved by attribute arguments), <code>ShootoutMod_GameManager_Server_SetGameState_Patch.cs:9</code> (<code>GameManager.Server_SetGameState</code>), <code>ShootoutMod_UIScoreboard_AddPlayer_Patch.cs:9</code> (<code>UIScoreboard.AddPlayer</code>), <code>CustomCommandUnknownCommandPatch.cs:8</code> (the game&#39;s unknown-slash-command handler, to add mod commands). These are the mechanism by which the mod runs its own game phase — expected for a game-mode mod, and they only alter game state, not OS behaviour.</p>
+<p><strong>Network — two netcode surfaces, both narrow and both already present in the game&#39;s session.</strong></p>
+<ul><li>Server side (<code>ShootoutMod_NetworkHandlers.cs:14 HandleClientMessage</code>) accepts exactly three client messages: <code>&quot;ShootoutModAskStartupData&quot;</code>, <code>&quot;ShootoutModAskShootoutState&quot;</code>, and <code>&quot;ShootoutModSubmitOrderVote&quot;</code> (an index array clamped to 0–32 at <code>:36–:43</code> before use). <strong>There is no client command-execution channel</strong>: no arbitrary command strings are accepted from clients, no admin actions are triggered remotely.</li><li>Client side (<code>HandleServerMessage</code> at <code>:60</code>) parses <code>&quot;ShootoutModStartupData&quot;</code> (version string, warns on mismatch with <code>3.0.0</code>) and <code>&quot;ShootoutModShootoutState&quot;</code> (a <code>Dictionary&lt;string,object&gt;</code> from JSON that only drives the mod&#39;s own HUD, <code>:80–:88</code>).</li><li>There is <strong>no <code>HttpClient</code>, <code>WebClient</code>, <code>WebRequest</code>, <code>Socket</code>, <code>TcpClient</code>, <code>UdpClient</code> or Steam API call anywhere</strong>. The only <code>UnityWebRequest</code> in the mod is <code>ShootoutUI.cs:1647 UnityWebRequestMultimedia.GetAudioClip(&quot;file:///&quot; + filePath, AudioType 20)</code> — a <strong>local file</strong> audio loader for <code>Whistle.wav</code>, not a network request.</li><li>The only external URL is <code>ShootoutSettingsUI.cs:427 Application.OpenURL(&quot;https://buymeacoffee.com/amikiir&quot;)</code> (the author&#39;s tip jar button, user-clicked). No data is sent with it.</li></ul>
+<p><strong>Admin authority is delegated to the game, not invented.</strong> <code>AdminRegistry.cs:38 IsAdminSteamId(string)</code> and <code>:70 IsAdminPlayer(Player)</code> resolve admin status through the game&#39;s own <code>AdminManager.IsSteamIdAdmin(...)</code> (<code>:53</code>) after normalising the SteamID. <code>ShootoutController.cs:4335/4340/4349</code> uses that. So a client cannot promote itself; whatever the server&#39;s real admin list says, applies.</p>
+<p><strong>Filesystem — two config files, plus one shared menu registry.</strong></p>
+<ul><li>Server config: <code>ShootoutConfigManager.cs:44–:51</code> → <code>&lt;server root&gt;/config/shootout_config.json</code>; read <code>:98</code>, written <code>:117</code>.</li><li>Client config: <code>ShootoutConfigManager.cs:54–:88</code> → <code>&lt;game root&gt;/config/ModHub/shootout_client_config.json</code>; read <code>:132</code>.</li><li>Shared PonceMods menu registry: <code>PonceMods.Shared/ModMenuHub.cs:83–:88</code> → <code>Application.persistentDataPath/PonceMods/PonceMods_ModMenuHub.json</code>, read <code>:361 File.ReadAllLines</code>, written <code>:394 File.WriteAllLines</code>, deleted <code>:429 File.Delete</code> when empty. This is a local registry of installed Ponce-family mods so they can share one menu button.</li><li>Every path above is inside the game&#39;s own tree or Unity&#39;s persistent data folder. Nothing touches Documents, Desktop, browser profiles, or other applications&#39; data.</li></ul>
+<p><strong>Reflection — used only to find sibling mods&#39; menus.</strong> <code>ModMenuHub.cs:177</code> reads <code>_localCallbacks</code> via non-public reflection, <code>:209</code>/<code>:268</code> read <code>_localRunner</code>, <code>:217</code>/<code>:276</code> read the <code>IsPrimary</code> property, <code>:221</code> invokes <code>OpenModPanelPublic</code>. <code>MaxPractice</code>/<code>CompetitiveAdjustments</code> (same author family) contain the matching <code>PonceMods.Shared.ModMenuHub</code> type, which is what this is looking for. Read-only access to private fields of a known type; no code generation, no dynamic assembly loading.</p>
+<p><strong>Absent categories (checked against <code>evidence/api_surface.txt</code> and all 29 sources).</strong> No HTTP/network client, no socket, no URL upload, no Steam API call. <strong>No Windows registry access</strong> — the three <code>[Registry]</code> lines in <code>api_surface.txt</code> are <code>ShootoutController.cs:4335/4340/4349</code> referencing the mod&#39;s <em>own</em> class <code>AdminRegistry</code>, which is a SteamID allow-list wrapper, not <code>Microsoft.Win32</code>. No crypto (<code>Aes</code>/<code>Rijndael</code>/<code>CryptoStream</code>) — the <code>[Crypto]</code> category is absent — and no base64. No <code>Assembly.Load</code>/<code>LoadFrom</code>/<code>Emit</code>. No P/Invoke, no <code>DllImport</code>, no <code>Marshal</code>. No input capture, no clipboard, no screen capture. No credential/token/session access (<code>GetAuthTicket</code> absent). No persistence (no Run key, no scheduled task, no service). No AV/AMSI/ETW evasion, no obfuscation, no anti-debug. <code>ShootoutController.cs:547 new Random(Environment.TickCount ^ (int)DateTime.UtcNow.Ticks)</code> is a gameplay RNG seed, not cryptography.</p>
+<h2 id="findings">Findings <a class="heading-anchor" href="#findings" aria-label="Link to Findings">#</a></h2>
+<ol><li><strong>Client→server message surface is three whitelisted messages, none of which executes commands</strong> (<code>ShootoutMod_NetworkHandlers.cs:24–:52</code>). The only client-controlled input reaching server logic is a vote array that is range-clamped before use (<code>:36–:43</code>). Good design; nothing to exploit for privilege escalation. <strong>Severity: informational (positive).</strong></li><li><strong>Opens the author&#39;s tip-jar page in the default browser on click</strong> (<code>ShootoutSettingsUI.cs:427</code>, <code>https://buymeacoffee.com/amikiir</code>). No query parameters, no data attached. <strong>Severity: low.</strong></li><li><strong>Loads <code>Whistle.wav</code> through <code>UnityWebRequestMultimedia</code></strong> (<code>ShootoutUI.cs:1647</code>, <code>&quot;file:///&quot; + filePath</code>). Looks like a network call in a keyword scan but is a local <code>file://</code> URI with no host component. <strong>Severity: informational.</strong></li><li><strong>34 automated &quot;magic signature&quot; hits are false positives.</strong> 16 are <code>MZ</code>/<code>ZIP</code>/<code>7Z</code> byte sequences at scattered offsets inside <code>preview.png</code> (offset 51173 <code>MZ</code>, 108583 <code>ZIP</code>, 161014 <code>7Z</code>, …, 343350 <code>7Z</code> — normal for compressed PNG data), one is <code>ShootoutMod.dll 0 MZ</code> (the DLL&#39;s own header), and one is a raw <code>https://</code> ASCII run at offset 75 inside <code>Whistle.wav</code> (audio sample bytes that happen to spell it; no code reads it). <code>hits_summary.txt</code>: <code>keyword hits: 0</code>, zero text-pattern hits. <strong>Severity: informational (scan artefact).</strong></li><li><strong>Writes a shared mod-menu JSON in Unity&#39;s persistent data path</strong> (<code>ModMenuHub.cs:83–:88</code>) and reads it back. It records installed Ponce mods/menu entries; no user or account data. <strong>Severity: low.</strong></li><li><strong>Five Harmony patches on core game methods</strong>, including <code>GameManager.Server_SetGameState</code> and <code>UIScoreboard.AddPlayer</code>. Necessary for a custom game mode; means the mod must be installed on both server and clients for consistent behaviour, and can break after a game patch. <strong>Severity: informational.</strong></li></ol>
+<h2 id="evidence-trail">Evidence trail <a class="heading-anchor" href="#evidence-trail" aria-label="Link to Evidence trail">#</a></h2>
+<ul><li>Method: SHA-256 inventory of all 6 files (<code>evidence/inventory.tsv</code>, <code>evidence/hashes_sha256.txt</code>), PE header parsing (<code>evidence/pe_info.txt</code>), <code>ilspycmd</code> decompilation of <code>ShootoutMod.dll</code> into 29 C# files across 4 namespaces (<code>sources/ShootoutMod/</code>), automated signature/keyword scan (<code>evidence/scan_hits.tsv</code>, <code>hits_summary.txt</code>), full source review plus <code>api_surface.txt</code> cross-check.</li><li>Read in full: <code>ShootoutMod_NetworkHandlers.cs</code>, <code>AdminRegistry.cs</code>, <code>ShootoutConfigManager.cs</code>, <code>PonceMods.Shared/ModMenuHub.cs</code>, and the five Harmony patch classes.</li><li>Keyword roll-up across every <code>.cs</code>: <code>HttpClient</code>/<code>WebClient</code>/<code>Socket</code>/<code>http</code> — none; <code>Registry</code> (Windows) — none (only the mod&#39;s own <code>AdminRegistry</code> class); <code>Assembly.Load</code> — none; <code>FromBase64String</code> — none; <code>GetAuthTicket</code> — none; <code>Clipboard</code> — none; <code>GetAsyncKeyState</code> — none; <code>DllImport</code>/<code>Marshal.</code> — none; <code>Aes</code>/<code>Rijndael</code>/<code>CryptoStream</code> — none; <code>DownloadFile</code>/<code>DownloadString</code> — none; <code>Steamworks</code> — none; <code>powershell</code>/<code>schtasks</code>/<code>RunKey</code> — none. All <code>File.*</code> and <code>Application.OpenURL</code> hits are the lines cited above.</li><li>What could NOT be verified: runtime behaviour on a live server was not executed (game not run); the vote-aggregation and score logic were read statically only. The <code>readme</code> file (102 B) was not quoted; <code>preview.png</code> and <code>Whistle.wav</code> were hashed and scanned but not rendered/played. No REA binary note exists for this DLL.</li></ul>
+<h2 id="bottom-line">Bottom line <a class="heading-anchor" href="#bottom-line" aria-label="Link to Bottom line">#</a></h2>
+<p>Keep. A well-behaved game-mode mod: its client-facing netcode accepts three fixed message types and no commands, admin checks go through the game&#39;s own admin list, it writes two JSON configs and one local menu registry, and it has no network client, no registry access, no crypto, no persistence and no download capability. The tip-jar link and the whistle sound are the only external-looking things, and both are inert.</p></div>
+    </section>
+    <nav class="prev-next" aria-label="Adjacent audit records">
+<a class="prev-next-link" href="3561076649.html">
+<span class="meta-label">Previous record</span>
+<span>Stats</span>
+</a>
+<a class="prev-next-link prev-next-link--next" href="3531395717.html">
+<span class="meta-label">Next record</span>
+<span>Curved Stick</span>
+</a>
+</nav>
+  </div>
+  <aside class="report-aside" aria-label="Report navigation and actions">
+    <div class="aside-block">
+      <p class="meta-label">Verdict</p>
+      <div class="aside-verdict"><span class="badge badge--clean"><span class="badge-dot" aria-hidden="true"></span>Clean</span></div>
+      <p class="aside-note">Low risk band. A verdict applies to the reviewed build, not to every future update.</p>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">Suspicion score</p>
+      <div class="aside-score-row"><span class="aside-score">9</span><span class="aside-score-denom">/ 100</span></div>
+      <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:9"></span></div>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">On this page</p>
+      <nav class="toc" aria-label="Report sections"><ol><li><a href="#what-it-is">What it is</a></li><li><a href="#contents">Contents</a></li><li><a href="#code-analysis">Code analysis</a></li><li><a href="#findings">Findings</a></li><li><a href="#evidence-trail">Evidence trail</a></li><li><a href="#bottom-line">Bottom line</a></li></ol></nav>
+    </div>
+    <div class="aside-block aside-block--link">
+      <a class="aside-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3630067097" target="_blank" rel="noopener noreferrer">Steam Workshop <span aria-hidden="true">↗</span></a>
+      <a class="aside-link" href="../method.html">Method &amp; scoring <span aria-hidden="true">→</span></a>
+      <a class="aside-link" href="../requests.html">Request another check <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-mark">PUCK WORKSHOP <span>/</span> AUDIT</p>
+        <p class="footer-note">Static reports tied to file inventories and hashes. Triage, not a guarantee. Read the method before treating a verdict as a clean bill of health.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../index.html">Audit ledger</a>
+        <a href="../method.html">Method &amp; limits</a>
+        <a href="../requests.html">Request a check</a>
+        <a href="https://github.com/praisethefacts/puck-workshop-audit/issues" target="_blank" rel="noopener noreferrer">GitHub issues <span class="external-mark" aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="footer-meta">
+        <p><span class="meta-label">Snapshot</span><span>2026-10-26</span></p>
+        <p><span class="meta-label">Scope</span><span>63 mods · app 2994020</span></p>
+        <p><span class="meta-label">Reports</span><span>Hash-bound, per mod</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>No tracking · no cookies · plain static output</span>
+      <span>Puck · Steam Workshop 2994020</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

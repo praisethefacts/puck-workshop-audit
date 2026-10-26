@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#090a08">
+<title>Stats — Clean · Puck Workshop audit</title>
+<meta name="description" content="Audit report for Stats (Workshop 3561076649): Clean, suspicion score 10/100. Code review included.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="statusbar">
+  <div class="shell statusbar-inner">
+    <span class="status-state"><span class="status-dot" aria-hidden="true"></span>No malware found</span>
+    <span>Independent static audit</span>
+    <span class="statusbar-detail">63 installed mods</span>
+    <span class="statusbar-detail">Snapshot 2026-10-26</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="../index.html" aria-label="Puck Workshop audit home">
+      <span class="brand-mark" aria-hidden="true">PWA</span>
+      <span class="brand-copy">
+        <span class="brand-name">Puck Workshop audit</span>
+        <span class="brand-sub">Forensic mod ledger</span>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Primary"><a href="../index.html" aria-current="page">Mods</a><a href="../method.html">Method</a><a href="../requests.html">Requests</a></nav>
+    <span class="header-proof"><span class="status-dot" aria-hidden="true"></span>63 records</span>
+  </div>
+</header>
+<main id="main" class="page-main">
+<div class="shell page-enter">
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../index.html">Audit ledger</a></li>
+    <li aria-current="page">Stats</li>
+  </ol>
+</nav>
+<article>
+<header class="record-hero">
+  <div class="record-copy">
+    <p class="eyebrow"><span class="eyebrow-index">RECORD 3561076649</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Code-bearing entry</span></p>
+    <h1>Stats</h1>
+    <div class="record-verdict">
+      <span class="badge badge--clean"><span class="badge-dot" aria-hidden="true"></span>Clean</span>
+      <span class="record-score-label">Risk score <strong>10/100</strong> · Low</span>
+    </div>
+    <p class="record-summary">This entry ships code. The report covers every file, the decompiled managed code and the external interfaces it uses. Report tied to the audited bytes; a later Workshop update can change the verdict.</p>
+    <div class="record-actions">
+      <a class="btn btn--primary" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3561076649" target="_blank" rel="noopener noreferrer">Open Workshop<span class="external-mark" aria-hidden="true">↗</span></a>
+      <a class="text-link" href="#report">Read the report</a>
+    </div>
+  </div>
+  <aside class="record-score-panel" aria-label="Record summary">
+    <span class="meta-label">Suspicion score</span>
+    <div class="record-big-score">10<span>/ 100</span></div>
+    <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:10"></span></div>
+    <div class="record-band">Low · Minimal capability</div>
+    <dl class="record-mini-facts">
+      <div><dt>Kind</dt><dd>managed .NET mod</dd></div>
+      <div><dt>Verdict</dt><dd>CLEAN</dd></div>
+      <div><dt>Workshop</dt><dd>3561076649</dd></div>
+      <div><dt>Report</dt><dd>4,775 characters</dd></div>
+    </dl>
+  </aside>
+</header>
+<div class="record-layout">
+  <div>
+    <div class="report-head">
+      <div>
+        <p class="kicker">Full audit report</p>
+        <h2 class="report-title">What the bytes do</h2>
+      </div>
+      <p class="report-timestamp"><span class="meta-label">Audit</span> 2026-10-26</p>
+    </div>
+    <section class="report" id="report" aria-label="Audit report">
+      <div class="prose"><p><strong>Verdict:</strong> <code>CLEAN</code> <strong>Risk score:</strong> <code>10/100 (Low)</code> <strong>Kind:</strong> <code>managed .NET mod</code> (server-authoritative stats plugin) <strong>Author:</strong> <code>76561198025378067</code> · <strong>Published/updated:</strong> <code>2025-09-02 22:19 UTC</code> · <strong>Subscribers:</strong> <code>175,480</code> · <strong>On-disk size:</strong> <code>0.09 MB</code></p>
+<h2 id="what-it-is">What it is <a class="heading-anchor" href="#what-it-is" aria-label="Link to What it is">#</a></h2>
+<p>A match-statistics mod for Puck: shots, passes, saves, goals, blocks, takeaways, turnovers, possession and star-of-the-game, computed from collisions and game-state events and displayed in the scoreboard/chat. It runs primarily server-side, keeping per-player counters keyed by SteamID, and can serialize a match summary to JSON/CSV on the server disk. It talks to clients only through Unity Netcode named messages.</p>
+<h2 id="contents">Contents <a class="heading-anchor" href="#contents" aria-label="Link to Contents">#</a></h2>
+<ul><li>1 file / 99,328 bytes: only <code>oomtm450PuckMod_Stats.dll</code>.</li><li><code>oomtm450PuckMod_Stats.dll</code> — 99,328 B, managed .NET (<code>dotnet=1</code>), PE32 <code>machine=i386</code>, <code>signed=0</code>, sections <code>.text/.rsrc/.reloc</code>, overlay 0, entropy 5.87 (normal IL).</li><li>All hashes are in <code>evidence/hashes_sha256.txt</code>; PE facts in <code>evidence/pe_info.txt</code>; decompiled source in <code>sources/</code>.</li></ul>
+<h2 id="code-analysis">Code analysis <a class="heading-anchor" href="#code-analysis" aria-label="Link to Code analysis">#</a></h2>
+<ul><li>28 decompiled files, namespaces <code>oomtm450PuckMod_Stats</code>, <code>...Configs</code>, <code>Codebase</code>. Harmony patches on gameplay and scoreboard: <code>PuckManager.Server_SpawnPuck</code> (<code>Stats.cs:23</code>), <code>BaseGameMode.ScoreGoal</code> (<code>:47</code>), <code>UIScoreboard.RemovePlayer</code> (<code>:216</code>), <code>BaseGameMode.OnGameStateChanged</code> (<code>:241</code>), <code>OnVoteRemoved</code> (<code>:327</code>), <code>PhysicsManager.Update</code> (<code>:356</code>, <code>:537</code>), <code>Puck.OnCollisionEnter/Stay/Exit</code> (<code>:581,800,895</code>), <code>PlayerBody.OnCollisionEnter</code> (<code>:959</code>), <code>PlayerBody.OnStandUp</code> (<code>:1040</code>), <code>GameManager.Server_SetGameState</code> (<code>:1073</code>), <code>Server_StopTicking/StartTicking</code> (<code>:1162,1182</code>). Collision callbacks are the statistics signal source, which is the mod&#39;s function.</li><li>Network: <strong>in-game Unity Netcode only</strong> — <code>NetworkCommunication.cs:40,65</code> (<code>SendData</code>/<code>SendDataToAll</code>), listeners <code>oomtm450_stats_server</code> / <code>oomtm450_stats_client</code>, <code>NetworkDelivery=4</code>. Many named counters, e.g. <code>Stats.cs:121,309,435,451,665,875,2064,2072,2281,2501-2534</code> and startup handshake <code>oomtm450_statsASKDATA</code> at <code>:559</code>, version exchange at <code>:2616</code>, batch sync at <code>:2625,2635</code>.</li><li>Filesystem (server-side, writes only):<ul><li>match JSON — <code>Stats.cs:2442</code> (<code>Path.Combine(Path.GetFullPath(&quot;.&quot;), &quot;stats&quot;)</code>), <code>:2447</code> (<code>File.WriteAllText(... &quot;oomtm450_stats_&quot; + timestamp + &quot;.json&quot;)</code>);</li><li><code>oomtm450_stats_shots.csv</code> — <code>Stats.cs:2774</code>; <code>oomtm450_stats_saves.csv</code> — <code>Stats.cs:2817</code>;</li><li>configs — <code>config/oomtm450_stats_clientconfig.json</code> (<code>ClientConfig.cs:12,15,45,75</code>) and <code>config/oomtm450_stats_serverconfig.json</code> (<code>ServerConfig.cs:15,18,124,130</code>).</li><li>These contain match statistics and SteamIDs of players in the match, written locally next to the server binary — nothing is transmitted off the machine by this mod.</li></ul></li><li><strong>Absent:</strong> no external network APIs (<code>HttpClient</code>/<code>WebClient</code>/<code>UnityWebRequest</code>/<code>Socket</code> — 0 hits across 28 files), no registry, no <code>Process.Start</code>, no <code>Assembly.Load</code>, no <code>DllImport</code>, no crypto, no base64, no clipboard/keylogger/screen capture, no Steam auth-ticket access, no persistence mechanism.</li></ul>
+<h2 id="findings">Findings <a class="heading-anchor" href="#findings" aria-label="Link to Findings">#</a></h2>
+<ol><li><strong>Wide Harmony patch surface on collisions, goals and game state</strong> — <code>Stats.cs:23,47,216,241,327,356,537,581,800,895,959,1040,1073,1162,1182</code>. Required to derive statistics; no OS-level capability. Severity: informational.</li><li><strong>Server writes per-match stats files including player SteamIDs</strong> — <code>Stats.cs:2442-2447</code> (JSON), <code>:2774</code> and <code>:2817</code> (CSV). Privacy-relevant only to the server operator&#39;s own disk and only when the debug/save option is used; no upload path exists in the code. Severity: informational.</li><li><strong>Stats counters exchanged via Netcode named messages</strong> — <code>NetworkCommunication.cs:40,65</code>; server↔client inside the game session only. Severity: informational.</li><li><strong>No external communication or host-level API use</strong> — 0 risky-API hits across all 28 files, consistent with <code>evidence/api_surface.txt</code> (<code>[Process] matches=5</code> are <code>Process</code> substrings in <code>NetworkCommunication.cs</code> logging/usings, not <code>System.Diagnostics.Process</code>).</li></ol>
+<h2 id="evidence-trail">Evidence trail <a class="heading-anchor" href="#evidence-trail" aria-label="Link to Evidence trail">#</a></h2>
+<ul><li>SHA-256 inventory: <code>evidence/hashes_sha256.txt</code>, <code>evidence/inventory.tsv</code>, <code>evidence/FACTS.md</code>.</li><li>PE facts: <code>evidence/pe_info.txt</code> (managed, unsigned, no overlay, entropy 5.87). Binary scan: 1 hit (<code>MZ</code> header at 0).</li><li>Decompilation: complete <code>ilspycmd</code> output, 28 files (<code>sources/</code>).</li><li>Independent binary REA notes reviewed: <code>_harness/rea/3561076649__oomtm450PuckMod_Stats.dll</code>.</li><li>Not verified: live stat accounting accuracy and the exact set of files a real server writes in a full match (game not run by instruction).</li></ul>
+<h2 id="bottom-line">Bottom line <a class="heading-anchor" href="#bottom-line" aria-label="Link to Bottom line">#</a></h2>
+<p>Keep. It is a stats tracker that computes numbers from the game&#39;s own events and (optionally) saves match JSON/CSV on the server it runs on; it never sends anything off the machine.</p></div>
+    </section>
+    <nav class="prev-next" aria-label="Adjacent audit records">
+<a class="prev-next-link" href="3775350613.html">
+<span class="meta-label">Previous record</span>
+<span>TLAN Rules Client (unlisted in Steam metadata)</span>
+</a>
+<a class="prev-next-link prev-next-link--next" href="3630067097.html">
+<span class="meta-label">Next record</span>
+<span>Shootouts</span>
+</a>
+</nav>
+  </div>
+  <aside class="report-aside" aria-label="Report navigation and actions">
+    <div class="aside-block">
+      <p class="meta-label">Verdict</p>
+      <div class="aside-verdict"><span class="badge badge--clean"><span class="badge-dot" aria-hidden="true"></span>Clean</span></div>
+      <p class="aside-note">Low risk band. A verdict applies to the reviewed build, not to every future update.</p>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">Suspicion score</p>
+      <div class="aside-score-row"><span class="aside-score">10</span><span class="aside-score-denom">/ 100</span></div>
+      <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--low" style="--score:10"></span></div>
+    </div>
+    <div class="aside-block">
+      <p class="meta-label">On this page</p>
+      <nav class="toc" aria-label="Report sections"><ol><li><a href="#what-it-is">What it is</a></li><li><a href="#contents">Contents</a></li><li><a href="#code-analysis">Code analysis</a></li><li><a href="#findings">Findings</a></li><li><a href="#evidence-trail">Evidence trail</a></li><li><a href="#bottom-line">Bottom line</a></li></ol></nav>
+    </div>
+    <div class="aside-block aside-block--link">
+      <a class="aside-link" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3561076649" target="_blank" rel="noopener noreferrer">Steam Workshop <span aria-hidden="true">↗</span></a>
+      <a class="aside-link" href="../method.html">Method &amp; scoring <span aria-hidden="true">→</span></a>
+      <a class="aside-link" href="../requests.html">Request another check <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+</article>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-mark">PUCK WORKSHOP <span>/</span> AUDIT</p>
+        <p class="footer-note">Static reports tied to file inventories and hashes. Triage, not a guarantee. Read the method before treating a verdict as a clean bill of health.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../index.html">Audit ledger</a>
+        <a href="../method.html">Method &amp; limits</a>
+        <a href="../requests.html">Request a check</a>
+        <a href="https://github.com/praisethefacts/puck-workshop-audit/issues" target="_blank" rel="noopener noreferrer">GitHub issues <span class="external-mark" aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="footer-meta">
+        <p><span class="meta-label">Snapshot</span><span>2026-10-26</span></p>
+        <p><span class="meta-label">Scope</span><span>63 mods · app 2994020</span></p>
+        <p><span class="meta-label">Reports</span><span>Hash-bound, per mod</span></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>No tracking · no cookies · plain static output</span>
+      <span>Puck · Steam Workshop 2994020</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
