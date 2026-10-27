@@ -2,51 +2,51 @@
   "id": "3765045334",
   "issue": 16,
   "title": "Puck Heatseeker",
-  "state": "done",
+  "state": "running",
   "startedAt": "2026-10-27T03:02:25.059Z",
-  "updatedAt": "2026-10-27T04:21:04.594Z",
-  "step": "publish",
-  "stepIndex": 4,
+  "updatedAt": "2026-10-27T04:21:58.422Z",
+  "step": "metadata",
+  "stepIndex": 0,
   "steps": [
     {
       "key": "metadata",
       "label": "Reading Workshop metadata",
       "state": "done",
-      "at": "2026-10-27T04:20:27.562Z",
+      "at": "2026-10-27T04:21:56.400Z",
       "detail": "Puck Heatseeker · 49664 B reported",
-      "finishedAt": "2026-10-27T04:20:30.488Z"
+      "finishedAt": "2026-10-27T04:21:58.422Z"
     },
     {
       "key": "download",
       "label": "Downloading the published files",
       "state": "done",
-      "at": "2026-10-27T04:20:32.448Z",
+      "at": "2026-10-27T04:12:08.194Z",
       "detail": "49664 B on disk",
-      "finishedAt": "2026-10-27T04:20:52.141Z"
+      "finishedAt": "2026-10-27T04:12:30.212Z"
     },
     {
       "key": "scan",
       "label": "Hashing files and scanning binaries",
       "state": "done",
-      "at": "2026-10-27T04:20:54.701Z",
+      "at": "2026-10-27T04:12:32.437Z",
       "detail": "1 files, 1 code files, 1 indicators",
-      "finishedAt": "2026-10-27T04:20:58.656Z"
+      "finishedAt": "2026-10-27T04:12:37.329Z"
     },
     {
       "key": "report",
       "label": "Writing the triage report",
       "state": "done",
-      "at": "2026-10-27T04:21:00.758Z",
+      "at": "2026-10-27T04:12:39.834Z",
       "detail": "CLEAN (10/100)",
-      "finishedAt": "2026-10-27T04:21:00.760Z"
+      "finishedAt": "2026-10-27T04:12:39.836Z"
     },
     {
       "key": "publish",
       "label": "Publishing to the site",
       "state": "done",
-      "at": "2026-10-27T04:21:02.642Z",
+      "at": "2026-10-27T04:12:42.074Z",
       "detail": "Report live on the site",
-      "finishedAt": "2026-10-27T04:21:04.594Z"
+      "finishedAt": "2026-10-27T04:12:44.423Z"
     }
   ],
   "report": {
@@ -57,7 +57,7 @@
     "verdict": "CLEAN",
     "score": 10,
     "automated": true,
-    "generatedAt": "2026-10-27T04:20:58.655Z",
+    "generatedAt": "2026-10-27T04:12:37.327Z",
     "reportPath": "reports/3765045334.md",
     "fileCount": 1,
     "bytes": 49664,
