@@ -1,9 +1,9 @@
 # Puck Workshop mod audit
 
-A static, dependency-free security audit site for 63 installed Puck Workshop mods, plus a public
-request queue that tracks the next mods to be audited. Plain HTML, CSS and vanilla JavaScript; the
-build is a single Node script with no npm dependencies, and Netlify hosts the static output and two
-small Web API functions.
+A static, dependency-free security audit site for 63 installed Puck Workshop mods, an automated
+triage pipeline for newly requested mods, and a public request queue. Plain HTML, CSS and vanilla
+JavaScript; the build is a single Node script with no npm dependencies, and Netlify hosts the static
+output and two small Web API functions.
 
 No framework, bundler, CDN, cookie or client-side tracker is used.
 
@@ -13,17 +13,23 @@ No framework, bundler, CDN, cookie or client-side tracker is used.
 | --- | --- |
 | `data/audit.json` | The audit itself: verdicts, scores, findings, re-audit log, full report Markdown |
 | `data/requests.json` | The public audit queue, kept in sync with GitHub issues labelled `mod-request` |
+| `data/audit-runs.json` | Live state of automated triage runs (steps, timestamps, notes) |
+| `data/reports.json` | Index of machine-generated triage reports published under `reports/` |
 | `data/staleness.json` | "Update watch": Workshop builds that moved, or delisted items, since the audit |
 | `data/site-config.json` | Which mods/requests/re-audits are hidden, and the canonical site URL |
 | `scripts/build.mjs` | Zero-dependency generator: renders `dist/` from the data files |
-| `scripts/verify.mjs` | Structural checks on the built site (rows, pages, queue, update watch, leaks) |
+| `scripts/verify.mjs` | Structural checks on the built site (rows, pages, queue, runs, leaks) |
 | `scripts/check-links.mjs` | Internal link and anchor checker |
 | `scripts/validate-data.mjs` | Schema checks for the committed data files |
 | `scripts/sync-requests.mjs` | GitHub issues → `data/requests.json` |
 | `scripts/check-staleness.mjs` | Steam Workshop → `data/staleness.json` |
+| `scripts/audit-mod.mjs` | Automated triage: Steam download → hash/scan → report → commit → deploy |
+| `scripts/lib/triage.mjs` | The static triage engine (PE metadata, indicator patterns, scoring) |
+| `scripts/request-id.mjs` | Extracts a Workshop id from issue title/body |
+| `scripts/issue-comment.mjs` | Builds the verdict comment posted back on the issue |
 | `scripts/admin.mjs` | CLI for hiding/showing entries (`data/site-config.json`) |
 | `scripts/serve.mjs` | Tiny static server for `dist/` |
-| `scripts/theme/` | Source stylesheet, browser script and favicon copied into `dist/assets/` |
+| `scripts/theme/` | Source stylesheet, browser scripts and favicon copied into `dist/assets/` |
 | `netlify/functions/api.mjs` | `/api/requests` (GET) and `/api/request` (POST) |
 | `netlify/functions/admin.mjs` | `/api/admin` (POST): password-gated visibility changes |
 | `netlify.toml` | Build command, publish directory, function directory, API rewrites and headers |
@@ -33,7 +39,8 @@ the committed data with `npm run build`.
 
 ## Build, verify and preview
 
-Requirements: Node.js 20 or newer. There is nothing to install.
+Requirements: Node.js 20 or newer. There is nothing to install. Automated triage also needs
+`steamcmd` (only for the download step) and `netlify-cli` (only for the deploy step).
 
 ```sh
 npm run build     # writes dist/
@@ -48,6 +55,26 @@ redacts local filesystem paths and machine usernames from report content before 
 
 For the API functions, use `npx netlify dev` instead of `npm run serve`; the static server is enough
 for the ledger, reports, method page and the request page's designed offline state.
+
+## Automated triage
+
+`audit-request.yml` runs when an issue labelled `mod-request` is opened. It downloads the published
+Workshop files anonymously with `steamcmd`, hashes every file, reads PE headers, matches indicator
+patterns against strings/scripts/configs and writes a machine-generated report.
+
+Progress is public: every step commits `data/audit-runs.json` and deploys, so
+`requests.html#automation` shows the run moving through
+`metadata → download → hash/scan → report → publish` while it works. The finished report lives at
+`reports/<id>.html` and is linked from the queue and from the issue comment.
+
+```sh
+npm run audit -- --id 3826743382         # run it locally (needs STEAMCMD)
+npm run audit -- --id 3826743382 --no-push
+node scripts/issue-comment.mjs 3826743382
+```
+
+The automated score is deliberately kept apart from the hand-written verdicts: the ledger is a human
+audit, the report page is a scan, and the page says so. A clean scan is not a safety guarantee.
 
 ## Deploy
 
@@ -83,9 +110,11 @@ The repository keeps itself current with GitHub Actions (details in
 [`docs/AUTOMATION.md`](docs/AUTOMATION.md)):
 
 - **CI** — build, verify, link-check and data-validate every push and pull request.
-- **Deploy** — build and publish to Netlify on every push to `main`.
+- **Deploy** — build and publish to Netlify on every push to `main`, and after the data workflows.
 - **Sync audit requests** — hourly, on issue events and on dispatch: issues labelled `mod-request`
   become `data/requests.json`, and the Workshop update watch is refreshed.
+- **Audit requested mod** — downloads a requested item, runs the static triage, publishes the report
+  and the live progress, and comments the outcome on the issue.
 - **Update watch** — daily Steam check so a mod that changed after its audit shows an update banner.
 - **Site admin** — manual workflow for hide/show changes without leaving GitHub.
 - **Triage audit requests** — labels and acknowledges new request issues, then triggers the sync.
@@ -100,9 +129,8 @@ is not enabled for this private repository, so the workflow could only fail. Add
 `/admin.html` (noindex, not linked from the site navigation) lets the operator hide or restore a mod,
 a request or a re-audit row. Each action is a commit to `data/site-config.json` via
 `/api/admin`, so it is reviewable and reversible; the audit reports themselves are never deleted.
-
-The page asks for `ADMIN_TOKEN`. The same changes can be made from the **Site admin** workflow or
-locally with `npm run admin -- hide-mod 3776968217`.
+The same changes can be made from the **Site admin** workflow or locally with
+`npm run admin -- hide-mod 3776968217`.
 
 ## API contract
 
@@ -149,7 +177,8 @@ deploy workflow.
 - The request queue is public. Contact details entered in the form become part of a public GitHub
   issue.
 - Reports are static triage tied to file hashes, not a sandbox detonation or a guarantee. Read
-  `method.html` before treating a verdict as complete.
+  `method.html` before treating a verdict as complete. Automated report pages say exactly what they
+  are: a scan of the published files, not an audit of intent.
 - The admin page is excluded from the sitemap and marked `noindex`; it contains no data beyond the
   public ledger.
 

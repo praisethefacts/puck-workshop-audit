@@ -1,0 +1,19 @@
+[
+  {
+    "id": "3824593782",
+    "issue": null,
+    "title": "Workshop item 3824593782",
+    "creator": null,
+    "verdict": "NO OBVIOUS INDICATORS",
+    "score": 0,
+    "automated": true,
+    "generatedAt": "2026-10-27T00:50:02.101Z",
+    "reportPath": "reports/3824593782.md",
+    "fileCount": 1,
+    "bytes": 243712,
+    "codeFiles": 1,
+    "indicatorCount": 0,
+    "topIndicators": [],
+    "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3824593782"
+  }
+]

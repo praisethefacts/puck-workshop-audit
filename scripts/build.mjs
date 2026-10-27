@@ -84,6 +84,8 @@ for (const mod of data.mods) {
 const siteConfig = readJson(path.join(DATA_DIR, "site-config.json"), {});
 const requestsData = readJson(path.join(DATA_DIR, "requests.json"), { requests: [] });
 const stalenessData = readJson(path.join(DATA_DIR, "staleness.json"), { items: [] });
+const auditRuns = readJson(path.join(DATA_DIR, "audit-runs.json"), []);
+const autoReports = readJson(path.join(DATA_DIR, "reports.json"), []);
 
 const hiddenMods = new Set((siteConfig.hiddenMods || []).map(String));
 const hiddenRequests = new Set((siteConfig.hiddenRequests || []).map(String));
@@ -1226,6 +1228,166 @@ function renderMethodPage() {
 /* Requests                                                                   */
 /* -------------------------------------------------------------------------- */
 
+const autoReportById = new Map(autoReports.map((report) => [String(report.id), report]));
+const RUN_STATE = {
+  queued: { label: "Queued", cls: "open" },
+  running: { label: "Running", cls: "open" },
+  done: { label: "Report ready", cls: "closed" },
+  blocked: { label: "Blocked", cls: "closed" },
+  failed: { label: "Failed", cls: "closed" },
+  skipped: { label: "Skipped", cls: "closed" },
+};
+const STEP_STATE = { pending: "waiting", running: "active", done: "done", failed: "failed", skipped: "skipped" };
+
+function automationStateChip(run) {
+  const state = RUN_STATE[run.state] || RUN_STATE.queued;
+  return `<span class="request-status request-status--${state.cls}">${esc(state.label)}</span>`;
+}
+
+function automationRunMarkup(run) {
+  const steps = (run.steps || [])
+    .map((step) => {
+      const cls = STEP_STATE[step.state] || "waiting";
+      const detail = step.detail ? `<span class="run-step-detail">${esc(step.detail)}</span>` : "";
+      return `<li class="run-step run-step--${cls}">
+<span class="run-dot" aria-hidden="true"></span>
+<span class="run-step-label">${esc(step.label || step.key)}</span>
+${detail}
+</li>`;
+    })
+    .join("");
+  const title = run.title || `Workshop item ${run.id}`;
+  const report = run.report
+    ? `<a class="text-link run-report-link" href="reports/${esc(run.id)}.html">Automated triage report<span aria-hidden="true"> →</span></a>`
+    : "";
+  const note = run.note ? `<p class="run-note">${esc(run.note)}</p>` : "";
+  return `<li class="run-row" data-run-id="${esc(run.id)}" data-run-state="${esc(run.state)}">
+<div class="run-head">
+  <div>
+    <p class="request-title"><a href="${attr(WORKSHOP + String(run.id))}" target="_blank" rel="noopener noreferrer">${esc(title)}<span class="external-mark" aria-hidden="true">↗</span></a></p>
+    <p class="request-meta">Mod ${esc(run.id)}${run.issue ? ` · Issue #${esc(run.issue)}` : ""} · started ${esc(timeMarkup(run.startedAt))}</p>
+  </div>
+  ${automationStateChip(run)}
+</div>
+<ol class="run-steps" aria-label="Audit steps">${steps}</ol>
+${note}
+${report}
+</li>`;
+}
+
+function renderAutomationSection() {
+  if (!auditRuns.length) return "";
+  const active = auditRuns.filter((run) => ["queued", "running"].includes(run.state));
+  const recent = auditRuns
+    .filter((run) => !["queued", "running"].includes(run.state))
+    .sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)))
+    .slice(0, 6);
+  const ordered = [...active, ...recent];
+  const live = active.length > 0;
+  return `<section class="queue-section" id="automation" aria-labelledby="automation-title">
+  <div class="section-head section-head--queue">
+    <span class="section-num">03</span>
+    <div class="section-head-copy">
+      <p class="kicker">Automated triage</p>
+      <h2 id="automation-title">Working on it, in public.</h2>
+      <p class="section-lede">Requested mods are fetched from Steam, unpacked, hashed and scanned by an automated static triage. Every step commits and redeploys, so this list shows the run as it happens.${
+        live ? " A run is active right now — the page checks for updates on its own." : ""
+      }</p>
+    </div>
+    <span class="run-live${live ? " run-live--on" : ""}" data-run-live="${live ? "on" : "off"}"><span class="run-live-dot" aria-hidden="true"></span>${live ? "Live" : "Idle"}</span>
+  </div>
+  <div class="queue-panel" id="automation-panel" data-automation-panel>
+    <ul class="request-list run-list" id="automation-list">${ordered.map(automationRunMarkup).join("\n")}</ul>
+  </div>
+  <div class="queue-foot">
+    <p class="meta-label">Source: data/audit-runs.json · runs triggered by the audit workflow</p>
+    <p class="meta-label">Automated triage is a scan, not a manual audit. It can miss runtime behaviour and remote payloads.</p>
+  </div>
+</section>`;
+}
+
+function renderAutoReportPage(report) {
+  const reportFile = path.join(ROOT, report.reportPath);
+  const markdown = fs.existsSync(reportFile) ? fs.readFileSync(reportFile, "utf8") : "";
+  const rendered = markdown
+    ? renderMarkdown(markdown, { skipFirstH1: true, selfId: String(report.id) })
+    : { html: "<p>Report file missing.</p>", headings: [] };
+  const score = Number(report.score) || 0;
+  const band = riskBand(score);
+  const main = `<div class="shell page-enter">
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="../requests.html#automation">Automated triage</a></li>
+    <li aria-current="page">${esc(report.title || `Workshop item ${report.id}`)}</li>
+  </ol>
+</nav>
+<article>
+<header class="record-hero">
+  <div class="record-copy">
+    <p class="eyebrow"><span class="eyebrow-index">AUTO ${esc(report.id)}</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Automated static triage</span></p>
+    <h1>${esc(report.title || `Workshop item ${report.id}`)}</h1>
+    <div class="record-verdict">
+      ${badgeMarkup(report.verdict)}
+      <span class="record-score-label">Automated score <strong>${score}/100</strong> · ${esc(band.label)}</span>
+    </div>
+    <p class="record-summary">This is machine-generated triage of the published files: every file hashed, every binary parsed, strings matched against indicator patterns. It is not a manual audit and a clean scan is not a safety guarantee.${
+      report.issue ? ` Requested in issue #${esc(report.issue)}.` : ""
+    }</p>
+    <div class="record-actions">
+      <a class="btn btn--primary" href="https://steamcommunity.com/sharedfiles/filedetails/?id=${attr(
+        report.id
+      )}" target="_blank" rel="noopener noreferrer">Open Workshop<span class="external-mark" aria-hidden="true">↗</span></a>
+      <a class="text-link" href="../requests.html#automation">Back to the run list</a>
+    </div>
+  </div>
+  <aside class="record-score-panel" aria-label="Automated triage summary">
+    <span class="meta-label">Automated score</span>
+    <div class="record-big-score">${score}<span>/ 100</span></div>
+    <div class="score-track score-track--wide" aria-hidden="true"><span class="score-fill score-fill--${band.key}" style="--score:${score}"></span></div>
+    <div class="record-band">${esc(band.label)} · ${esc(band.note)}</div>
+    <dl class="record-mini-facts">
+      <div><dt>Files</dt><dd>${Number(report.fileCount) || 0}</dd></div>
+      <div><dt>Code files</dt><dd>${Number(report.codeFiles) || 0}</dd></div>
+      <div><dt>Indicators</dt><dd>${Number(report.indicatorCount) || 0}</dd></div>
+      <div><dt>Generated</dt><dd>${esc(dateDisplay(report.generatedAt))}</dd></div>
+    </dl>
+  </aside>
+</header>
+<div class="record-layout">
+  <div>
+    <div class="report-head">
+      <div>
+        <p class="kicker">Automated triage</p>
+        <h2 class="report-title">What the scanner saw</h2>
+      </div>
+      <p class="report-timestamp"><span class="meta-label">Run</span> ${esc(dateDisplay(report.generatedAt))}</p>
+    </div>
+    <section class="report" id="report" aria-label="Automated triage report">
+      <div class="prose">${rendered.html}</div>
+    </section>
+  </div>
+  <aside class="report-aside" aria-label="Triage actions">
+    <div class="aside-block">
+      <p class="meta-label">Not a manual audit</p>
+      <p class="aside-note">A human audit inspects the decompiled code and the intent behind each capability. This page is the machine half: hashes, binaries, indicators.</p>
+    </div>
+    <div class="aside-block aside-block--link">
+      <a class="aside-link" href="../method.html">Method &amp; scoring <span aria-hidden="true">→</span></a>
+      <a class="aside-link" href="../requests.html">Request a manual audit <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+</article>
+</div>`;
+  return pageShell({
+    title: `${report.title || `Workshop item ${report.id}`} — automated triage · Puck Workshop audit`,
+    description: `Automated static triage of ${report.title || `Workshop ${report.id}`}: ${report.verdict}, automated score ${score}/100.`,
+    prefix: "../",
+    current: "requests",
+    main,
+  });
+}
+
 function renderRequestedSection() {
   if (!pendingRequests.length) return "";
 
@@ -1240,7 +1402,21 @@ function renderRequestedSection() {
 
   const items = pendingRequests
     .map((request) => {
-      const status = STATUS[request.status] || STATUS.pending;
+      const auto = autoReportById.get(String(request.id));
+      const activeRun = auditRuns.find(
+        (run) => String(run.id) === String(request.id) && ["queued", "running"].includes(run.state)
+      );
+      let status = STATUS[request.status] || STATUS.pending;
+      if (auto) status = { label: "Triage ready", cls: "closed" };
+      else if (activeRun) {
+        const stepLabel = (activeRun.steps || []).find((step) => step.state === "running")?.label || "Queued";
+        status = { label: `Auditing — ${stepLabel.toLowerCase()}`, cls: "open" };
+      }
+      const autoLine = auto
+        ? `<p class="request-auto"><span class="auto-tag">AUTO</span> ${esc(
+            auto.verdict
+          )} · ${Number(auto.score) || 0}/100 · <a href="reports/${esc(auto.id)}.html">automated triage report</a></p>`
+        : "";
       const meta = [
         request.id ? `Mod ${esc(request.id)}` : "",
         request.issue ? `Issue #${esc(request.issue)}` : "",
@@ -1255,6 +1431,7 @@ function renderRequestedSection() {
         request.title || `Workshop item ${request.id}`
       )}<span class="external-mark" aria-hidden="true">↗</span></a></p>
 <p class="request-meta">${meta}</p>
+${autoLine}
 </div>
 <span class="request-status request-status--${status.cls}">${esc(status.label)}</span>
 </li>`;
@@ -1263,7 +1440,7 @@ function renderRequestedSection() {
 
   return `<section class="queue-section" id="requested" aria-labelledby="requested-title">
   <div class="section-head section-head--queue">
-    <span class="section-num">03</span>
+    <span class="section-num">04</span>
     <div class="section-head-copy">
       <p class="kicker">Requested</p>
       <h2 id="requested-title">Queued for audit.</h2>
@@ -1282,6 +1459,7 @@ function renderRequestedSection() {
 
 function renderRequestsPage() {
   const main = `<div class="shell page-enter">
+<script src="assets/queue-live.js" defer></script>
 <header class="page-hero page-hero--request">
   <div>
     <p class="eyebrow"><span class="eyebrow-index">REQUESTS</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Public queue</span></p>
@@ -1393,6 +1571,8 @@ function renderRequestsPage() {
     <a class="text-link" href="${GITHUB_ISSUES}" target="_blank" rel="noopener noreferrer">View the raw queue<span class="external-mark" aria-hidden="true">↗</span></a>
   </div>
 </section>
+
+${renderAutomationSection()}
 
 ${renderRequestedSection()}
 
@@ -1677,8 +1857,16 @@ writeFile(path.join(OUT, "method.html"), renderMethodPage());
 writeFile(path.join(OUT, "requests.html"), renderRequestsPage());
 writeFile(path.join(OUT, "admin.html"), renderAdminPage());
 
+for (const report of autoReports) {
+  writeFile(path.join(OUT, "reports", `${report.id}.html`), renderAutoReportPage(report));
+}
+fs.mkdirSync(path.join(OUT, "data"), { recursive: true });
+fs.writeFileSync(path.join(OUT, "data", "audit-runs.json"), JSON.stringify({ generatedAt: new Date().toISOString(), runs: auditRuns }), "utf8");
+fs.writeFileSync(path.join(OUT, "data", "reports.json"), JSON.stringify({ generatedAt: new Date().toISOString(), reports: autoReports }), "utf8");
+
 copyAsset("style.css");
 copyAsset("app.js");
+copyAsset("queue-live.js");
 copyAsset("favicon.svg");
 
 const SITE_URL = String(
@@ -1690,6 +1878,11 @@ const sitemapEntries = ["", "method.html", "requests.html"]
   .concat(
     data.mods.map(
       (mod) => `  <url><loc>${esc(`${SITE_URL}/mods/${mod.id}.html`)}</loc></url>`
+    )
+  )
+  .concat(
+    autoReports.map(
+      (report) => `  <url><loc>${esc(`${SITE_URL}/reports/${report.id}.html`)}</loc></url>`
     )
   )
   .join("\n");

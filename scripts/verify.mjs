@@ -40,6 +40,8 @@ if (!audit || !Array.isArray(audit.mods)) {
 const config = readJson(path.join(ROOT, "data", "site-config.json"), {});
 const requests = readJson(path.join(ROOT, "data", "requests.json"), { requests: [] });
 const staleness = readJson(path.join(ROOT, "data", "staleness.json"), { items: [] });
+const autoReports = readJson(path.join(ROOT, "data", "reports.json"), []);
+const auditRuns = readJson(path.join(ROOT, "data", "audit-runs.json"), []);
 
 const hiddenMods = new Set((config.hiddenMods || []).map(String));
 const hiddenRequests = new Set((config.hiddenRequests || []).map(String));
@@ -90,7 +92,10 @@ for (const required of [
   "robots.txt",
   path.join("assets", "style.css"),
   path.join("assets", "app.js"),
+  path.join("assets", "queue-live.js"),
   path.join("assets", "favicon.svg"),
+  path.join("data", "audit-runs.json"),
+  path.join("data", "reports.json"),
 ]) {
   if (!exists(required)) problems.push(`missing ${required}`);
 }
@@ -134,10 +139,28 @@ if (staleItems.length === 0 && /note-callout--watch/.test(index)) {
 
 const sitemap = exists("sitemap.xml") ? read("sitemap.xml") : "";
 const locCount = (sitemap.match(/<loc>/g) || []).length;
-if (locCount !== mods.length + 3) {
-  problems.push(`sitemap has ${locCount} entries, expected ${mods.length + 3}`);
+const expectedLoc = mods.length + 3 + autoReports.length;
+if (locCount !== expectedLoc) {
+  problems.push(`sitemap has ${locCount} entries, expected ${expectedLoc}`);
 }
 
+const reportPages = fs.existsSync(path.join(OUT, "reports"))
+  ? fs.readdirSync(path.join(OUT, "reports")).filter((name) => name.endsWith(".html")).length
+  : 0;
+if (reportPages !== autoReports.length) {
+  problems.push(`reports/ has ${reportPages} pages, expected ${autoReports.length}`);
+}
+for (const report of autoReports) {
+  if (!exists(path.join("reports", `${report.id}.html`))) {
+    problems.push(`missing automated report page for ${report.id}`);
+  }
+}
+if (auditRuns.length > 0 && !/id="automation"/.test(requestsHtml)) {
+  problems.push("requests.html has runs but no automation section");
+}
+if (auditRuns.length === 0 && /id="automation"/.test(requestsHtml)) {
+  problems.push("requests.html renders an empty automation section");
+}
 if (!/Sitemap: https?:\/\//.test(exists("robots.txt") ? read("robots.txt") : "")) {
   problems.push("robots.txt has no sitemap URL");
 }

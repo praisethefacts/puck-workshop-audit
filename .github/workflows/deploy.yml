@@ -4,10 +4,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-  # Commits made by the queue/update-watch workflows use the Actions token, and
-  # GitHub does not start a workflow for those pushes. Deploy after them instead.
+  # Commits made by the queue/update-watch/audit workflows use the Actions token,
+  # and GitHub does not start a workflow for those pushes. Deploy after them.
   workflow_run:
-    workflows: ["Sync audit requests", "Update watch"]
+    workflows: ["Sync audit requests", "Update watch", "Audit requested mod", "Site admin"]
     types: [completed]
   schedule:
     - cron: "43 * * * *" # hourly backstop so the site never lags the data

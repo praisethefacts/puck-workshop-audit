@@ -1,0 +1,116 @@
+name: Audit requested mod
+
+# Triggered by a mod-request issue (opened or labelled) or manually.
+# Runs an automated static triage, commits every step so the site shows
+# progress, deploys, then reports back on the issue.
+on:
+  issues:
+    types: [opened, labeled, reopened]
+  workflow_dispatch:
+    inputs:
+      id:
+        description: "Workshop published file id"
+        required: true
+        type: string
+      issue:
+        description: "Issue number to comment on (optional)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: audit-${{ github.event.issue.number || inputs.id || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    # Only run for the request queue, or a manual dispatch.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      contains(github.event.issue.labels.*.name, 'mod-request')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      NETLIFY_CLI: netlify
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue }}
+      ISSUE_TITLE: ${{ github.event.issue.title }}
+      ISSUE_BODY: ${{ github.event.issue.body }}
+      MOD_ID: ${{ inputs.id }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Netlify CLI
+        run: npm install -g netlify-cli@23
+
+      - name: Install steamcmd
+        run: |
+          mkdir -p "$HOME/steamcmd"
+          curl -fsSL https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz \
+            | tar -xz -C "$HOME/steamcmd"
+          "$HOME/steamcmd/steamcmd.sh" +quit >/dev/null 2>&1 || true
+          echo "STEAMCMD=$HOME/steamcmd/steamcmd.sh" >> "$GITHUB_ENV"
+
+      - name: Configure git
+        run: |
+          git config user.name "puck-audit-bot"
+          git config user.email "audit-bot@users.noreply.github.com"
+
+      - name: Resolve Workshop id
+        id: resolve
+        run: |
+          set +e
+          ID="$(node scripts/request-id.mjs)"
+          STATUS=$?
+          set -e
+          if [ -z "$ID" ] || [ "$STATUS" -ne 0 ]; then
+            echo "::warning::No Workshop id found on this issue; nothing to audit."
+            echo "id=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "id=$ID" >> "$GITHUB_OUTPUT"
+          echo "Resolved Workshop id: $ID"
+
+      - name: Mark issue as running
+        if: steps.resolve.outputs.id != '' && env.ISSUE_NUMBER != ''
+        run: |
+          gh issue edit "$ISSUE_NUMBER" --add-label "audit-running" || true
+          gh issue comment "$ISSUE_NUMBER" --body "Automated triage started for Workshop ${{ steps.resolve.outputs.id }}. Live progress: https://puck-workshop-safecheck.netlify.app/requests.html#automation"
+
+      - name: Run automated triage
+        if: steps.resolve.outputs.id != ''
+        run: |
+          ISSUE_ARG=""
+          if [ -n "$ISSUE_NUMBER" ]; then ISSUE_ARG="--issue $ISSUE_NUMBER"; fi
+          node scripts/audit-mod.mjs --id "${{ steps.resolve.outputs.id }}" $ISSUE_ARG
+
+      - name: Comment the outcome
+        if: steps.resolve.outputs.id != '' && env.ISSUE_NUMBER != ''
+        env:
+          AUDIT_ID: ${{ steps.resolve.outputs.id }}
+        run: |
+          node scripts/issue-comment.mjs /tmp/comment.md
+          gh issue comment "$ISSUE_NUMBER" --body-file /tmp/comment.md
+
+      - name: Update labels
+        if: steps.resolve.outputs.id != '' && env.ISSUE_NUMBER != ''
+        run: |
+          gh issue edit "$ISSUE_NUMBER" --remove-label "audit-running" || true
+          if grep -q "\"id\": \"${{ steps.resolve.outputs.id }}\"" data/reports.json; then
+            gh issue edit "$ISSUE_NUMBER" --add-label "audited" || true
+          else
+            gh issue edit "$ISSUE_NUMBER" --add-label "audit-blocked" || true
+          fi
