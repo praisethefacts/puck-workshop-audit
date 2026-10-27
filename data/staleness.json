@@ -1,7 +1,14 @@
 {
-  "checkedAt": "2026-10-26T23:25:18.440Z",
+  "checkedAt": "2026-10-27T00:54:37.068Z",
   "source": "Steam ISteamRemoteStorage/GetPublishedFileDetails",
   "items": [
+    {
+      "id": "3578513105",
+      "name": "Halloween Music Pack",
+      "auditedAt": "2026-10-26",
+      "state": "updated",
+      "workshopUpdated": "2026-10-27T00:46:34.000Z"
+    },
     {
       "id": "3778714545",
       "name": "TLAN Client (unlisted in Steam metadata)",
