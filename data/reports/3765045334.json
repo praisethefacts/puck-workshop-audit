@@ -1,0 +1,19 @@
+{
+  "id": "3765045334",
+  "issue": 16,
+  "title": "Puck Heatseeker",
+  "creator": "76561198033311962",
+  "verdict": "NO OBVIOUS INDICATORS",
+  "score": 12,
+  "automated": true,
+  "generatedAt": "2026-10-27T03:01:23.547Z",
+  "reportPath": "reports/3765045334.md",
+  "fileCount": 1,
+  "bytes": 49664,
+  "codeFiles": 1,
+  "indicatorCount": 1,
+  "topIndicators": [
+    "Hardcoded IPv4 endpoint"
+  ],
+  "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3765045334"
+}
