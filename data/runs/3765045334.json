@@ -2,71 +2,41 @@
   "id": "3765045334",
   "issue": 16,
   "title": "Puck Heatseeker",
-  "state": "done",
-  "startedAt": "2026-10-27T03:01:00.030Z",
-  "updatedAt": "2026-10-27T03:01:30.887Z",
-  "step": "publish",
-  "stepIndex": 4,
+  "state": "running",
+  "startedAt": "2026-10-27T03:02:25.059Z",
+  "updatedAt": "2026-10-27T03:02:27.331Z",
+  "step": "metadata",
+  "stepIndex": 0,
   "steps": [
     {
       "key": "metadata",
       "label": "Reading Workshop metadata",
       "state": "done",
-      "at": "2026-10-27T03:01:00.030Z",
+      "at": "2026-10-27T03:02:25.060Z",
       "detail": "Puck Heatseeker · 49664 B reported",
-      "finishedAt": "2026-10-27T03:01:03.479Z"
+      "finishedAt": "2026-10-27T03:02:27.331Z"
     },
     {
       "key": "download",
       "label": "Downloading the published files",
-      "state": "done",
-      "at": "2026-10-27T03:01:06.260Z",
-      "detail": "49664 B on disk",
-      "finishedAt": "2026-10-27T03:01:18.747Z"
+      "state": "pending"
     },
     {
       "key": "scan",
       "label": "Hashing files and scanning binaries",
-      "state": "done",
-      "at": "2026-10-27T03:01:21.140Z",
-      "detail": "1 files, 1 code files, 1 indicators",
-      "finishedAt": "2026-10-27T03:01:23.548Z"
+      "state": "pending"
     },
     {
       "key": "report",
       "label": "Writing the triage report",
-      "state": "done",
-      "at": "2026-10-27T03:01:25.970Z",
-      "detail": "NO OBVIOUS INDICATORS (12/100)",
-      "finishedAt": "2026-10-27T03:01:25.971Z"
+      "state": "pending"
     },
     {
       "key": "publish",
       "label": "Publishing to the site",
-      "state": "done",
-      "at": "2026-10-27T03:01:28.534Z",
-      "detail": "Report live on the site",
-      "finishedAt": "2026-10-27T03:01:30.887Z"
+      "state": "pending"
     }
   ],
-  "report": {
-    "id": "3765045334",
-    "issue": 16,
-    "title": "Puck Heatseeker",
-    "creator": "76561198033311962",
-    "verdict": "NO OBVIOUS INDICATORS",
-    "score": 12,
-    "automated": true,
-    "generatedAt": "2026-10-27T03:01:23.547Z",
-    "reportPath": "reports/3765045334.md",
-    "fileCount": 1,
-    "bytes": 49664,
-    "codeFiles": 1,
-    "indicatorCount": 1,
-    "topIndicators": [
-      "Hardcoded IPv4 endpoint"
-    ],
-    "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3765045334"
-  },
+  "report": null,
   "note": null
 }
