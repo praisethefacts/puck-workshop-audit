@@ -10,11 +10,12 @@ FROM node:22-bookworm-slim
 
 ENV DEBIAN_FRONTEND=noninteractive \
     DOTNET_ROOT=/usr/share/dotnet \
+    TZ=UTC \
     PATH=/usr/share/dotnet:/root/.dotnet/tools:/opt/steamcmd:/usr/local/bin:$PATH
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-      ca-certificates curl file binutils unzip xz-utils python3 procps \
+      ca-certificates curl file binutils unzip xz-utils python3 procps tzdata libicu72 \
       lib32gcc-s1 lib32stdc++6 \
  && rm -rf /var/lib/apt/lists/*
 
