@@ -593,6 +593,18 @@
             .then(function (snapshot) {
               var items = snapshot && Array.isArray(snapshot.requests) ? snapshot.requests : null;
               if (!items) throw new Error("no snapshot");
+              items = items.map(function (entry) {
+                return {
+                  number: entry.issue,
+                  title: entry.title || "Workshop item " + entry.id,
+                  state: normalize(entry.status) === "closed" ? "closed" : "open",
+                  createdAt: entry.requestedAt || "",
+                  htmlUrl:
+                    entry.issue && GITHUB_ISSUES
+                      ? GITHUB_ISSUES.replace(/\/issues\/?$/, "") + "/issues/" + entry.issue
+                      : "",
+                };
+              });
               queueList.textContent = "";
               if (!items.length) {
                 showQueueState("empty");
