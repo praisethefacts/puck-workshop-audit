@@ -2,72 +2,44 @@
   "id": "3765045334",
   "issue": 16,
   "title": "Puck Heatseeker",
-  "state": "done",
+  "state": "running",
   "startedAt": "2026-10-27T03:02:25.059Z",
-  "updatedAt": "2026-10-27T03:06:49.227Z",
-  "step": "publish",
-  "stepIndex": 4,
+  "updatedAt": "2026-10-27T03:07:41.065Z",
+  "step": "metadata",
+  "stepIndex": 0,
   "steps": [
     {
       "key": "metadata",
       "label": "Reading Workshop metadata",
       "state": "done",
-      "at": "2026-10-27T03:06:15.505Z",
+      "at": "2026-10-27T03:07:38.670Z",
       "detail": "Puck Heatseeker · 49664 B reported · metadata unavailable",
-      "finishedAt": "2026-10-27T03:06:18.900Z"
+      "finishedAt": "2026-10-27T03:07:41.065Z"
     },
     {
       "key": "download",
       "label": "Downloading the published files",
-      "state": "done",
-      "at": "2026-10-27T03:06:21.110Z",
-      "detail": "49664 B on disk",
-      "finishedAt": "2026-10-27T03:06:35.558Z"
+      "state": "failed",
+      "at": "2026-10-27T03:02:29.489Z",
+      "detail": "steamcmd reported success but the item folder is missing",
+      "finishedAt": "2026-10-27T03:02:39.442Z"
     },
     {
       "key": "scan",
       "label": "Hashing files and scanning binaries",
-      "state": "done",
-      "at": "2026-10-27T03:06:40.540Z",
-      "detail": "1 files, 1 code files, 1 indicators",
-      "finishedAt": "2026-10-27T03:06:42.700Z"
+      "state": "pending"
     },
     {
       "key": "report",
       "label": "Writing the triage report",
-      "state": "done",
-      "at": "2026-10-27T03:06:44.895Z",
-      "detail": "NO OBVIOUS INDICATORS (12/100)",
-      "finishedAt": "2026-10-27T03:06:44.896Z"
+      "state": "pending"
     },
     {
       "key": "publish",
       "label": "Publishing to the site",
-      "state": "done",
-      "at": "2026-10-27T03:06:47.027Z",
-      "detail": "Report live on the site",
-      "finishedAt": "2026-10-27T03:06:49.227Z"
+      "state": "pending"
     }
   ],
-  "report": {
-    "id": "3765045334",
-    "issue": 16,
-    "title": "Puck Heatseeker",
-    "creator": "76561198033311962",
-    "verdict": "NO OBVIOUS INDICATORS",
-    "score": 12,
-    "automated": true,
-    "generatedAt": "2026-10-27T03:06:42.700Z",
-    "reportPath": "reports/3765045334.md",
-    "fileCount": 1,
-    "bytes": 49664,
-    "codeFiles": 1,
-    "indicatorCount": 1,
-    "topIndicators": [
-      "Hardcoded IPv4 endpoint"
-    ],
-    "programs": [],
-    "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3765045334"
-  },
+  "report": null,
   "note": "Could not obtain the files: steamcmd reported success but the item folder is missing"
 }
