@@ -1883,6 +1883,20 @@ for (const report of autoReports) {
 fs.mkdirSync(path.join(OUT, "data"), { recursive: true });
 fs.writeFileSync(path.join(OUT, "data", "audit-runs.json"), JSON.stringify({ generatedAt: new Date().toISOString(), runs: auditRuns }), "utf8");
 fs.writeFileSync(path.join(OUT, "data", "reports.json"), JSON.stringify({ generatedAt: new Date().toISOString(), reports: autoReports }), "utf8");
+fs.writeFileSync(
+  path.join(OUT, "data", "requests.json"),
+  JSON.stringify(
+    {
+      generatedAt: new Date().toISOString(),
+      source: requestsData.source || "GitHub issues labelled mod-request",
+      updatedAt: requestsData.updatedAt || "",
+      requests: requestsData.requests || [],
+    },
+    null,
+    2
+  ),
+  "utf8"
+);
 
 copyAsset("style.css");
 copyAsset("app.js");
