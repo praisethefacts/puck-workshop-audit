@@ -4,9 +4,9 @@
   "title": "Minecraft Teams",
   "state": "running",
   "startedAt": "2026-10-27T01:08:53.058Z",
-  "updatedAt": "2026-10-27T01:09:28.404Z",
-  "step": "report",
-  "stepIndex": 3,
+  "updatedAt": "2026-10-27T01:09:32.316Z",
+  "step": "publish",
+  "stepIndex": 4,
   "steps": [
     {
       "key": "metadata",
@@ -43,7 +43,8 @@
     {
       "key": "publish",
       "label": "Publishing to the site",
-      "state": "pending"
+      "state": "running",
+      "at": "2026-10-27T01:09:32.316Z"
     }
   ],
   "report": {
