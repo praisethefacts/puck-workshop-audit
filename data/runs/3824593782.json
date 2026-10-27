@@ -4,9 +4,9 @@
   "title": "Workshop item 3824593782",
   "state": "running",
   "startedAt": "2026-10-27T00:45:35.646Z",
-  "updatedAt": "2026-10-27T03:06:23.356Z",
-  "step": "metadata",
-  "stepIndex": 0,
+  "updatedAt": "2026-10-27T03:06:26.343Z",
+  "step": "download",
+  "stepIndex": 1,
   "steps": [
     {
       "key": "metadata",
@@ -19,8 +19,8 @@
     {
       "key": "download",
       "label": "Downloading the published files",
-      "state": "done",
-      "at": "2026-10-27T00:50:02.082Z",
+      "state": "running",
+      "at": "2026-10-27T03:06:26.343Z",
       "detail": "243712 B on disk",
       "finishedAt": "2026-10-27T00:50:02.083Z"
     },
