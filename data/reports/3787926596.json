@@ -1,0 +1,19 @@
+{
+  "id": "3787926596",
+  "issue": 15,
+  "title": "Improved Constant Angle Track",
+  "creator": "76561198349977397",
+  "verdict": "NO OBVIOUS INDICATORS",
+  "score": 12,
+  "automated": true,
+  "generatedAt": "2026-10-27T03:02:07.222Z",
+  "reportPath": "reports/3787926596.md",
+  "fileCount": 1,
+  "bytes": 95232,
+  "codeFiles": 1,
+  "indicatorCount": 1,
+  "topIndicators": [
+    "Hardcoded IPv4 endpoint"
+  ],
+  "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3787926596"
+}

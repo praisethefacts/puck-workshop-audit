@@ -4,9 +4,9 @@
   "title": "Improved Constant Angle Track",
   "state": "running",
   "startedAt": "2026-10-27T03:01:44.254Z",
-  "updatedAt": "2026-10-27T03:02:07.222Z",
-  "step": "scan",
-  "stepIndex": 2,
+  "updatedAt": "2026-10-27T03:02:09.347Z",
+  "step": "report",
+  "stepIndex": 3,
   "steps": [
     {
       "key": "metadata",
@@ -35,7 +35,10 @@
     {
       "key": "report",
       "label": "Writing the triage report",
-      "state": "pending"
+      "state": "done",
+      "at": "2026-10-27T03:02:09.346Z",
+      "detail": "NO OBVIOUS INDICATORS (12/100)",
+      "finishedAt": "2026-10-27T03:02:09.347Z"
     },
     {
       "key": "publish",
@@ -43,6 +46,24 @@
       "state": "pending"
     }
   ],
-  "report": null,
+  "report": {
+    "id": "3787926596",
+    "issue": 15,
+    "title": "Improved Constant Angle Track",
+    "creator": "76561198349977397",
+    "verdict": "NO OBVIOUS INDICATORS",
+    "score": 12,
+    "automated": true,
+    "generatedAt": "2026-10-27T03:02:07.222Z",
+    "reportPath": "reports/3787926596.md",
+    "fileCount": 1,
+    "bytes": 95232,
+    "codeFiles": 1,
+    "indicatorCount": 1,
+    "topIndicators": [
+      "Hardcoded IPv4 endpoint"
+    ],
+    "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3787926596"
+  },
   "note": null
 }
