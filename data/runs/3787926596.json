@@ -4,9 +4,9 @@
   "title": "Improved Constant Angle Track",
   "state": "running",
   "startedAt": "2026-10-27T03:00:36.220Z",
-  "updatedAt": "2026-10-27T03:00:39.003Z",
-  "step": "metadata",
-  "stepIndex": 0,
+  "updatedAt": "2026-10-27T03:00:41.098Z",
+  "step": "download",
+  "stepIndex": 1,
   "steps": [
     {
       "key": "metadata",
@@ -19,7 +19,8 @@
     {
       "key": "download",
       "label": "Downloading the published files",
-      "state": "pending"
+      "state": "running",
+      "at": "2026-10-27T03:00:41.098Z"
     },
     {
       "key": "scan",
