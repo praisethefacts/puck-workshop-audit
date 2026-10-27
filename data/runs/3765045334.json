@@ -2,27 +2,27 @@
   "id": "3765045334",
   "issue": 16,
   "title": "Puck Heatseeker",
-  "state": "blocked",
+  "state": "running",
   "startedAt": "2026-10-27T03:02:25.059Z",
-  "updatedAt": "2026-10-27T04:56:44.992Z",
-  "step": "download",
-  "stepIndex": 1,
+  "updatedAt": "2026-10-27T04:57:51.142Z",
+  "step": "metadata",
+  "stepIndex": 0,
   "steps": [
     {
       "key": "metadata",
       "label": "Reading Workshop metadata",
       "state": "done",
-      "at": "2026-10-27T04:56:28.995Z",
+      "at": "2026-10-27T04:57:48.701Z",
       "detail": "Puck Heatseeker · 49664 B reported · metadata unavailable",
-      "finishedAt": "2026-10-27T04:56:31.126Z"
+      "finishedAt": "2026-10-27T04:57:51.142Z"
     },
     {
       "key": "download",
       "label": "Downloading the published files",
       "state": "failed",
-      "at": "2026-10-27T04:56:32.864Z",
+      "at": "2026-10-27T04:33:06.033Z",
       "detail": "steamcmd reported success but the item folder is missing",
-      "finishedAt": "2026-10-27T04:56:44.992Z"
+      "finishedAt": "2026-10-27T04:33:15.622Z"
     },
     {
       "key": "scan",
