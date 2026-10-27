@@ -2,27 +2,24 @@
   "id": "3787926596",
   "issue": 15,
   "title": "Improved Constant Angle Track",
-  "state": "blocked",
-  "startedAt": "2026-10-27T03:00:36.220Z",
-  "updatedAt": "2026-10-27T03:00:53.129Z",
-  "step": "download",
-  "stepIndex": 1,
+  "state": "running",
+  "startedAt": "2026-10-27T03:01:44.254Z",
+  "updatedAt": "2026-10-27T03:01:46.562Z",
+  "step": "metadata",
+  "stepIndex": 0,
   "steps": [
     {
       "key": "metadata",
       "label": "Reading Workshop metadata",
       "state": "done",
-      "at": "2026-10-27T03:00:36.221Z",
+      "at": "2026-10-27T03:01:44.254Z",
       "detail": "Improved Constant Angle Track · 95232 B reported",
-      "finishedAt": "2026-10-27T03:00:39.002Z"
+      "finishedAt": "2026-10-27T03:01:46.562Z"
     },
     {
       "key": "download",
       "label": "Downloading the published files",
-      "state": "failed",
-      "at": "2026-10-27T03:00:41.098Z",
-      "detail": "steamcmd reported success but the item folder is missing",
-      "finishedAt": "2026-10-27T03:00:53.129Z"
+      "state": "pending"
     },
     {
       "key": "scan",
@@ -41,5 +38,5 @@
     }
   ],
   "report": null,
-  "note": "Could not obtain the files: steamcmd reported success but the item folder is missing"
+  "note": null
 }
