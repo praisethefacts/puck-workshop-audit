@@ -3,17 +3,19 @@
   "issue": 9,
   "title": "Minecraft Teams",
   "creator": "76561198101351445",
-  "verdict": "NO OBVIOUS INDICATORS",
-  "score": 12,
+  "verdict": "CLEAN",
+  "score": 14,
   "automated": true,
-  "generatedAt": "2026-10-27T03:12:13.811Z",
+  "generatedAt": "2026-10-27T04:18:07.710Z",
   "reportPath": "reports/3825309102.md",
   "fileCount": 1,
   "bytes": 70144,
   "codeFiles": 1,
-  "indicatorCount": 1,
+  "indicatorCount": 3,
   "topIndicators": [
-    "Dynamic code loading"
+    "Steam account identity in code/data",
+    "Dynamic code loading",
+    "Base64-encoded payload strings"
   ],
   "programs": [
     {
@@ -58,7 +60,7 @@
         "MinecraftTeams.SkinPanel+<>c__DisplayClassf",
         "MinecraftTeams.SkinPanel+<>c__DisplayClass15"
       ],
-      "excerpt": "// line 13 · Steamworks\nusing Newtonsoft.Json;\nusing Newtonsoft.Json.Linq;\nusing Steamworks;\nusing Unity.Netcode;\nusing UnityEngine;\nusing UnityEngine.InputSystem;\n\n// line 1080 · WebRequest\n\tprivate readonly HashSet<string> pending = new HashSet<string>(StringComparer.OrdinalIgnoreCase);\n\n\tprivate readonly HashSet<UnityWebRequest> requests = new HashSet<UnityWebRequest>();\n\n\tprivate readonly HashSet<string> sharedLookups = new HashSet<string>(StringComparer.OrdinalIgnoreCase);\n\n\n// line 1439 · File.WriteAll\n\t\t\tValidate(skinSettings2);\n\t\t\tDirectory.CreateDirectory(Path.GetDirectoryName(SettingsPath));\n\t\t\tFile.WriteAllText(SettingsPath, JsonConvert.SerializeObject((object)skinSettings2, (Formatting)1));\n\t\t\tsettings = skinSettings2;\n\t\t\tnotice = \"Saved. Your personal skin shares automatically. Skins update after downloading.\";\n\t\t\tLoadConfigured(force);\n\n// line 1500 · FromBase64String\n\t\t\t\t\tif (cached != null && cached.Png != null && cached.Png.Length <= 1400000)\n\t\t\t\t\t{\n\t\t\t\t\t\tloaded[name] = assets.Add(Convert.FromBase64String(cached.Png), cached.Slim, name);\n\t\t\t\t\t\tstatuses[name] = \"Loaded cached skin\";\n\t\t\t\t\t}\n\t\t\t\t}"
+      "excerpt": "// line 13 Â· Steamworks\nusing Newtonsoft.Json;\nusing Newtonsoft.Json.Linq;\nusing Steamworks;\nusing Unity.Netcode;\nusing UnityEngine;\nusing UnityEngine.InputSystem;\n\n// line 1080 Â· WebRequest\n\tprivate readonly HashSet<string> pending = new HashSet<string>(StringComparer.OrdinalIgnoreCase);\n\n\tprivate readonly HashSet<UnityWebRequest> requests = new HashSet<UnityWebRequest>();\n\n\tprivate readonly HashSet<string> sharedLookups = new HashSet<string>(StringComparer.OrdinalIgnoreCase);\n\n\n// line 1439 Â· File.WriteAll\n\t\t\tValidate(skinSettings2);\n\t\t\tDirectory.CreateDirectory(Path.GetDirectoryName(SettingsPath));\n\t\t\tFile.WriteAllText(SettingsPath, JsonConvert.SerializeObject((object)skinSettings2, (Formatting)1));\n\t\t\tsettings = skinSettings2;\n\t\t\tnotice = \"Saved. Your personal skin shares automatically. Skins update after downloading.\";\n\t\t\tLoadConfigured(force);\n\n// line 1500 Â· FromBase64String\n\t\t\t\t\tif (cached != null && cached.Png != null && cached.Png.Length <= 1400000)\n\t\t\t\t\t{\n\t\t\t\t\t\tloaded[name] = assets.Add(Convert.FromBase64String(cached.Png), cached.Slim, name);\n\t\t\t\t\t\tstatuses[name] = \"Loaded cached skin\";\n\t\t\t\t\t}\n\t\t\t\t}"
     }
   ],
   "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3825309102"
