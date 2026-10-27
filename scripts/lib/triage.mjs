@@ -131,7 +131,7 @@ export function decompileManaged(file, options = {}) {
   // the strings a binary happens to carry. Capped so a huge assembly stays sane.
   result.source = decompiled.stdout ? decompiled.stdout.slice(0, 8 * 1024 * 1024) : "";
   result.apiHits = apiHits.map((hit) => hit.needle);
-  result.excerpt = apiHits.map((hit) => `// line ${hit.atLine} · ${hit.needle}\n${hit.text}`).join("\n\n");
+  result.excerpt = apiHits.map((hit) => `// line ${hit.atLine} Â· ${hit.needle}\n${hit.text}`).join("\n\n");
   return result;
 }
 
@@ -171,6 +171,9 @@ const INDICATORS = [
   // Machine binding / anti-alt detection: a mod that fingerprints the PC is doing
   // something a hockey mod has no need for.
   { id: "hwid-binding", label: "Hardware / machine fingerprinting", sev: 4, re: /(deviceUniqueIdentifier|GetVolumeInformation|volume\s*serial|HWID|hardware\s*id|machine\s*(?:id|guid|fingerprint)|K32EnumProcessModules|EnumProcessModules|GetModuleFileNameEx|GetModuleInformation|ProcessorCount\s*\+|Win32_ComputerSystem)/i },
+  // Enumerating the modules loaded into the game is an anti-cheat/telemetry shape:
+  // it tells the author which other mods (and patches) you run.
+  { id: "module-enumeration", label: "Enumerates loaded modules / assemblies", sev: 3, re: /(K32EnumProcessModules|EnumProcessModules|K32GetModuleFileNameExW|GetModuleFileNameEx|GetModuleInformation)/ },
   // Account identity leaving the game: SteamID + a network call in the same item.
   { id: "steam-identity", label: "Steam account identity in code/data", sev: 3, re: /(steamId64|SteamID64|GetSteamID\(\)|m_SteamID|SteamId\b|GetAuthTicketForWebApi|ISteamUser)/ },
   { id: "telemetry", label: "Telemetry / analytics payload", sev: 3, re: /(analytics|telemetry|heartbeat|usage\s*data|usage\s*ping|trackEvent)/i },
@@ -342,6 +345,7 @@ const CAPABILITIES = [
   { key: "credentials", label: "Credential or session access", weight: 18, ids: ["browser-login", "keylog", "screen-capture"] },
   { key: "obfuscation", label: "Deliberately obfuscated code", weight: 20, ids: ["obfuscated-code"] },
   { key: "fingerprinting", label: "Machine/account fingerprinting", weight: 12, ids: ["hwid-binding", "steam-identity"] },
+  { key: "anti-cheat", label: "Loaded-module enumeration / anti-cheat snapshot", weight: 8, ids: ["module-enumeration"] },
   { key: "c2", label: "Outbound network with telemetry/C2 shape", weight: 8, ids: ["ip-endpoint", "plain-http", "webhook", "telemetry", "raw-ip"] },
   { key: "credential-cache", label: "Passwords/secrets cached in plain files", weight: 6, ids: ["credential-store", "steam-session"] },
   { key: "encrypted-payload", label: "Encrypted / encoded payload handling", weight: 4, ids: ["crypto", "base64-payload", "remote-bundle"] },
@@ -399,6 +403,9 @@ export function analyzeDirectory(root, meta = {}, options = {}) {
   const inventory = [];
   const binaries = [];
   const findings = [];
+  const endpointTexts = [];
+  const techniqueTexts = [];
+  const notableStrings = new Set();
   let analysedCount = 0;
   let skipped = 0;
 
@@ -419,6 +426,9 @@ export function analyzeDirectory(root, meta = {}, options = {}) {
     const buf = fs.readFileSync(file);
     const pe = isPe ? peInfo(buf) : null;
     const strings = extractStrings(buf);
+    techniqueTexts.push(strings.join("\n"));
+    endpointTexts.push(strings.join("\n"));
+    for (const s of strings) { if (s.length >= 12 && s.length <= 140 && /(fingerprint|integrity|hwid|steam\s*id|steamid|api[-_ ]?key|telemetry|analytics|heartbeat|report[\s_-]?(?:plugin|integrity))/i.test(s)) notableStrings.add(s.trim()); }
     const indicators = scanIndicators(strings);
     const benign = BENIGN_CONTEXT.filter((re) => strings.some((s) => re.test(s))).length;
     const binary = {
@@ -447,6 +457,10 @@ export function analyzeDirectory(root, meta = {}, options = {}) {
         const codeLines = binary.decompile.source ? binary.decompile.source.split(/\r?\n/) : [];
         const codeIndicators = scanIndicators(codeLines);
         binary.codeIndicators = codeIndicators.map(({ id, label, sev, samples }) => ({ id, label, severity: sev, samples }));
+        techniqueTexts.push(binary.decompile.source || "");
+        endpointTexts.push(binary.decompile.source || "");
+        const literals = (binary.decompile.source || "").match(/"([^"\n\r]{12,140})"/g) || [];
+        for (const lit of literals) { const value = lit.slice(1, -1); if (/(fingerprint|integrity|hwid|steam\s*id|steamid|api[-_ ]?key|telemetry|analytics|heartbeat|report[\s_-]?(?:plugin|integrity))/i.test(value)) notableStrings.add(value); }
         for (const ind of codeIndicators) {
           if (findings.some((f) => f.id === ind.id)) continue;
           findings.push({
@@ -499,16 +513,19 @@ export function analyzeDirectory(root, meta = {}, options = {}) {
     codeFiles: analysedCount, skippedFiles: skipped,
     inventory, binaries, findings: scored.map((f) => ({ ...f, samples: f.samples })),
     hashes,
+    techniques: detectTechniques(techniqueTexts),
+    endpoints: extractEndpoints(endpointTexts),
+    notableStrings: [...notableStrings].slice(0, 8),
   };
 }
 
-export function toMarkdown(report) {
+export function toMarkdownLegacy(report) {
   const m = report.meta || {};
   const item = m.title || `Workshop item ${m.id}`;
   const lines = [];
-  lines.push(`# ${item} — automated triage`);
+  lines.push(`# ${item} â€” automated triage`);
   lines.push("");
-  lines.push(`**Verdict:** ${report.verdict} — automated score ${report.score}/100`);
+  lines.push(`**Verdict:** ${report.verdict} â€” automated score ${report.score}/100`);
   lines.push("");
   lines.push("> This report was produced by an automated static scanner, not a manual audit. It lists");
   lines.push("> machine-checkable indicators in the shipped files. Nothing here is executed, and a low");
@@ -525,16 +542,16 @@ export function toMarkdown(report) {
   lines.push("## Files and hashes");
   lines.push("");
   for (const f of report.inventory.slice(0, 60)) {
-    lines.push(`- \`${f.sha256}\` ${f.size} B — ${f.path}`);
+    lines.push(`- \`${f.sha256}\` ${f.size} B â€” ${f.path}`);
   }
-  if (report.inventory.length > 60) lines.push(`- … ${report.inventory.length - 60} more`);
+  if (report.inventory.length > 60) lines.push(`- â€¦ ${report.inventory.length - 60} more`);
   lines.push("");
   lines.push("## Binaries");
   lines.push("");
   if (!report.binaries.length) lines.push("No code files were found in this item.");
   for (const b of report.binaries) {
     const pe = b.pe ? `PE${b.pe.bitness}${b.pe.dotnet ? " .NET" : " native"}, ${b.pe.sections.length} sections, overlay ${b.pe.overlay} B` : b.kind;
-    lines.push(`- **${b.path}** — ${b.size} B, ${pe}, sha256 \`${b.sha256}\``);
+    lines.push(`- **${b.path}** â€” ${b.size} B, ${pe}, sha256 \`${b.sha256}\``);
     for (const s of b.pe ? b.pe.sections : []) {
       lines.push(`  - section ${s.name}: entropy ${s.entropy}${s.executable ? ", executable" : ""}${s.writable ? ", writable" : ""}`);
     }
@@ -554,7 +571,7 @@ export function toMarkdown(report) {
     lines.push("- No capability pattern matched. The files are asset data or ordinary mod code.");
   } else {
     for (const c of [...caps].sort((a, b) => b.weight - a.weight)) {
-      lines.push(`- **${c.label}** — ${c.weight + c.bump}/100 weight${c.ids.length ? `, evidence: ${c.ids.join(", ")}` : ""}`);
+      lines.push(`- **${c.label}** â€” ${c.weight + c.bump}/100 weight${c.ids.length ? `, evidence: ${c.ids.join(", ")}` : ""}`);
     }
   }
   lines.push("");
@@ -565,7 +582,7 @@ export function toMarkdown(report) {
   } else {
     const order = { 5: "critical", 4: "high", 3: "medium", 2: "low", 1: "info" };
     for (const f of [...report.findings].sort((a, b) => b.severity - a.severity)) {
-      lines.push(`- **${order[f.severity] || "info"}** — ${f.label} (${f.file})`);
+      lines.push(`- **${order[f.severity] || "info"}** â€” ${f.label} (${f.file})`);
       for (const s of f.samples || []) lines.push(`  - \`${String(s).replace(/`/g, "").slice(0, 180)}\``);
     }
   }
@@ -587,7 +604,7 @@ export function toMarkdown(report) {
       if (d.apiHits && d.apiHits.length) {
         lines.push(`- API surface used: ${d.apiHits.map((h) => "`" + h + "`").join(", ")}`);
       }
-      lines.push(`- Types: ${d.types.slice(0, 40).map((t) => "`" + t + "`").join(", ")}${d.typeCount > 40 ? ", …" : ""}`);
+      lines.push(`- Types: ${d.types.slice(0, 40).map((t) => "`" + t + "`").join(", ")}${d.typeCount > 40 ? ", â€¦" : ""}`);
       if (d.excerpt) {
         lines.push("");
         lines.push("```csharp");
@@ -604,6 +621,355 @@ export function toMarkdown(report) {
   lines.push("- ASCII and UTF-16 strings were extracted and matched against indicator patterns:");
   lines.push("  shells/LOLBins, credential and wallet stores, input capture, injection, persistence,");
   lines.push("  encryption, miner markers, raw IP endpoints and exfiltration-style webhooks.");
+  lines.push("");
+  lines.push("## Limits");
+  lines.push("");
+  lines.push("- Static only: nothing is run. Runtime behaviour and remote payloads are invisible here.");
+  lines.push("- Strings can appear in benign libraries; context is judged by a human in a manual audit.");
+  lines.push("- A clean automated scan does not prove a mod is safe.");
+  return lines.join("\n") + "\n";
+}
+
+// ---------------------------------------------------------------------------
+// Report body shaped like a hand audit: What it is / Contents / Code analysis /
+// Findings / Evidence trail / Bottom line. Everything is derived from what the
+// scanner could actually verify, and the text says so where evidence is thin.
+// ---------------------------------------------------------------------------
+
+const TECHNIQUES = [
+  { group: "identity", re: /GetVolumeInformation/i, text: "`GetVolumeInformation` (disk volume serial)" },
+  { group: "identity", re: /deviceUniqueIdentifier/i, text: "`SystemInfo.deviceUniqueIdentifier`" },
+  { group: "identity", re: /GetEnvironmentVariables?\s*\(/i, text: "environment variables" },
+  { group: "identity", re: /SteamID64|SteamId64|GetSteamID\s*\(|m_SteamID|GetAuthTicketForWebApi/, text: "Steam account identity (SteamID64)" },
+  { group: "modules", re: /K32EnumProcessModulesEx|EnumProcessModules|K32GetModuleFileNameExW|GetModuleFileNameEx|GetModuleInformation/, text: "loaded-module enumeration (`K32EnumProcessModulesEx` / `K32GetModuleFileNameExW`)" },
+  { group: "loading", re: /Assembly\.Load|AppDomain\.CurrentDomain\.Load|LoadFrom\s*\(/, text: "runtime assembly loading" },
+  { group: "loading", re: /FromBase64String|Convert\.ToBase64String/, text: "base64 decoding" },
+  { group: "capture", re: /GetAsyncKeyState|SetWindowsHookEx|OpenClipboard|GetClipboardData/, text: "keystroke or clipboard capture" },
+  { group: "fs", re: /File\.WriteAll(?:Text|Bytes)\s*\(|File\.AppendAllText\s*\(|new\s+StreamWriter/, text: "file writes at runtime" },
+  { group: "shell", re: /Process\.Start\s*\(|UseShellExecute\s*=\s*true/, text: "launches external processes" },
+  { group: "registry", re: /Registry\.(?:CurrentUser|LocalMachine)|SetValue\s*\(/, text: "registry writes" },
+  { group: "network", re: /WebClient|HttpClient|UnityWebRequest|HttpWebRequest/, text: "an HTTP client" },
+  { group: "network", re: /X-Api-Key/i, text: "a shipped `X-Api-Key` header" },
+  { group: "assets", re: /AssetBundle\.LoadFromFile/, text: "asset-bundle loading" },
+  { group: "patches", re: /HarmonyPatch|Harmony\.Patch/, text: "Harmony patches into game code" },
+  { group: "obfuscation", re: /\\u[0-9A-Fa-f]{4}/, text: "escaped string literals" },
+];
+
+export function detectTechniques(texts) {
+  const out = new Set();
+  for (const raw of texts) {
+    if (!raw) continue;
+    const text = String(raw);
+    for (const t of TECHNIQUES) if (t.re.test(text)) out.add(t.group + "\u0000" + t.text);
+  }
+  return [...out].map((entry) => {
+    const at = entry.indexOf("\u0000");
+    return { group: entry.slice(0, at), text: entry.slice(at + 1) };
+  });
+}
+
+const URL_PATTERN = /https?:\/\/[^\s"'<>)\]}`]+/gi;
+
+export function extractEndpoints(texts) {
+  const seen = new Map();
+  for (const raw of texts) {
+    if (!raw) continue;
+    const found = String(raw).match(URL_PATTERN) || [];
+    for (const candidate of found) {
+      const cleaned = candidate.replace(/[.,;:]+$/, "").replace(/&amp;/g, "&");
+      let url;
+      try { url = new URL(cleaned); } catch { continue; }
+      if (url.protocol !== "http:" && url.protocol !== "https:") continue;
+      const key = url.origin + url.pathname;
+      if (seen.has(key)) continue;
+      seen.set(key, {
+        url: key,
+        scheme: url.protocol.replace(":", ""),
+        host: url.hostname,
+        port: url.port,
+        path: url.pathname,
+        query: url.search ? url.search.slice(1) : "",
+        plain: url.protocol === "http:",
+        rawIp: /^\d{1,3}(?:\.\d{1,3}){3}$/.test(url.hostname),
+      });
+    }
+  }
+  return [...seen.values()].sort((a, b) => (a.plain === b.plain ? a.url.localeCompare(b.url) : a.plain ? -1 : 1));
+}
+
+function formatBytes(bytes) {
+  if (!bytes) return "0 B";
+  if (bytes < 1024) return bytes + " B";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+}
+
+function techText(report, groups) {
+  const seen = new Set();
+  for (const t of report.techniques || []) if (groups.includes(t.group)) seen.add(t.text);
+  return [...seen];
+}
+
+function hostsOf(endpoints) {
+  return [...new Set(endpoints.map((e) => e.host))];
+}
+
+function describeWhatItIs(report) {
+  const m = report.meta || {};
+  const published = m.title ? '"' + m.title + '"' : "Workshop item " + (m.id || "?");
+  if (!report.codeFiles) {
+    return [published + " ships no executable code: " + report.files + " file(s) of asset data, " + formatBytes(report.bytes) + ". Nothing in it can run on its own."];
+  }
+  const managed = report.binaries.filter((b) => b.pe && b.pe.dotnet);
+  const native = report.binaries.filter((b) => b.pe && !b.pe.dotnet);
+  const groups = new Set((report.techniques || []).map((t) => t.group));
+  const obfuscated = report.binaries.some((b) => b.obfuscation && b.obfuscation.weight >= 20);
+  const parts = [];
+  const kind = managed.length
+    ? managed.length + " managed .NET assembl" + (managed.length === 1 ? "y" : "ies")
+    : native.length + " native binar" + (native.length === 1 ? "y" : "ies");
+  parts.push(published + " is a Puck Workshop item with " + kind + (groups.has("patches") ? ", patching game code through Harmony" : "") + ". Titles and sizes come from Steam; this description comes from the files themselves.");
+  const identity = techText(report, ["identity", "modules"]);
+  if (identity.length) {
+    parts.push("It reads machine/account identity and loaded modules: " + identity.join(", ") + ".");
+  }
+  if (report.endpoints.length) {
+    const hosts = hostsOf(report.endpoints);
+    parts.push("It talks to " + hosts.length + " host" + (hosts.length === 1 ? "" : "s") + " (" + hosts.slice(0, 4).join(", ") + (hosts.length > 4 ? ", ..." : "") + ")" + (report.endpoints.some((e) => e.plain) ? ", partly over plain HTTP" : "") + ".");
+  } else if (obfuscated) {
+    parts.push("No endpoint is readable: URLs live in an encoded string table, so this scan cannot list them without de-obfuscation.");
+  }
+  if (obfuscated) {
+    parts.push("The assembly is deliberately obfuscated (renamed symbols and/or an encoded string table), so its strings and control flow are hidden from casual review.");
+  }
+  const caps = (report.capabilities || []).filter((c) => c.key !== "patches");
+  if (caps.length) parts.push("Capabilities matched by the scanner: " + caps.map((c) => c.label.toLowerCase()).join("; ") + ".");
+  parts.push("This is an automated static triage: nothing is executed, and the remote side is not tested.");
+  return parts;
+}
+
+function describeContents(report) {
+  const out = [];
+  const decompiled = report.binaries.filter((b) => b.decompile && b.decompile.available);
+  if (decompiled.length) {
+    out.push("- " + decompiled.length + " managed assembl" + (decompiled.length === 1 ? "y" : "ies") + " decompiled with ILSpy: " + decompiled.map((b) => b.path + " (" + b.decompile.typeCount + " types, " + b.decompile.methodCount + " methods, " + b.decompile.sourceLines + " lines of C#)").join("; ") + ".");
+  }
+  const peBits = report.binaries.filter((b) => b.pe).map((b) => b.path + " - PE" + b.pe.bitness + (b.pe.dotnet ? " .NET" : " native") + ", " + b.pe.sections.length + " sections, overlay " + b.pe.overlay + " B");
+  if (peBits.length) out.push("- PE: " + peBits.join("; ") + ".");
+  const obfuscated = report.binaries.filter((b) => b.obfuscation && b.obfuscation.weight >= 20);
+  if (obfuscated.length) {
+    out.push("- Obfuscation: " + obfuscated.map((b) => b.path + " (" + b.obfuscation.escapes + " escaped literals, " + b.obfuscation.junk + " renamed identifiers over " + b.obfuscation.lines + " decompiled lines)").join("; ") + ". Detected by symbol/string signals only - this scan does not de-obfuscate the string table.");
+  }
+  out.push("- Files: " + report.files + ", " + formatBytes(report.bytes) + "; code files analysed: " + report.codeFiles + (report.skippedFiles ? ", skipped over-size: " + report.skippedFiles : "") + ".");
+  out.push("- Every file is hashed below; the JSON that produced this page lives beside the site data under `data/reports/`.");
+  return out;
+}
+
+function absentLines(report) {
+  const ids = new Set((report.findings || []).map((f) => f.id));
+  const out = [];
+  if (!ids.has("ransom")) out.push("no file-encryption/ransom behaviour");
+  if (!["browser-login", "wallet", "discord-token"].some((id) => ids.has(id))) out.push("no browser, wallet or Discord credential paths");
+  if (!ids.has("keylog")) out.push("no keystroke or clipboard capture");
+  if (!ids.has("run-key")) out.push("no persistence (Run key / task / service)");
+  if (!ids.has("injection")) out.push("no process injection");
+  if (!ids.has("miner")) out.push("no miner markers");
+  if (!["shell-exec", "dynamic-load"].some((id) => ids.has(id))) out.push("no shell/LOLBin execution or downloaded-binary execution");
+  if (!ids.has("webhook")) out.push("no webhook/paste exfiltration endpoints");
+  return out;
+}
+
+function describeCodeAnalysis(report) {
+  const out = [];
+  const identity = techText(report, ["identity", "modules"]);
+  if (identity.length) out.push("- **Identity / fingerprinting:** " + identity.join(", ") + ".");
+  if (report.endpoints.length) {
+    out.push("- **Endpoints (" + report.endpoints.length + "):**");
+    for (const e of report.endpoints.slice(0, 14)) {
+      const flags = [e.plain ? "**plain HTTP**" : null, e.rawIp ? "**hard-coded IP, no domain**" : null, e.port ? "port " + e.port : null, e.query ? "query parameters" : null].filter(Boolean);
+      out.push("  - `" + e.url + "`" + (flags.length ? " - " + flags.join(", ") : ""));
+    }
+    if (report.endpoints.length > 14) out.push("  - ... " + (report.endpoints.length - 14) + " more");
+  }
+  const network = techText(report, ["network", "assets"]);
+  if (network.length) out.push("- **Network / content code:** " + network.join(", ") + ".");
+  const notable = report.notableStrings || [];
+  if (notable.length) out.push("- **Notable strings:** " + notable.map((s) => '"' + s + '"').join(", ") + ".");
+  else if (report.binaries.some((b) => b.obfuscation && b.obfuscation.weight >= 20)) out.push("- **Notable strings:** not readable - literals are held in an encoded string table.");
+  const misc = techText(report, ["fs", "shell", "registry", "capture", "loading"]);
+  if (misc.length) out.push("- **Other calls found:** " + misc.join(", ") + ".");
+  const absent = absentLines(report);
+  if (absent.length) out.push("- **Absent:** " + absent.join("; ") + ".");
+  return out;
+}
+
+const FINDING_SEVERITY = {
+  hostile: "critical",
+  credentials: "high",
+  fingerprinting: "high-privacy / moderate overall",
+  "anti-cheat": "moderate",
+  obfuscation: "moderate",
+  c2: "moderate",
+  "credential-cache": "moderate",
+  "encrypted-payload": "low",
+  crypto: "low",
+  "code-loading": "low",
+  filesystem: "low",
+  shell: "low",
+  native: "low",
+  "binary-anomaly": "low",
+};
+
+function describeFindings(report) {
+  const caps = [...(report.capabilities || [])].filter((c) => c.key !== "patches").sort((a, b) => b.weight - a.weight);
+  const items = [];
+  for (const c of caps.slice(0, 6)) {
+    const sev = FINDING_SEVERITY[c.key] || "low";
+    const extra = [];
+    if (c.key === "c2") {
+      const plain = report.endpoints.filter((e) => e.plain);
+      if (plain.length) extra.push("includes plain HTTP to " + hostsOf(plain).join(", "));
+      if (report.endpoints.some((e) => e.rawIp)) extra.push("one endpoint is a bare IP with no domain");
+    }
+    if (c.key === "obfuscation") extra.push("symbols and/or strings are deliberately hidden");
+    if (c.key === "anti-cheat") extra.push("the client can see every other mod you have loaded");
+    if (c.key === "fingerprinting") extra.push("a persistent hardware/account identifier can be tied to you");
+    items.push("**" + c.label + "**" + (extra.length ? " - " + extra.join("; ") : "") + ". Evidence: " + c.ids.join(", ") + ". Severity: **" + sev + "**.");
+  }
+  if (!caps.some((c) => ["hostile", "credentials"].includes(c.key))) items.push("No evidence of malware behaviour. Severity: **none**.");
+  return items.map((text, i) => i + 1 + ". " + text);
+}
+
+function describeEvidence(report) {
+  const out = [];
+  out.push("- Method: SHA-256 of every file; PE parsing (machine, sections, overlay, .NET metadata); ASCII/UTF-16 string extraction; indicator matching (shells/LOLBins, credential and wallet stores, input capture, injection, persistence, encryption, miner markers, raw-IP and plain-HTTP endpoints); ILSpy (`ilspycmd`, ICSharpCode.Decompiler) decompilation of managed assemblies; the same 0-100 rubric as the hand-written audits (0-15 clean, 16-30 benign with caveats, 31-50 suspicious, 51+ hostile).");
+  out.push("- Generated " + report.generatedAt + " in " + report.analysisMs + " ms; " + report.files + " files, " + formatBytes(report.bytes) + ", " + report.codeFiles + " code files analysed.");
+  out.push("- Not verified: nothing is executed; the endpoints are not contacted (no request is sent by this pipeline), so server-side handling and remote payloads are unknown; obfuscation is judged from symbol/string signals, not by fully de-obfuscating every method.");
+  return out;
+}
+
+function describeBottomLine(report) {
+  const caps = (report.capabilities || []).filter((c) => c.key !== "patches");
+  const score = report.score;
+  const labels = caps.map((c) => c.label.toLowerCase()).join("; ");
+  if (score >= 51) return "**Treat as hostile until proven otherwise.** Multiple high-severity primitives were found in the shipped bytes; do not run this mod. Read a hand audit before touching the build again.";
+  if (score >= 31) {
+    const bits = [];
+    if (caps.some((c) => c.key === "fingerprinting")) bits.push("a hardware/account identifier");
+    if (caps.some((c) => c.key === "anti-cheat")) bits.push("the list of mods you have loaded");
+    if (caps.some((c) => c.key === "c2")) bits.push("reports to a remote endpoint");
+    if (caps.some((c) => c.key === "obfuscation")) bits.push("deliberate obfuscation");
+    const collects = bits.filter((b) => !b.includes("obfuscation"));
+    const obf = bits.includes("deliberate obfuscation");
+    const sentence = collects.length === 1 ? "It collects " + collects[0] : collects.length ? "It collects " + collects.slice(0, -1).join(", ") + " and " + collects[collects.length - 1] : "It reports to a remote endpoint";
+    return "**Not malware, but it behaves like an anti-cheat/telemetry client.** " + sentence + (obf ? ", and its code is deliberately obfuscated" : "") + ". Keep it only if you actually use what it is for; otherwise remove it.";
+  }
+  if (score >= 16) {
+    return "**Not malware, but it carries capabilities a hockey mod does not need** (" + labels + "). Keep it if you trust the mod and its author; remove it if you do not.";
+  }
+  return "**No machine-checkable malware capability found.** Ordinary mod behaviour; treat this as triage, not as a safety guarantee.";
+}
+
+export function toMarkdown(report) {
+  const m = report.meta || {};
+  const item = m.title || ("Workshop item " + (m.id || "?"));
+  const lines = [];
+  lines.push("# " + item + " - automated triage");
+  lines.push("");
+  lines.push("**Verdict:** " + report.verdict + " - automated score " + report.score + "/100");
+  lines.push("**Kind:** " + (report.codeFiles ? (report.binaries.some((b) => b.obfuscation && b.obfuscation.weight >= 20) ? "managed .NET mod, obfuscated" : (report.binaries.some((b) => b.pe) ? "code-bearing mod (managed or native)" : "scripts")) : "asset-only (no executable code)"));
+  lines.push("**Workshop id:** " + (m.id || "?") + " | **Files:** " + report.files + " (" + formatBytes(report.bytes) + ") | **Generated:** " + report.generatedAt);
+  lines.push("");
+  lines.push("> This report was produced by an automated static scanner, not a manual audit. It lists");
+  lines.push("> machine-checkable indicators in the shipped files. Nothing here is executed, and a low");
+  lines.push("> score is not a guarantee of safety. Manual reports supersede this when they exist.");
+  lines.push("");
+  lines.push("## What it is");
+  for (const p of describeWhatItIs(report)) { lines.push(p); lines.push(""); }
+  lines.push("## Contents");
+  for (const p of describeContents(report)) lines.push(p);
+  lines.push("");
+  lines.push("## Code analysis");
+  for (const p of describeCodeAnalysis(report)) lines.push(p);
+  lines.push("");
+  lines.push("## Findings");
+  for (const p of describeFindings(report)) lines.push(p);
+  lines.push("");
+  lines.push("## Evidence trail");
+  for (const p of describeEvidence(report)) lines.push(p);
+  lines.push("");
+  lines.push("## Bottom line");
+  lines.push(describeBottomLine(report));
+  lines.push("");
+  lines.push("## Files and hashes");
+  lines.push("");
+  for (const f of report.inventory.slice(0, 60)) lines.push("- `" + f.sha256 + "` " + f.size + " B - " + f.path);
+  if (report.inventory.length > 60) lines.push("- ... " + (report.inventory.length - 60) + " more");
+  lines.push("");
+  lines.push("## Binaries");
+  lines.push("");
+  if (!report.binaries.length) lines.push("No code files were found in this item.");
+  for (const b of report.binaries) {
+    const pe = b.pe ? "PE" + b.pe.bitness + (b.pe.dotnet ? " .NET" : " native") + ", " + b.pe.sections.length + " sections, overlay " + b.pe.overlay + " B" : b.kind;
+    lines.push("- **" + b.path + "** - " + b.size + " B, " + pe + ", sha256 `" + b.sha256 + "`");
+    for (const s of b.pe ? b.pe.sections : []) lines.push("  - section " + s.name + ": entropy " + s.entropy + (s.executable ? ", executable" : "") + (s.writable ? ", writable" : ""));
+    for (const i of b.indicators || []) lines.push("  - indicator " + i.id + " (" + i.label + ")" + (i.samples.length ? ": " + i.samples.map((x) => "`" + String(x).replace(/`/g, "") + "`").join(", ") : ""));
+  }
+  lines.push("");
+  lines.push("## Capabilities observed");
+  lines.push("");
+  lines.push("Same vocabulary and the same 0-100 rubric as the hand-written reports: 0-15 clean,");
+  lines.push("16-30 benign with caveats, 31-50 suspicious, 51+ treat as hostile. A capability is");
+  lines.push("listed when a machine-checkable pattern for it was present in the shipped bytes.");
+  lines.push("");
+  const caps = report.capabilities || [];
+  if (!caps.length) lines.push("- No capability pattern matched. The files are asset data or ordinary mod code.");
+  for (const c of [...caps].sort((a, b) => b.weight - a.weight)) {
+    lines.push("- **" + c.label + "** - " + (c.weight + c.bump) + "/100 weight" + (c.ids.length ? ", evidence: " + c.ids.join(", ") : ""));
+  }
+  lines.push("");
+  lines.push("## Indicators");
+  lines.push("");
+  if (!report.findings.length) lines.push("No indicator pattern matched.");
+  const order = { 5: "critical", 4: "high", 3: "medium", 2: "low", 1: "info" };
+  for (const f of [...report.findings].sort((a, b) => b.severity - a.severity)) {
+    lines.push("- **" + (order[f.severity] || "info") + "** - " + f.label + " (" + f.file + ")");
+    for (const s of f.samples || []) lines.push("  - `" + String(s).replace(/`/g, "").slice(0, 180) + "`");
+  }
+  lines.push("");
+  lines.push("## Decompiled with ILSpy");
+  lines.push("");
+  const decompiled = report.binaries.filter((b) => b.decompile && b.decompile.available);
+  if (!decompiled.length) {
+    lines.push("No managed .NET assembly was decompiled in this item.");
+  } else {
+    lines.push("Managed assemblies were opened with `ilspycmd` (ICSharpCode.Decompiler) so the report can show");
+    lines.push("what the code actually contains, not only which strings it carries.");
+    for (const b of decompiled) {
+      const d = b.decompile;
+      lines.push("");
+      lines.push("### " + b.path);
+      lines.push("");
+      lines.push("- ILSpy: " + d.typeCount + " types, " + d.methodCount + " methods, " + d.sourceLines + " lines of C# reconstructed");
+      if (d.apiHits && d.apiHits.length) lines.push("- API surface used: " + d.apiHits.map((h) => "`" + h + "`").join(", "));
+      lines.push("- Types: " + d.types.slice(0, 40).map((t) => "`" + t + "`").join(", ") + (d.typeCount > 40 ? ", ..." : ""));
+      if (d.excerpt) {
+        lines.push("");
+        lines.push("```csharp");
+        lines.push(d.excerpt.slice(0, 4000));
+        lines.push("```");
+      }
+    }
+  }
+  lines.push("");
+  lines.push("## What was checked");
+  lines.push("");
+  lines.push("- Every file in the published item was hashed with SHA-256.");
+  lines.push("- Every PE file was parsed for machine, sections, overlay, entropy and .NET metadata.");
+  lines.push("- ASCII and UTF-16 strings were extracted and matched against indicator patterns:");
+  lines.push("  shells/LOLBins, credential and wallet stores, input capture, injection, persistence,");
+  lines.push("  encryption, miner markers, raw IP endpoints and exfiltration-style webhooks.");
+  lines.push("- Managed assemblies were decompiled with ILSpy and the C# was scanned the same way.");
   lines.push("");
   lines.push("## Limits");
   lines.push("");
