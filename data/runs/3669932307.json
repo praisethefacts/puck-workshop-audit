@@ -4,9 +4,9 @@
   "title": "Piluts´s Player Wireframes",
   "state": "running",
   "startedAt": "2026-10-27T04:37:44.958Z",
-  "updatedAt": "2026-10-27T04:53:57.658Z",
-  "step": "metadata",
-  "stepIndex": 0,
+  "updatedAt": "2026-10-27T04:53:59.998Z",
+  "step": "download",
+  "stepIndex": 1,
   "steps": [
     {
       "key": "metadata",
@@ -19,8 +19,8 @@
     {
       "key": "download",
       "label": "Downloading the published files",
-      "state": "failed",
-      "at": "2026-10-27T04:37:48.940Z",
+      "state": "running",
+      "at": "2026-10-27T04:53:59.998Z",
       "detail": "steamcmd reported success but the item folder is missing",
       "finishedAt": "2026-10-27T04:37:57.063Z"
     },
