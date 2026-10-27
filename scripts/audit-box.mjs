@@ -86,16 +86,42 @@ function findSteamCmd() {
   try { return sh("which", ["steamcmd"]).trim(); } catch { return null; }
 }
 
+function runSteamCmd(cmd, args) {
+  // steamcmd exits 0 even when it fails, so keep the output to explain failures.
+  try {
+    const out = execFileSync(cmd, args, { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], timeout: 20 * 60 * 1000 });
+    return out;
+  } catch (err) {
+    return `${err.stdout || ""}${err.stderr || ""}\n${err.message}`;
+  }
+}
+
+function findDownloaded(installDir) {
+  const candidates = [
+    path.join(installDir, "steamapps", "workshop", "content", APP_ID, id),
+    path.join(os.homedir(), ".steam", "steam", "steamapps", "workshop", "content", APP_ID, id),
+    path.join(os.homedir(), "Steam", "steamapps", "workshop", "content", APP_ID, id),
+    path.join(os.homedir(), ".local", "share", "Steam", "steamapps", "workshop", "content", APP_ID, id),
+    path.join("C:", "Program Files (x86)", "Steam", "steamapps", "workshop", "content", APP_ID, id),
+  ];
+  return candidates.find((c) => fs.existsSync(c)) || null;
+}
+
 function download() {
   if (localDir) return path.resolve(localDir);
   const cmd = findSteamCmd();
   if (!cmd) throw new Error("steamcmd not found - run scripts/install-audit-tools.sh or pass --dir");
   const installDir = path.join(os.tmpdir(), "audit-steamcmd");
   fs.mkdirSync(installDir, { recursive: true });
-  console.log(`Downloading ${id} with steamcmd (anonymous)...`);
-  sh(cmd, ["+force_install_dir", installDir, "+login", "anonymous", "+workshop_download_item", APP_ID, id, "+quit"], { timeout: 20 * 60 * 1000 });
-  const dir = path.join(installDir, "steamapps", "workshop", "content", APP_ID, id);
-  if (!fs.existsSync(dir)) throw new Error("steamcmd reported success but the item folder is missing");
+  console.log(`Downloading ${id} with steamcmd (${cmd})...`);
+  const out = runSteamCmd(cmd, ["+force_install_dir", installDir, "+login", "anonymous", "+workshop_download_item", APP_ID, id, "+quit"]);
+  const dir = findDownloaded(installDir);
+  if (!dir) {
+    console.error("steamcmd output:");
+    console.error(out.split("\n").slice(-25).join("\n"));
+    throw new Error(`the item folder is missing after steamcmd (searched ${installDir} and the usual Steam roots)`);
+  }
+  console.log(`Downloaded ${dir}`);
   return dir;
 }
 

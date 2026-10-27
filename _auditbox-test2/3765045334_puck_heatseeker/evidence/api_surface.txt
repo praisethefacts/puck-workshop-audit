@@ -1,0 +1,4 @@
+patches	Harmony patches into game code
+fs	file writes at runtime
+ilspy-api	PuckHeatseeker.dll	Harmony
+ilspy-api	PuckHeatseeker.dll	File.WriteAll

@@ -6,7 +6,8 @@ set -euo pipefail
 echo "== apt packages"
 sudo apt-get update -qq
 sudo apt-get install -y -qq --no-install-recommends \
-  curl ca-certificates tar gzip unzip file binutils python3 xz-utils
+  curl ca-certificates tar gzip unzip file binutils python3 xz-utils \
+  lib32gcc-s1 lib32stdc++6
 
 echo "== steamcmd (anonymous Workshop downloads)"
 if [ ! -x "$HOME/steamcmd/steamcmd.sh" ]; then

@@ -1,0 +1,109 @@
+# Puck Heatseeker - automated triage
+
+**Verdict:** CLEAN - automated score 10/100
+**Kind:** managed .NET mod
+**Workshop id:** 3765045334 | **Files:** 1 (48.5 KB) | **Generated:** 2026-10-27T04:31:25.029Z
+
+> This report was produced by an automated static scanner, not a manual audit. It lists
+> machine-checkable indicators in the shipped files. Nothing here is executed, and a low
+> score is not a guarantee of safety. Manual reports supersede this when they exist.
+
+## What it is
+"Puck Heatseeker" is a Puck Workshop item with 1 managed .NET assembly, patching game code through Harmony. Titles and sizes come from Steam; this description comes from the files themselves.
+
+Capabilities matched by the scanner: machine/account fingerprinting.
+
+This is an automated static triage: nothing is executed, and the remote side is not tested.
+
+## Contents
+- 1 managed assembly decompiled with ILSpy: PuckHeatseeker.dll (17 types, 115 methods, 2801 lines of C#).
+- PE: PuckHeatseeker.dll - PE32 .NET, 3 sections, overlay 0 B.
+- Files: 1, 48.5 KB; code files analysed: 1.
+- Every file is hashed below; the JSON that produced this page lives beside the site data under `data/reports/`.
+
+## Code analysis
+- **Notable strings:** "IsSteamIdAdmin".
+- **Other calls found:** file writes at runtime.
+- **Absent:** no file-encryption/ransom behaviour; no browser, wallet or Discord credential paths; no keystroke or clipboard capture; no persistence (Run key / task / service); no process injection; no miner markers; no shell/LOLBin execution or downloaded-binary execution; no webhook/paste exfiltration endpoints.
+
+## Findings
+1. **Machine/account fingerprinting** - a persistent hardware/account identifier can be tied to you. Evidence: steam-identity. Severity: **high-privacy / moderate overall**.
+2. No evidence of malware behaviour. Severity: **none**.
+
+## Evidence trail
+- Method: SHA-256 of every file; PE parsing (machine, sections, overlay, .NET metadata); ASCII/UTF-16 string extraction; indicator matching (shells/LOLBins, credential and wallet stores, input capture, injection, persistence, encryption, miner markers, raw-IP and plain-HTTP endpoints); ILSpy (`ilspycmd`, ICSharpCode.Decompiler) decompilation of managed assemblies; the same 0-100 rubric as the hand-written audits (0-15 clean, 16-30 benign with caveats, 31-50 suspicious, 51+ hostile).
+- Generated 2026-10-27T04:31:25.029Z in 3324 ms; 1 files, 48.5 KB, 1 code files analysed.
+- Not verified: nothing is executed; the endpoints are not contacted (no request is sent by this pipeline), so server-side handling and remote payloads are unknown; obfuscation is judged from symbol/string signals, not by fully de-obfuscating every method.
+
+## Bottom line
+**No machine-checkable malware capability found.** Ordinary mod behaviour; treat this as triage, not as a safety guarantee.
+
+## Files and hashes
+
+- `0526660090664d05ecaf7a531a95c51a193ce020cb5a0d447e8f707357373b60` 49664 B - PuckHeatseeker.dll
+
+## Binaries
+
+- **PuckHeatseeker.dll** - 49664 B, PE32 .NET, 3 sections, overlay 0 B, sha256 `0526660090664d05ecaf7a531a95c51a193ce020cb5a0d447e8f707357373b60`
+  - section .text: entropy 5.68, executable
+  - section .rsrc: entropy 2.72
+  - section .reloc: entropy 0.08
+  - indicator steam-identity (Steam account identity in code/data): `SteamId`
+  - indicator harmony (Harmony patches into game code): `HarmonyPatch`
+
+## Capabilities observed
+
+Same vocabulary and the same 0-100 rubric as the hand-written reports: 0-15 clean,
+16-30 benign with caveats, 31-50 suspicious, 51+ treat as hostile. A capability is
+listed when a machine-checkable pattern for it was present in the shipped bytes.
+
+- **Machine/account fingerprinting** - 12/100 weight, evidence: steam-identity
+
+## Indicators
+
+- **medium** - Steam account identity in code/data (PuckHeatseeker.dll)
+  - `		return ((adminManager != null) ? new bool?(adminManager.IsSteamIdAdmin(((object)player.SteamId.Value/*cast due to constrained. prefix*/).ToString())) : ((bool?)null)) == true;`
+
+## Decompiled with ILSpy
+
+Managed assemblies were opened with `ilspycmd` (ICSharpCode.Decompiler) so the report can show
+what the code actually contains, not only which strings it carries.
+
+### PuckHeatseeker.dll
+
+- ILSpy: 17 types, 115 methods, 2801 lines of C# reconstructed
+- API surface used: `Harmony`, `File.WriteAll`
+- Types: `<Module>`, `PuckHeatseeker.ClientBehaviour`, `PuckHeatseeker.HeatseekerConfig`, `PuckHeatseeker.HeatseekerMode`, `PuckHeatseeker.HeatseekerPlugin`, `PuckHeatseeker.PhysicsManagerUpdatePatch`, `PuckHeatseeker.PuckCollisionPatch`, `PuckHeatseeker.GameManagerServerTickPatch`, `PuckHeatseeker.GameManagerSetGameStatePatch`, `PuckHeatseeker.HumanizedGamePhasePatch`, `PuckHeatseeker.PlayerSetGameStatePatch`, `PuckHeatseeker.HeatseekerSettingsUI`, `PuckHeatseeker.Net`, `PuckHeatseeker.ClientBehaviour+TrailVisual`, `PuckHeatseeker.ClientBehaviour+<>c`, `PuckHeatseeker.HeatseekerMode+PuckState`, `PuckHeatseeker.HeatseekerMode+<>c`
+
+```csharp
+// line 10 - Harmony
+using System.Runtime.Versioning;
+using System.Text;
+using HarmonyLib;
+using Newtonsoft.Json;
+using Unity.Collections;
+using Unity.Netcode;
+
+// line 609 - File.WriteAll
+			{
+				HeatseekerConfig heatseekerConfig = new HeatseekerConfig();
+				File.WriteAllText(FilePath, JsonConvert.SerializeObject((object)heatseekerConfig, (Formatting)1));
+				Debug.Log((object)("[PuckHeatseeker] Created default config at " + FilePath));
+				return heatseekerConfig;
+			}
+```
+
+## What was checked
+
+- Every file in the published item was hashed with SHA-256.
+- Every PE file was parsed for machine, sections, overlay, entropy and .NET metadata.
+- ASCII and UTF-16 strings were extracted and matched against indicator patterns:
+  shells/LOLBins, credential and wallet stores, input capture, injection, persistence,
+  encryption, miner markers, raw IP endpoints and exfiltration-style webhooks.
+- Managed assemblies were decompiled with ILSpy and the C# was scanned the same way.
+
+## Limits
+
+- Static only: nothing is run. Runtime behaviour and remote payloads are invisible here.
+- Strings can appear in benign libraries; context is judged by a human in a manual audit.
+- A clean automated scan does not prove a mod is safe.

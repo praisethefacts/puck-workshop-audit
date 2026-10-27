@@ -1,0 +1,2 @@
+indicator	severity	file	label	sample
+steam-identity	3	PuckHeatseeker.dll	Steam account identity in code/data	 return ((adminManager != null) ? new bool?(adminManager.IsSteamIdAdmin(((object)player.SteamId.Value/*cast due to constrained. prefix*/).ToString())) : ((bool?)null)) == true;

@@ -1,0 +1,8 @@
+PuckHeatseeker.dll	49664 B	sha256 0526660090664d05ecaf7a531a95c51a193ce020cb5a0d447e8f707357373b60
+  kind: PE32 .NET; sections: 3; overlay: 0 B
+  section .text: raw 47616 B, entropy 5.68, executable
+  section .rsrc: raw 1024 B, entropy 2.72
+  section .reloc: raw 512 B, entropy 0.08
+  obfuscation signals: 0 escaped literals, 0 renamed identifiers over 2801 decompiled lines
+  ILSpy: 17 types, 115 methods, 2801 lines
+
