@@ -1,18 +1,20 @@
 {
   "id": "3765045334",
   "issue": 16,
-  "title": null,
+  "title": "Puck Heatseeker",
   "state": "running",
   "startedAt": "2026-10-27T03:01:00.030Z",
-  "updatedAt": "2026-10-27T03:01:00.030Z",
+  "updatedAt": "2026-10-27T03:01:03.479Z",
   "step": "metadata",
   "stepIndex": 0,
   "steps": [
     {
       "key": "metadata",
       "label": "Reading Workshop metadata",
-      "state": "running",
-      "at": "2026-10-27T03:01:00.030Z"
+      "state": "done",
+      "at": "2026-10-27T03:01:00.030Z",
+      "detail": "Puck Heatseeker · 49664 B reported",
+      "finishedAt": "2026-10-27T03:01:03.479Z"
     },
     {
       "key": "download",
