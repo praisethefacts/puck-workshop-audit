@@ -2,88 +2,44 @@
   "id": "3669932307",
   "issue": 22,
   "title": "Piluts´s Player Wireframes",
-  "state": "done",
+  "state": "running",
   "startedAt": "2026-10-27T04:37:44.958Z",
-  "updatedAt": "2026-10-27T04:52:57.622Z",
-  "step": "publish",
-  "stepIndex": 4,
+  "updatedAt": "2026-10-27T04:53:57.658Z",
+  "step": "metadata",
+  "stepIndex": 0,
   "steps": [
     {
       "key": "metadata",
       "label": "Reading Workshop metadata",
       "state": "done",
-      "at": "2026-10-27T04:52:25.600Z",
+      "at": "2026-10-27T04:53:55.082Z",
       "detail": "Piluts´s Player Wireframes · 13312 B reported · metadata unavailable",
-      "finishedAt": "2026-10-27T04:52:28.598Z"
+      "finishedAt": "2026-10-27T04:53:57.658Z"
     },
     {
       "key": "download",
       "label": "Downloading the published files",
-      "state": "done",
-      "at": "2026-10-27T04:52:30.742Z",
-      "detail": "13312 B on disk",
-      "finishedAt": "2026-10-27T04:52:44.484Z"
+      "state": "failed",
+      "at": "2026-10-27T04:37:48.940Z",
+      "detail": "steamcmd reported success but the item folder is missing",
+      "finishedAt": "2026-10-27T04:37:57.063Z"
     },
     {
       "key": "scan",
       "label": "Hashing files and scanning binaries",
-      "state": "done",
-      "at": "2026-10-27T04:52:46.650Z",
-      "detail": "1 files, 1 code files, 0 indicators",
-      "finishedAt": "2026-10-27T04:52:51.470Z"
+      "state": "pending"
     },
     {
       "key": "report",
       "label": "Writing the triage report",
-      "state": "done",
-      "at": "2026-10-27T04:52:53.541Z",
-      "detail": "CLEAN (0/100)",
-      "finishedAt": "2026-10-27T04:52:53.544Z"
+      "state": "pending"
     },
     {
       "key": "publish",
       "label": "Publishing to the site",
-      "state": "done",
-      "at": "2026-10-27T04:52:55.542Z",
-      "detail": "Report live on the site",
-      "finishedAt": "2026-10-27T04:52:57.622Z"
+      "state": "pending"
     }
   ],
-  "report": {
-    "id": "3669932307",
-    "issue": 22,
-    "title": "Piluts´s Player Wireframes",
-    "creator": "76561199623120582",
-    "verdict": "CLEAN",
-    "score": 0,
-    "automated": true,
-    "generatedAt": "2026-10-27T04:52:51.470Z",
-    "reportPath": "reports/3669932307.md",
-    "fileCount": 1,
-    "bytes": 13312,
-    "codeFiles": 1,
-    "indicatorCount": 0,
-    "topIndicators": [],
-    "programs": [
-      {
-        "file": "PlayerOverlay.dll",
-        "typeCount": 7,
-        "methodCount": 26,
-        "sourceLines": 591,
-        "apiHits": [],
-        "types": [
-          "<Module>",
-          "Microsoft.CodeAnalysis.EmbeddedAttribute",
-          "System.Runtime.CompilerServices.RefSafetyRulesAttribute",
-          "PlayerOverlayLog",
-          "PlayerOverlayMod",
-          "PlayerOverlayPanel",
-          "PlayerOverlayPanel+PlayerDisplayInfo"
-        ],
-        "excerpt": ""
-      }
-    ],
-    "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3669932307"
-  },
-  "note": null
+  "report": null,
+  "note": "Could not obtain the files: steamcmd reported success but the item folder is missing"
 }
