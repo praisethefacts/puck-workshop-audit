@@ -44,4 +44,4 @@ jobs:
 
       - name: Smoke test the image
         run: |
-          docker run --rm puck-audit:ci bash -lc 'node --version && ilspycmd --version | head -2 && steamcmd +quit 2>&1 | tail -2'
+          docker run --rm --entrypoint bash puck-audit:ci -lc 'node --version && ilspycmd --version | head -2 && steamcmd +quit 2>&1 | tail -2'
