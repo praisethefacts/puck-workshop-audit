@@ -1,0 +1,40 @@
+{
+  "id": "3787926596",
+  "issue": 15,
+  "title": null,
+  "state": "running",
+  "startedAt": "2026-10-27T03:00:36.220Z",
+  "updatedAt": "2026-10-27T03:00:36.221Z",
+  "step": "metadata",
+  "stepIndex": 0,
+  "steps": [
+    {
+      "key": "metadata",
+      "label": "Reading Workshop metadata",
+      "state": "running",
+      "at": "2026-10-27T03:00:36.221Z"
+    },
+    {
+      "key": "download",
+      "label": "Downloading the published files",
+      "state": "pending"
+    },
+    {
+      "key": "scan",
+      "label": "Hashing files and scanning binaries",
+      "state": "pending"
+    },
+    {
+      "key": "report",
+      "label": "Writing the triage report",
+      "state": "pending"
+    },
+    {
+      "key": "publish",
+      "label": "Publishing to the site",
+      "state": "pending"
+    }
+  ],
+  "report": null,
+  "note": null
+}
