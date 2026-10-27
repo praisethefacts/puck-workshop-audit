@@ -131,7 +131,7 @@ export function decompileManaged(file, options = {}) {
   // the strings a binary happens to carry. Capped so a huge assembly stays sane.
   result.source = decompiled.stdout ? decompiled.stdout.slice(0, 8 * 1024 * 1024) : "";
   result.apiHits = apiHits.map((hit) => hit.needle);
-  result.excerpt = apiHits.map((hit) => `// line ${hit.atLine} Â· ${hit.needle}\n${hit.text}`).join("\n\n");
+  result.excerpt = apiHits.map((hit) => `// line ${hit.atLine} - ${hit.needle}\n${hit.text}`).join("\n\n");
   return result;
 }
 
@@ -729,9 +729,13 @@ function describeWhatItIs(report) {
     ? managed.length + " managed .NET assembl" + (managed.length === 1 ? "y" : "ies")
     : native.length + " native binar" + (native.length === 1 ? "y" : "ies");
   parts.push(published + " is a Puck Workshop item with " + kind + (groups.has("patches") ? ", patching game code through Harmony" : "") + ". Titles and sizes come from Steam; this description comes from the files themselves.");
-  const identity = techText(report, ["identity", "modules"]);
-  if (identity.length) {
-    parts.push("It reads machine/account identity and loaded modules: " + identity.join(", ") + ".");
+  const identity = techText(report, ["identity"]);
+  const modules = techText(report, ["modules"]);
+  if (identity.length || modules.length) {
+    const what = [];
+    if (identity.length) what.push((modules.length ? "machine/account identity and loaded modules: " : "machine/account identity: ") + identity.join(", "));
+    if (modules.length) what.push(modules.join(", "));
+    parts.push("It reads " + what.join(" and ") + ".");
   }
   if (report.endpoints.length) {
     const hosts = hostsOf(report.endpoints);
