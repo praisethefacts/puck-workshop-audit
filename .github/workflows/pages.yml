@@ -1,0 +1,53 @@
+name: Publish mirror
+
+# Free, always-available mirror of the audit site on GitHub Pages. Netlify is the
+# canonical host (it has the request/admin functions); Pages is the copy that keeps
+# updating when deploy credits run out, so progress stays visible.
+
+# Manual only: this repository is private, and GitHub Pages on a private repo needs
+# a paid plan. If the repo is ever made public (or the plan changes), run this from
+# the Actions UI to publish a free mirror at praisethefacts.github.io/puck-workshop-audit/.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build the static site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Build
+        run: npm run build
+
+      - name: Verify
+        run: |
+          npm run verify
+          npm run check:links
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: Publish to Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

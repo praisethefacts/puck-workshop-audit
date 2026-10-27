@@ -390,6 +390,17 @@
         .then(function (result) {
           var response = result.response;
           var body = result.body;
+          var contentType = response.headers.get("content-type") || "";
+
+          if (!response.ok && contentType.indexOf("application/json") === -1) {
+            showStatus(
+              "error",
+              "This copy of the site has no request API. Open the request as a GitHub issue instead — the audit workflow picks it up from there.",
+              GITHUB_ISSUES,
+              "Open GitHub issues"
+            );
+            return;
+          }
 
           if (response.ok && body && body.ok) {
             var issueUrl = safeHttpUrl(body.issueUrl || body.url || "");

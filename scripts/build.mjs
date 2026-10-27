@@ -1675,6 +1675,7 @@ function renderAdminPage() {
     <button class="btn btn--primary" type="submit" id="admin-submit">Unlock</button>
     <p class="admin-status" id="admin-status" role="status" aria-live="polite">Locked. Enter the admin token to manage visibility.</p>
   </form>
+  <p class="field-hint">Run this copy without the Netlify admin function? The same changes are available from the <a href="https://github.com/praisethefacts/puck-workshop-audit/actions/workflows/admin-commands.yml" rel="noopener">Site admin workflow</a> in the repository — every run writes a reviewed commit to <code>data/site-config.json</code>.</p>
 </section>
 
 <div id="admin-panels" hidden>
