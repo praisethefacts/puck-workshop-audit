@@ -392,6 +392,9 @@
           var body = result.body;
           var contentType = response.headers.get("content-type") || "";
 
+          // Static copies (GitHub Pages) have no serverless function. The request is still
+          // actionable: hand it to GitHub with everything pre-filled, where the audit
+          // workflow picks it up. This is a normal step, not an error.
           if (!response.ok && contentType.indexOf("application/json") === -1) {
             var modId = extractSteamId(payload.mod) || payload.mod;
             var issueUrl =
@@ -404,14 +407,18 @@
                   modId +
                   "\n\n" +
                   (payload.reason ? "Why: " + payload.reason + "\n\n" : "") +
-                  "Requested from the audit site mirror (no request API on this copy)."
+                  (payload.contact ? "Contact: " + payload.contact + "\n\n" : "") +
+                  "Requested from https://praisethefacts.github.io/puck-workshop-audit/"
               );
+            window.open(issueUrl, "_blank", "noopener");
             showStatus(
-              "error",
-              "This copy of the site has no request API. Open the request as a GitHub issue instead — the audit workflow picks it up from there.",
+              "success",
+              "Request ready — GitHub opened in a new tab. Press “Create” there and the automated audit starts by itself; the run shows up on this page.",
               issueUrl,
-              "Open the pre-filled issue"
+              "Open the pre-filled request again"
             );
+            requestForm.reset();
+            updateCounters();
             return;
           }
 

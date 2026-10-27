@@ -1,0 +1,33 @@
+name: Mod audit request
+description: Ask for a Puck Workshop mod to be checked by the automated triage.
+title: "Audit request: "
+labels: ["mod-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks. Fill in the Workshop link or numeric ID and the audit workflow picks this up
+        automatically. Requests are public, so do not paste private information.
+  - type: input
+    id: mod
+    attributes:
+      label: Workshop link or item ID
+      description: For example https://steamcommunity.com/sharedfiles/filedetails/?id=3825309102 or just 3825309102
+      placeholder: "3825309102"
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why this one?
+      description: Optional context - a new build, a suspicious interface, a report you want checked.
+      placeholder: It updated yesterday and adds a new backend call.
+    validations:
+      required: false
+  - type: input
+    id: contact
+    attributes:
+      label: Contact
+      description: Optional Discord or Steam name if you want a ping when the report lands.
+    validations:
+      required: false
