@@ -4,9 +4,9 @@
   "title": "Minecraft Teams",
   "state": "running",
   "startedAt": "2026-10-27T01:08:53.058Z",
-  "updatedAt": "2026-10-27T01:09:24.492Z",
-  "step": "scan",
-  "stepIndex": 2,
+  "updatedAt": "2026-10-27T01:09:28.404Z",
+  "step": "report",
+  "stepIndex": 3,
   "steps": [
     {
       "key": "metadata",
@@ -35,7 +35,10 @@
     {
       "key": "report",
       "label": "Writing the triage report",
-      "state": "pending"
+      "state": "done",
+      "at": "2026-10-27T01:09:28.403Z",
+      "detail": "REVIEW (28/100)",
+      "finishedAt": "2026-10-27T01:09:28.404Z"
     },
     {
       "key": "publish",
@@ -43,6 +46,25 @@
       "state": "pending"
     }
   ],
-  "report": null,
+  "report": {
+    "id": "3825309102",
+    "issue": 9,
+    "title": "Minecraft Teams",
+    "creator": "76561198101351445",
+    "verdict": "REVIEW",
+    "score": 28,
+    "automated": true,
+    "generatedAt": "2026-10-27T01:09:24.492Z",
+    "reportPath": "reports/3825309102.md",
+    "fileCount": 1,
+    "bytes": 70144,
+    "codeFiles": 1,
+    "indicatorCount": 2,
+    "topIndicators": [
+      "Dynamic code loading",
+      "Steam session / SSFN / config reference"
+    ],
+    "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3825309102"
+  },
   "note": null
 }
