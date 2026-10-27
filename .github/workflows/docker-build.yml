@@ -1,4 +1,4 @@
-﻿name: Docker image
+name: Docker image
 
 # Builds the audit container so the Dockerfile cannot rot. No image is pushed;
 # the goal is to prove `docker build` works with the committed scripts.
@@ -37,6 +37,7 @@ jobs:
         with:
           context: .
           push: false
+          load: true
           tags: puck-audit:ci
           cache-from: type=gha
           cache-to: type=gha,mode=max
