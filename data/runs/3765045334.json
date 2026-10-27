@@ -4,9 +4,9 @@
   "title": "Puck Heatseeker",
   "state": "running",
   "startedAt": "2026-10-27T03:02:25.059Z",
-  "updatedAt": "2026-10-27T04:12:39.836Z",
-  "step": "report",
-  "stepIndex": 3,
+  "updatedAt": "2026-10-27T04:12:42.074Z",
+  "step": "publish",
+  "stepIndex": 4,
   "steps": [
     {
       "key": "metadata",
@@ -43,8 +43,8 @@
     {
       "key": "publish",
       "label": "Publishing to the site",
-      "state": "done",
-      "at": "2026-10-27T03:43:55.793Z",
+      "state": "running",
+      "at": "2026-10-27T04:12:42.074Z",
       "detail": "Report live on the site",
       "finishedAt": "2026-10-27T03:43:57.725Z"
     }
