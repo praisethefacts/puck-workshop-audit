@@ -1,14 +1,25 @@
 {
-  "updatedAt": "2026-10-27T02:44:31.749Z",
+  "updatedAt": "2026-10-27T03:00:02.346Z",
   "source": "GitHub issues labelled mod-request in praisethefacts/puck-workshop-audit",
   "requests": [
+    {
+      "id": "3787926596",
+      "title": "Improved Constant Angle Track",
+      "issue": 15,
+      "status": "pending",
+      "requestedAt": "2026-10-27T02:59:53Z",
+      "updatedAt": "2026-10-27T03:00:02.346Z",
+      "note": "",
+      "workshopUpdated": "2026-10-06T08:01:08.000Z",
+      "steamResult": 1
+    },
     {
       "id": "3774089198",
       "title": "Stubby Rinks",
       "issue": 14,
       "status": "pending",
       "requestedAt": "2026-10-27T02:44:21Z",
-      "updatedAt": "2026-10-27T02:44:31.749Z",
+      "updatedAt": "2026-10-27T03:00:02.346Z",
       "note": "",
       "workshopUpdated": "2026-08-25T09:47:07.000Z",
       "steamResult": 1
@@ -19,7 +30,7 @@
       "issue": 11,
       "status": "audited",
       "requestedAt": "2026-10-27T00:54:24Z",
-      "updatedAt": "2026-10-27T02:44:31.749Z",
+      "updatedAt": "2026-10-27T03:00:02.346Z",
       "note": "",
       "workshopUpdated": "2026-09-27T18:15:07.000Z",
       "steamResult": 1
@@ -30,7 +41,7 @@
       "issue": 9,
       "status": "pending",
       "requestedAt": "2026-10-26T23:48:30Z",
-      "updatedAt": "2026-10-27T02:44:31.749Z",
+      "updatedAt": "2026-10-27T03:00:02.346Z",
       "note": "",
       "workshopUpdated": "2026-10-25T05:28:06.000Z",
       "steamResult": 1,
@@ -42,7 +53,7 @@
       "issue": 5,
       "status": "audited",
       "requestedAt": "2026-10-26T23:16:32Z",
-      "updatedAt": "2026-10-27T02:44:31.749Z",
+      "updatedAt": "2026-10-27T03:00:02.346Z",
       "note": "",
       "workshopUpdated": "2026-10-06T13:47:52.000Z",
       "steamResult": 1
@@ -53,7 +64,7 @@
       "issue": 4,
       "status": "audited",
       "requestedAt": "2026-10-26T23:11:12Z",
-      "updatedAt": "2026-10-27T02:44:31.749Z",
+      "updatedAt": "2026-10-27T03:00:02.346Z",
       "note": "form smoke test - ignore",
       "workshopUpdated": "2026-10-22T17:54:27.000Z",
       "steamResult": 1
@@ -64,7 +75,7 @@
       "issue": 3,
       "status": "audited",
       "requestedAt": "2026-10-26T23:08:25Z",
-      "updatedAt": "2026-10-27T02:44:31.749Z",
+      "updatedAt": "2026-10-27T03:00:02.346Z",
       "note": "test",
       "workshopUpdated": "2026-10-25T20:50:38.000Z",
       "steamResult": 1,
@@ -76,7 +87,7 @@
       "issue": 2,
       "status": "pending",
       "requestedAt": "2026-10-26T23:08:23Z",
-      "updatedAt": "2026-10-27T02:44:31.749Z",
+      "updatedAt": "2026-10-27T03:00:02.346Z",
       "note": "Companion server mod for APPL Cinema Studio (the clip-sharing receiver) - not installed locally, never audited.",
       "workshopUpdated": "",
       "steamResult": 9
