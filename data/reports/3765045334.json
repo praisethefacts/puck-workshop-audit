@@ -6,7 +6,7 @@
   "verdict": "NO OBVIOUS INDICATORS",
   "score": 12,
   "automated": true,
-  "generatedAt": "2026-10-27T03:01:23.547Z",
+  "generatedAt": "2026-10-27T03:06:42.700Z",
   "reportPath": "reports/3765045334.md",
   "fileCount": 1,
   "bytes": 49664,
@@ -15,5 +15,6 @@
   "topIndicators": [
     "Hardcoded IPv4 endpoint"
   ],
+  "programs": [],
   "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3765045334"
 }
