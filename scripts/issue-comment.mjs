@@ -22,10 +22,15 @@ const readJson = (file, fallback) => {
   try { return JSON.parse(fs.readFileSync(file, "utf8").replace(/^\uFEFF/, "")); } catch { return fallback; }
 };
 
-const runs = readJson(`${ROOT}/data/audit-runs.json`, []);
-const reports = readJson(`${ROOT}/data/reports.json`, []);
-const run = runs.find((entry) => String(entry.id) === id) || {};
-const report = reports.find((entry) => String(entry.id) === id);
+const findEntry = (dirName, legacyName) => {
+  const own = readJson(`${ROOT}/data/${dirName}/${id}.json`, null);
+  if (own) return own;
+  const legacy = readJson(`${ROOT}/data/${legacyName}`, []);
+  return (Array.isArray(legacy) ? legacy : []).find((entry) => String(entry.id) === id) || null;
+};
+
+const run = findEntry("runs", "audit-runs.json") || {};
+const report = findEntry("reports", "reports.json");
 
 const lines = [];
 if (report) {

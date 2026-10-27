@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /**
  * Post-build checks for the generated site.
  *
@@ -28,6 +28,20 @@ const readJson = (file, fallback) => {
   }
 };
 
+// One JSON file per run/report id; falls back to the legacy single-file layout.
+const readDirJson = (dir, legacyFile) => {
+  const out = [];
+  try {
+    for (const name of fs.readdirSync(dir).sort()) {
+      if (name.endsWith(".json")) out.push(readJson(path.join(dir, name), null));
+    }
+  } catch {
+    /* no directory yet */
+  }
+  if (out.length) return out.filter(Boolean);
+  return readJson(legacyFile, []);
+};
+
 const problems = [];
 const notes = [];
 
@@ -40,8 +54,8 @@ if (!audit || !Array.isArray(audit.mods)) {
 const config = readJson(path.join(ROOT, "data", "site-config.json"), {});
 const requests = readJson(path.join(ROOT, "data", "requests.json"), { requests: [] });
 const staleness = readJson(path.join(ROOT, "data", "staleness.json"), { items: [] });
-const autoReports = readJson(path.join(ROOT, "data", "reports.json"), []);
-const auditRuns = readJson(path.join(ROOT, "data", "audit-runs.json"), []);
+const autoReports = readDirJson(path.join(ROOT, "data", "reports"), path.join(ROOT, "data", "reports.json"));
+const auditRuns = readDirJson(path.join(ROOT, "data", "runs"), path.join(ROOT, "data", "audit-runs.json"));
 
 const hiddenMods = new Set((config.hiddenMods || []).map(String));
 const hiddenRequests = new Set((config.hiddenRequests || []).map(String));

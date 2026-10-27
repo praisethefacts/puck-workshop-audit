@@ -1,0 +1,70 @@
+{
+  "id": "3824593782",
+  "issue": null,
+  "title": "Workshop item 3824593782",
+  "state": "done",
+  "startedAt": "2026-10-27T00:45:35.646Z",
+  "updatedAt": "2026-10-27T00:50:02.104Z",
+  "step": "publish",
+  "stepIndex": 4,
+  "steps": [
+    {
+      "key": "metadata",
+      "label": "Reading Workshop metadata",
+      "state": "done",
+      "at": "2026-10-27T00:50:01.640Z",
+      "detail": "Workshop item 3824593782 · metadata unavailable",
+      "finishedAt": "2026-10-27T00:50:02.082Z"
+    },
+    {
+      "key": "download",
+      "label": "Downloading the published files",
+      "state": "done",
+      "at": "2026-10-27T00:50:02.082Z",
+      "detail": "243712 B on disk",
+      "finishedAt": "2026-10-27T00:50:02.083Z"
+    },
+    {
+      "key": "scan",
+      "label": "Hashing files and scanning binaries",
+      "state": "done",
+      "at": "2026-10-27T00:50:02.084Z",
+      "detail": "1 files, 1 code files, 0 indicators",
+      "finishedAt": "2026-10-27T00:50:02.101Z"
+    },
+    {
+      "key": "report",
+      "label": "Writing the triage report",
+      "state": "done",
+      "at": "2026-10-27T00:50:02.101Z",
+      "detail": "NO OBVIOUS INDICATORS (0/100)",
+      "finishedAt": "2026-10-27T00:50:02.103Z"
+    },
+    {
+      "key": "publish",
+      "label": "Publishing to the site",
+      "state": "done",
+      "at": "2026-10-27T00:50:02.103Z",
+      "detail": "Report live on the site",
+      "finishedAt": "2026-10-27T00:50:02.104Z"
+    }
+  ],
+  "report": {
+    "id": "3824593782",
+    "issue": null,
+    "title": "Workshop item 3824593782",
+    "creator": null,
+    "verdict": "NO OBVIOUS INDICATORS",
+    "score": 0,
+    "automated": true,
+    "generatedAt": "2026-10-27T00:50:02.101Z",
+    "reportPath": "reports/3824593782.md",
+    "fileCount": 1,
+    "bytes": 243712,
+    "codeFiles": 1,
+    "indicatorCount": 0,
+    "topIndicators": [],
+    "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3824593782"
+  },
+  "note": "Steam metadata unavailable (Steam API result 9); the files were analysed as published."
+}

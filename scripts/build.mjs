@@ -33,6 +33,23 @@ function readJson(file, fallback) {
   }
 }
 
+// Runs and automated reports are stored one file per Workshop id so concurrent
+// workflow runs never rewrite the same file (which would make commits conflict).
+// The legacy single-file layouts are still read if present.
+function readDirJson(dir, fallback, legacyFile) {
+  const out = [];
+  try {
+    for (const name of fs.readdirSync(dir).sort()) {
+      if (!name.endsWith(".json")) continue;
+      out.push(readJson(path.join(dir, name), null));
+    }
+  } catch {
+    /* directory missing: fall through to the legacy file */
+  }
+  if (!out.length && legacyFile) return readJson(legacyFile, fallback);
+  return out.filter(Boolean);
+}
+
 function findData() {
   const explicit = cliArg("data");
   const candidates = [
@@ -84,8 +101,10 @@ for (const mod of data.mods) {
 const siteConfig = readJson(path.join(DATA_DIR, "site-config.json"), {});
 const requestsData = readJson(path.join(DATA_DIR, "requests.json"), { requests: [] });
 const stalenessData = readJson(path.join(DATA_DIR, "staleness.json"), { items: [] });
-const auditRuns = readJson(path.join(DATA_DIR, "audit-runs.json"), []);
-const autoReports = readJson(path.join(DATA_DIR, "reports.json"), []);
+const auditRuns = readDirJson(path.join(DATA_DIR, "runs"), [], path.join(DATA_DIR, "audit-runs.json"))
+  .sort((a, b) => String(a.startedAt || "").localeCompare(String(b.startedAt || "")));
+const autoReports = readDirJson(path.join(DATA_DIR, "reports"), [], path.join(DATA_DIR, "reports.json"))
+  .sort((a, b) => String(a.generatedAt || "").localeCompare(String(b.generatedAt || "")));
 
 const hiddenMods = new Set((siteConfig.hiddenMods || []).map(String));
 const hiddenRequests = new Set((siteConfig.hiddenRequests || []).map(String));

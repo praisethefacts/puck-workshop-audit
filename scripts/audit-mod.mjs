@@ -10,8 +10,10 @@ import { analyzeDirectory, toMarkdown } from "./lib/triage.mjs";
 const ROOT = path.resolve(import.meta.dirname, "..");
 const DATA = path.join(ROOT, "data");
 const REPORTS = path.join(ROOT, "reports");
-const RUNS_FILE = path.join(DATA, "audit-runs.json");
-const REPORTS_FILE = path.join(DATA, "reports.json");
+// One file per run and per report: concurrent runs never edit the same file, so
+// their commits cannot conflict while the site shows several of them at once.
+const RUNS_DIR = path.join(DATA, "runs");
+const REPORT_META_DIR = path.join(DATA, "reports");
 const APP_ID = "2994020";
 
 function arg(name, fallback = null) {
@@ -32,6 +34,8 @@ const localDir = arg("dir", null);
 const maxBytes = Number(arg("max-bytes", 600 * 1024 * 1024));
 const commit = !flag("no-commit");
 const deploy = !flag("no-deploy");
+const RUN_FILE = path.join(RUNS_DIR, `${id}.json`);
+const REPORT_META_FILE = path.join(REPORT_META_DIR, `${id}.json`);
 
 function readJson(file, fallback) {
   try { return JSON.parse(fs.readFileSync(file, "utf8").replace(/^\uFEFF/, "")); } catch { return fallback; }
@@ -44,8 +48,7 @@ function sh(cmd, args, opts = {}) {
   return execFileSync(cmd, args, { cwd: ROOT, encoding: "utf8", stdio: opts.stdio || "pipe", env: process.env, ...opts });
 }
 
-const runs = readJson(RUNS_FILE, []);
-const existing = runs.find((r) => String(r.id) === id);
+const existing = readJson(RUN_FILE, null);
 const manualAudit = readJson(path.join(DATA, "audit.json"), { mods: [] });
 const hasManual = (manualAudit.mods || []).some((m) => String(m.id) === id);
 
@@ -78,15 +81,13 @@ if (hasManual) {
   run.note = "A manual audit already exists for this mod, so the automated run was skipped.";
   run.steps = STEP_DEFS.map((s) => ({ ...s, state: "skipped" }));
 }
-if (!existing) runs.push(run);
 
 function persist({ message } = {}) {
-  writeJson(RUNS_FILE, runs);
+  writeJson(RUN_FILE, run);
   if (!commit) return;
   try {
     if (deploy) sh("node", ["scripts/build.mjs"], { stdio: "inherit" });
-    sh("git", ["add", "data", "reports"]);
-    if (!sh("git", ["status", "--porcelain"]).trim()) return;
+    sh("git", ["add", "data", "reports"]);    if (!sh("git", ["status", "--porcelain"]).trim()) return;
     sh("git", ["commit", "-m", message || `audit: ${id} progress`]);
     push();
     if (deploy) deployNow();
@@ -263,7 +264,6 @@ async function main() {
   fs.mkdirSync(REPORTS, { recursive: true });
   const md = toMarkdown(report);
   fs.writeFileSync(path.join(REPORTS, `${id}.md`), md, "utf8");
-  const reports = readJson(REPORTS_FILE, []);
   const summary = {
     id,
     issue: run.issue,
@@ -281,9 +281,7 @@ async function main() {
     topIndicators: report.findings.slice(0, 6).map((f) => f.label),
     workshopUrl: `https://steamcommunity.com/sharedfiles/filedetails/?id=${id}`,
   };
-  const idx = reports.findIndex((r) => String(r.id) === id);
-  if (idx === -1) reports.push(summary); else reports[idx] = summary;
-  writeJson(REPORTS_FILE, reports);
+  writeJson(REPORT_META_FILE, summary);
   run.report = summary;
   step("report", "done", { detail: `${report.verdict} (${report.score}/100)` });
   persist({ message: `audit: ${id} report` });
