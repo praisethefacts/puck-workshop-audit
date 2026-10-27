@@ -4,9 +4,9 @@
   "title": "Puck Heatseeker",
   "state": "running",
   "startedAt": "2026-10-27T03:02:25.059Z",
-  "updatedAt": "2026-10-27T04:58:15.001Z",
-  "step": "scan",
-  "stepIndex": 2,
+  "updatedAt": "2026-10-27T04:58:17.208Z",
+  "step": "report",
+  "stepIndex": 3,
   "steps": [
     {
       "key": "metadata",
@@ -36,9 +36,9 @@
       "key": "report",
       "label": "Writing the triage report",
       "state": "done",
-      "at": "2026-10-27T04:12:39.834Z",
+      "at": "2026-10-27T04:58:17.206Z",
       "detail": "CLEAN (10/100)",
-      "finishedAt": "2026-10-27T04:12:39.836Z"
+      "finishedAt": "2026-10-27T04:58:17.208Z"
     },
     {
       "key": "publish",
@@ -57,7 +57,7 @@
     "verdict": "CLEAN",
     "score": 10,
     "automated": true,
-    "generatedAt": "2026-10-27T04:12:37.327Z",
+    "generatedAt": "2026-10-27T04:58:14.999Z",
     "reportPath": "reports/3765045334.md",
     "fileCount": 1,
     "bytes": 49664,
@@ -95,7 +95,7 @@
           "PuckHeatseeker.HeatseekerMode+PuckState",
           "PuckHeatseeker.HeatseekerMode+<>c"
         ],
-        "excerpt": "// line 10  -  Harmony\nusing System.Runtime.Versioning;\nusing System.Text;\nusing HarmonyLib;\nusing Newtonsoft.Json;\nusing Unity.Collections;\nusing Unity.Netcode;\n\n// line 609  -  File.WriteAll\n\t\t\t{\n\t\t\t\tHeatseekerConfig heatseekerConfig = new HeatseekerConfig();\n\t\t\t\tFile.WriteAllText(FilePath, JsonConvert.SerializeObject((object)heatseekerConfig, (Formatting)1));\n\t\t\t\tDebug.Log((object)(\"[PuckHeatseeker] Created default config at \" + FilePath));\n\t\t\t\treturn heatseekerConfig;\n\t\t\t}"
+        "excerpt": "// line 10 - Harmony\nusing System.Runtime.Versioning;\nusing System.Text;\nusing HarmonyLib;\nusing Newtonsoft.Json;\nusing Unity.Collections;\nusing Unity.Netcode;\n\n// line 609 - File.WriteAll\n\t\t\t{\n\t\t\t\tHeatseekerConfig heatseekerConfig = new HeatseekerConfig();\n\t\t\t\tFile.WriteAllText(FilePath, JsonConvert.SerializeObject((object)heatseekerConfig, (Formatting)1));\n\t\t\t\tDebug.Log((object)(\"[PuckHeatseeker] Created default config at \" + FilePath));\n\t\t\t\treturn heatseekerConfig;\n\t\t\t}"
       }
     ],
     "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3765045334"
