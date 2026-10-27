@@ -4,9 +4,9 @@
   "title": "Piluts´s Player Wireframes",
   "state": "running",
   "startedAt": "2026-10-27T04:36:14.362Z",
-  "updatedAt": "2026-10-27T04:36:42.713Z",
-  "step": "report",
-  "stepIndex": 3,
+  "updatedAt": "2026-10-27T04:36:44.845Z",
+  "step": "publish",
+  "stepIndex": 4,
   "steps": [
     {
       "key": "metadata",
@@ -43,7 +43,8 @@
     {
       "key": "publish",
       "label": "Publishing to the site",
-      "state": "pending"
+      "state": "running",
+      "at": "2026-10-27T04:36:44.845Z"
     }
   ],
   "report": {
