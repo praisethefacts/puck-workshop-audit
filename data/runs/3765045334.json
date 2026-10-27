@@ -2,9 +2,9 @@
   "id": "3765045334",
   "issue": 16,
   "title": "Puck Heatseeker",
-  "state": "running",
+  "state": "done",
   "startedAt": "2026-10-27T03:02:25.059Z",
-  "updatedAt": "2026-10-27T03:14:52.714Z",
+  "updatedAt": "2026-10-27T03:14:55.851Z",
   "step": "publish",
   "stepIndex": 4,
   "steps": [
@@ -43,8 +43,10 @@
     {
       "key": "publish",
       "label": "Publishing to the site",
-      "state": "running",
-      "at": "2026-10-27T03:14:52.714Z"
+      "state": "done",
+      "at": "2026-10-27T03:14:52.714Z",
+      "detail": "Report live on the site",
+      "finishedAt": "2026-10-27T03:14:55.851Z"
     }
   ],
   "report": {
