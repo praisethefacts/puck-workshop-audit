@@ -97,8 +97,19 @@ function runSteamCmd(cmd, args) {
 }
 
 function findDownloaded(installDir) {
+  const cmd = findSteamCmd();
+  const nearCmd = cmd && path.resolve(cmd, "..");
+  const fromCmd = nearCmd ? [
+    path.join(nearCmd, "steamapps", "workshop", "content", APP_ID, id),
+    path.join(nearCmd, "..", "steamapps", "workshop", "content", APP_ID, id),
+  ] : [];
+  // Windows: steamcmd lives in an arbitrary folder; its install dir is its parent.
+  const winRoots = [];
+  if (process.env.STEAMCMD_DIR) winRoots.push(path.join(process.env.STEAMCMD_DIR, "steamapps", "workshop", "content", APP_ID, id));
   const candidates = [
     path.join(installDir, "steamapps", "workshop", "content", APP_ID, id),
+    ...fromCmd,
+    ...winRoots,
     path.join(os.homedir(), ".steam", "steam", "steamapps", "workshop", "content", APP_ID, id),
     path.join(os.homedir(), "Steam", "steamapps", "workshop", "content", APP_ID, id),
     path.join(os.homedir(), ".local", "share", "Steam", "steamapps", "workshop", "content", APP_ID, id),
