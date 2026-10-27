@@ -877,7 +877,11 @@ export function toMarkdown(report) {
   lines.push("# " + item + " - automated triage");
   lines.push("");
   lines.push("**Verdict:** " + report.verdict + " - automated score " + report.score + "/100");
-  lines.push("**Kind:** " + (report.codeFiles ? (report.binaries.some((b) => b.obfuscation && b.obfuscation.weight >= 20) ? "managed .NET mod, obfuscated" : (report.binaries.some((b) => b.pe) ? "code-bearing mod (managed or native)" : "scripts")) : "asset-only (no executable code)"));
+  const obfBinary = report.binaries.some((b) => b.obfuscation && b.obfuscation.weight >= 20);
+  const managedCount = report.binaries.filter((b) => b.pe && b.pe.dotnet).length;
+  const nativeCount = report.binaries.filter((b) => b.pe && !b.pe.dotnet).length;
+  const kindLabel = !report.codeFiles ? "asset-only (no executable code)" : obfBinary ? "managed .NET mod, obfuscated" : managedCount && nativeCount ? "managed + native mod" : managedCount ? "managed .NET mod" : nativeCount ? "native mod" : "scripts";
+  lines.push("**Kind:** " + kindLabel);
   lines.push("**Workshop id:** " + (m.id || "?") + " | **Files:** " + report.files + " (" + formatBytes(report.bytes) + ") | **Generated:** " + report.generatedAt);
   lines.push("");
   lines.push("> This report was produced by an automated static scanner, not a manual audit. It lists");
