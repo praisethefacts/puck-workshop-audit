@@ -109,7 +109,7 @@ jobs:
         if: steps.resolve.outputs.id != '' && env.ISSUE_NUMBER != ''
         run: |
           gh issue edit "$ISSUE_NUMBER" --remove-label "audit-running" || true
-          if grep -q "\"id\": \"${{ steps.resolve.outputs.id }}\"" data/reports.json; then
+          if [ -f "data/reports/${{ steps.resolve.outputs.id }}.json" ]; then
             gh issue edit "$ISSUE_NUMBER" --add-label "audited" || true
           else
             gh issue edit "$ISSUE_NUMBER" --add-label "audit-blocked" || true
