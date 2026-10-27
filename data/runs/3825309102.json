@@ -4,9 +4,9 @@
   "title": "Minecraft Teams",
   "state": "running",
   "startedAt": "2026-10-27T01:08:53.058Z",
-  "updatedAt": "2026-10-27T03:12:13.811Z",
-  "step": "scan",
-  "stepIndex": 2,
+  "updatedAt": "2026-10-27T03:12:15.989Z",
+  "step": "report",
+  "stepIndex": 3,
   "steps": [
     {
       "key": "metadata",
@@ -36,9 +36,9 @@
       "key": "report",
       "label": "Writing the triage report",
       "state": "done",
-      "at": "2026-10-27T02:38:53.681Z",
+      "at": "2026-10-27T03:12:15.988Z",
       "detail": "NO OBVIOUS INDICATORS (12/100)",
-      "finishedAt": "2026-10-27T02:38:53.681Z"
+      "finishedAt": "2026-10-27T03:12:15.989Z"
     },
     {
       "key": "publish",
@@ -57,7 +57,7 @@
     "verdict": "NO OBVIOUS INDICATORS",
     "score": 12,
     "automated": true,
-    "generatedAt": "2026-10-27T02:38:50.413Z",
+    "generatedAt": "2026-10-27T03:12:13.811Z",
     "reportPath": "reports/3825309102.md",
     "fileCount": 1,
     "bytes": 70144,
@@ -65,6 +65,52 @@
     "indicatorCount": 1,
     "topIndicators": [
       "Dynamic code loading"
+    ],
+    "programs": [
+      {
+        "file": "MinecraftTeams.dll",
+        "typeCount": 29,
+        "methodCount": 180,
+        "sourceLines": 3440,
+        "apiHits": [
+          "Steamworks",
+          "WebRequest",
+          "File.WriteAll",
+          "FromBase64String"
+        ],
+        "types": [
+          "<Module>",
+          "MinecraftTeams.MenuModel",
+          "MinecraftTeams.SkinAsset",
+          "MinecraftTeams.ModelAssets",
+          "MinecraftTeams.PartSpec",
+          "MinecraftTeams.MeshData",
+          "MinecraftTeams.ModelGeometry",
+          "MinecraftTeams.NativeRenderers",
+          "MinecraftTeams.Plugin",
+          "MinecraftTeams.ModelManager",
+          "MinecraftTeams.CachedSkin",
+          "MinecraftTeams.SkinCustomization",
+          "MinecraftTeams.SkinPanel",
+          "MinecraftTeams.PlayerSkinIdentity",
+          "MinecraftTeams.SkinSettings",
+          "MinecraftTeams.SkinLookup",
+          "MinecraftTeams.SkinPixels",
+          "MinecraftTeams.SkinShareMessage",
+          "MinecraftTeams.SkinShareProtocol",
+          "MinecraftTeams.SkinShareSession",
+          "MinecraftTeams.SkinShareSession+Peer",
+          "MinecraftTeams.SteamSkinSharing",
+          "MinecraftTeams.TeamModel",
+          "MinecraftTeams.SkinCustomization+<>c__DisplayClass16",
+          "MinecraftTeams.SkinCustomization+<Fetch>d__18",
+          "MinecraftTeams.SkinCustomization+<Download>d__1e",
+          "MinecraftTeams.SkinPanel+<>c__DisplayClassc",
+          "MinecraftTeams.SkinPanel+<>c__DisplayClassf",
+          "MinecraftTeams.SkinPanel+<>c__DisplayClass15"
+        ],
+        "excerpt": "// line 13 · Steamworks\nusing Newtonsoft.Json;\nusing Newtonsoft.Json.Linq;\nusing Steamworks;\nusing Unity.Netcode;\nusing UnityEngine;\nusing UnityEngine.InputSystem;\n\n// line 1080 · WebRequest\n\tprivate readonly HashSet<string> pending = new HashSet<string>(StringComparer.OrdinalIgnoreCase);\n\n\tprivate readonly HashSet<UnityWebRequest> requests = new HashSet<UnityWebRequest>();\n\n\tprivate readonly HashSet<string> sharedLookups = new HashSet<string>(StringComparer.OrdinalIgnoreCase);\n\n\n// line 1439 · File.WriteAll\n\t\t\tValidate(skinSettings2);\n\t\t\tDirectory.CreateDirectory(Path.GetDirectoryName(SettingsPath));\n\t\t\tFile.WriteAllText(SettingsPath, JsonConvert.SerializeObject((object)skinSettings2, (Formatting)1));\n\t\t\tsettings = skinSettings2;\n\t\t\tnotice = \"Saved. Your personal skin shares automatically. Skins update after downloading.\";\n\t\t\tLoadConfigured(force);\n\n// line 1500 · FromBase64String\n\t\t\t\t\tif (cached != null && cached.Png != null && cached.Png.Length <= 1400000)\n\t\t\t\t\t{\n\t\t\t\t\t\tloaded[name] = assets.Add(Convert.FromBase64String(cached.Png), cached.Slim, name);\n\t\t\t\t\t\tstatuses[name] = \"Loaded cached skin\";\n\t\t\t\t\t}\n\t\t\t\t}"
+      }
     ],
     "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3825309102"
   },
