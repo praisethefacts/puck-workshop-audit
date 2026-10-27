@@ -2,9 +2,9 @@
   "id": "3669932307",
   "issue": 22,
   "title": "Piluts´s Player Wireframes",
-  "state": "running",
+  "state": "done",
   "startedAt": "2026-10-27T04:37:44.958Z",
-  "updatedAt": "2026-10-27T04:52:55.542Z",
+  "updatedAt": "2026-10-27T04:52:57.622Z",
   "step": "publish",
   "stepIndex": 4,
   "steps": [
@@ -43,8 +43,10 @@
     {
       "key": "publish",
       "label": "Publishing to the site",
-      "state": "running",
-      "at": "2026-10-27T04:52:55.542Z"
+      "state": "done",
+      "at": "2026-10-27T04:52:55.542Z",
+      "detail": "Report live on the site",
+      "finishedAt": "2026-10-27T04:52:57.622Z"
     }
   ],
   "report": {
