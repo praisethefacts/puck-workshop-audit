@@ -623,12 +623,14 @@
                 (items.length === 1 ? " request" : " requests") +
                 " · open issues for live state";
             })
-            .catch(function () {
+            .catch(function (error) {
               showQueueState("error");
               var detail = $("#queue-error-detail");
               if (detail) {
                 detail.textContent =
-                  "The API is unreachable or GitHub did not answer. The request queue lives on GitHub as issues labelled mod-request.";
+                  "The API is unreachable or GitHub did not answer. The request queue lives on GitHub as issues labelled mod-request. (fallback: " +
+                  String(error && error.message ? error.message : error) +
+                  ")";
               }
               queueUpdated.textContent = "Queue unavailable · GitHub issues still available";
             });
