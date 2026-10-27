@@ -4,9 +4,9 @@
   "title": "Stubby Rinks",
   "state": "running",
   "startedAt": "2026-10-27T02:45:01.699Z",
-  "updatedAt": "2026-10-27T02:45:25.078Z",
-  "step": "download",
-  "stepIndex": 1,
+  "updatedAt": "2026-10-27T02:45:29.101Z",
+  "step": "scan",
+  "stepIndex": 2,
   "steps": [
     {
       "key": "metadata",
@@ -27,7 +27,8 @@
     {
       "key": "scan",
       "label": "Hashing files and scanning binaries",
-      "state": "pending"
+      "state": "running",
+      "at": "2026-10-27T02:45:29.101Z"
     },
     {
       "key": "report",
