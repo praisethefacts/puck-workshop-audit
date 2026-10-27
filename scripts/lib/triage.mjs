@@ -1,4 +1,4 @@
-﻿// Static triage for a downloaded Workshop mod.
+// Static triage for a downloaded Workshop mod.
 // Deterministic: hashes, PE structure, strings, indicator patterns.
 // This is deliberately conservative: it reports what it can see and says so.
 import crypto from "node:crypto";
@@ -17,7 +17,7 @@ const INDICATORS = [
   { id: "browser-login", label: "Browser credential database reference", sev: 4, re: /(Login Data|Web Data|Local State|Cookies|History)\b.*(sqlite|leveldb|chromium|chrome|edge|brave)|\\Google\\Chrome\\User Data|\\Microsoft\\Edge\\User Data/i },
   { id: "wallet", label: "Crypto wallet path reference", sev: 5, re: /(wallet\.dat|Exodus[\\/]|MetaMask|Phantom[\\/]|Electrum[\\/]|Coinbase[\\/]|Keplr|Trust\s*Wallet)/i },
   { id: "discord-token", label: "Discord token storage reference", sev: 5, re: /(discord[\\/]Local Storage|leveldb|discordcanary|discordptb)/i },
-  { id: "steam-session", label: "Steam session / SSFN / config reference", sev: 4, re: /(loginusers\.vdf|ssfn\d*|config[\\/]config\.vdf|Steam\\config|SteamID64)/i },
+  { id: "steam-session", label: "Steam session / SSFN / config reference", sev: 4, re: /(loginusers\.vdf|ssfn\d*|config[\\/]config\.vdf|Steam[\\/]config|steamguard|SteamAppTicket|GetAuthTicketForWebApi)/i },
   // input capture / screen
   { id: "keylog", label: "Keystroke or clipboard capture API", sev: 4, re: /\b(GetAsyncKeyState|SetWindowsHookEx|GetKeyboardState|OpenClipboard|GetClipboardData)\b/ },
   { id: "screen-capture", label: "Screen capture API", sev: 2, re: /\b(BitBlt|PrintWindow|GetDC|CaptureScreenshot)\b/ },
