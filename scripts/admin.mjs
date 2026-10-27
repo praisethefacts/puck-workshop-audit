@@ -11,7 +11,7 @@
  *   node scripts/admin.mjs hide-request 5
  *   node scripts/admin.mjs show-request 5
  *   node scripts/admin.mjs hide-reaudit 3735183385
- *   node scripts/admin.mjs site-url https://example.netlify.app
+ *   node scripts/admin.mjs site-url https://praisethefacts.github.io/puck-workshop-audit
  *
  * Hidden mods disappear from the ledger and their mod page is not generated.
  * Hidden requests disappear from the "Queued for audit" list. Editing only
@@ -44,7 +44,7 @@ const readJson = (file, fallback) => {
 };
 
 const config = readJson(CONFIG_PATH, {
-  siteUrl: "https://puck-workshop-safecheck.netlify.app",
+  siteUrl: "https://praisethefacts.github.io/puck-workshop-audit",
   hiddenMods: [],
   hiddenRequests: [],
   hiddenReaudits: [],

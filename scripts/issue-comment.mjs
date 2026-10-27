@@ -10,7 +10,7 @@ import fs from "node:fs";
 const ROOT = process.cwd();
 const argId = process.argv[2] && !process.argv[2].startsWith("-") ? process.argv[2] : "";
 const id = String(process.env.AUDIT_ID || argId || "").trim();
-const site = String(process.env.SITE_URL || "https://puck-workshop-safecheck.netlify.app").replace(/\/+$/, "");
+const site = String(process.env.SITE_URL || "https://praisethefacts.github.io/puck-workshop-audit").replace(/\/+$/, "");
 const outFile = process.argv[3] || "/tmp/comment.md";
 
 if (!id) {

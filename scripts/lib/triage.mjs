@@ -536,7 +536,7 @@ export function toMarkdownLegacy(report) {
   lines.push(`- Creator: ${m.creator || "(unknown)"}`);
   lines.push(`- Created / updated: ${m.timeCreatedHuman || "?"} / ${m.timeUpdatedHuman || "?"}`);
   lines.push(`- Reported size: ${m.fileSize ? m.fileSize + " B" : "?"}`);
-  lines.push(`- Generated: ${report.generatedAt}`);
+  lines.push(`- Generated: ${formatWhen(report.generatedAt)}`);
   lines.push(`- Files: ${report.files}, bytes hashed: ${report.bytes}`);
   lines.push("");
   lines.push("## Files and hashes");
@@ -697,6 +697,13 @@ export function extractEndpoints(texts) {
   return [...seen.values()].sort((a, b) => (a.plain === b.plain ? a.url.localeCompare(b.url) : a.plain ? -1 : 1));
 }
 
+function formatWhen(iso) {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return String(iso || "?");
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())} UTC`;
+}
+
 function formatBytes(bytes) {
   if (!bytes) return "0 B";
   if (bytes < 1024) return bytes + " B";
@@ -847,7 +854,7 @@ function describeFindings(report) {
 function describeEvidence(report) {
   const out = [];
   out.push("- Method: SHA-256 of every file; PE parsing (machine, sections, overlay, .NET metadata); ASCII/UTF-16 string extraction; indicator matching (shells/LOLBins, credential and wallet stores, input capture, injection, persistence, encryption, miner markers, raw-IP and plain-HTTP endpoints); ILSpy (`ilspycmd`, ICSharpCode.Decompiler) decompilation of managed assemblies; the same 0-100 rubric as the hand-written audits (0-15 clean, 16-30 benign with caveats, 31-50 suspicious, 51+ hostile).");
-  out.push("- Generated " + report.generatedAt + " in " + report.analysisMs + " ms; " + report.files + " files, " + formatBytes(report.bytes) + ", " + report.codeFiles + " code files analysed.");
+  out.push("- Generated " + formatWhen(report.generatedAt) + " in " + (report.analysisMs / 1000).toFixed(1) + " s; " + report.files + " files, " + formatBytes(report.bytes) + ", " + report.codeFiles + " code files analysed.");
   out.push("- Not verified: nothing is executed; the endpoints are not contacted (no request is sent by this pipeline), so server-side handling and remote payloads are unknown; obfuscation is judged from symbol/string signals, not by fully de-obfuscating every method.");
   return out;
 }

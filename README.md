@@ -1,13 +1,13 @@
 # Puck Workshop mod audit
 
-**Live site:** https://praisethefacts.github.io/puck-workshop-audit/ (GitHub Pages mirror,
-republished on every commit) · https://puck-workshop-safecheck.netlify.app (canonical host with
-the request/admin functions; its deploys pause when the Netlify account credits run out).
+**Live site:** https://praisethefacts.github.io/puck-workshop-audit/ — GitHub Pages, republished on
+every commit by the **Publish mirror** workflow. That is the only deployment.
 
 A static, dependency-free security audit site for 63 installed Puck Workshop mods, an automated
 triage pipeline for newly requested mods, and a public request queue. Plain HTML, CSS and vanilla
-JavaScript; the build is a single Node script with no npm dependencies, and Netlify hosts the static
-output and two small Web API functions.
+JavaScript; the build is a single Node script with no npm dependencies. The hosted site needs no
+server: the request form hands off to a pre-filled GitHub issue, and the queue is a static snapshot
+that the workflows keep in sync.
 
 No framework, bundler, CDN, cookie or client-side tracker is used.
 
@@ -34,9 +34,9 @@ No framework, bundler, CDN, cookie or client-side tracker is used.
 | `scripts/admin.mjs` | CLI for hiding/showing entries (`data/site-config.json`) |
 | `scripts/serve.mjs` | Tiny static server for `dist/` |
 | `scripts/theme/` | Source stylesheet, browser scripts and favicon copied into `dist/assets/` |
-| `netlify/functions/api.mjs` | `/api/requests` (GET) and `/api/request` (POST) |
-| `netlify/functions/admin.mjs` | `/api/admin` (POST): password-gated visibility changes |
-| `netlify.toml` | Build command, publish directory, function directory, API rewrites and headers |
+| `netlify/functions/api.mjs` | Optional self-hosting: `/api/requests` (GET) and `/api/request` (POST). Not used by the live site. |
+| `netlify/functions/admin.mjs` | Optional self-hosting: `/api/admin` (POST), password-gated visibility changes. Not used by the live site. |
+| `netlify.toml` | Optional self-hosting config (build command, publish dir, functions, API rewrites). Not used by the live site. |
 
 `dist/` is generated and is not committed. Every page, report and asset in it is reproducible from
 the committed data with `npm run build`.
@@ -44,7 +44,8 @@ the committed data with `npm run build`.
 ## Build, verify and preview
 
 Requirements: Node.js 20 or newer. There is nothing to install. Automated triage also needs
-`steamcmd` (only for the download step) and `netlify-cli` (only for the deploy step).
+`steamcmd` (only for the download step); decompilation needs the .NET SDK with `ilspycmd`
+(`scripts/install-audit-tools.sh` installs both).
 
 ```sh
 npm run build     # writes dist/
@@ -57,8 +58,8 @@ npm run serve     # http://127.0.0.1:4173/ over dist/
 site never fetches Markdown at runtime: every report is rendered during the build, and the generator
 redacts local filesystem paths and machine usernames from report content before writing HTML.
 
-For the API functions, use `npx netlify dev` instead of `npm run serve`; the static server is enough
-for the ledger, reports, method page and the request page's designed offline state.
+`npm run serve` is enough for every page: the request form falls back to a pre-filled GitHub issue,
+and the queue renders from the committed snapshot.
 
 ## Automated triage
 
@@ -82,31 +83,31 @@ audit, the report page is a scan, and the page says so. A clean scan is not a sa
 
 ## Deploy
 
-Deployment is automated: a push to `main` runs **Deploy**, which builds, verifies, checks links and
-publishes `dist/` to Netlify. To do it locally:
+Deployment is automated and static. A push to `main` (or a completed data/audit workflow) runs
+**Publish mirror**, which builds `dist/`, verifies it, checks links and publishes it to GitHub Pages.
+There is no other host and no server-side component.
+
+To inspect exactly what will be published, build and serve it locally:
 
 ```sh
-npm run build
-netlify deploy --prod --dir=dist --functions=netlify/functions
+npm run check
+npm run serve
 ```
 
-### Repository secrets
+### Optional: hosting the API functions yourself
 
-| Secret | Used by | Purpose |
-| --- | --- | --- |
-| `NETLIFY_AUTH_TOKEN` | Deploy | Netlify personal access token. |
-| `NETLIFY_SITE_ID` | Deploy | `710ee0da-e912-4c0d-a334-f9a6ad59b911` for the live site. |
-
-### Netlify environment variables
+`netlify/functions/*` and `netlify.toml` are kept for anyone who wants server-side request intake or
+the password-gated admin page. They are inert on GitHub Pages. If you do host them, set:
 
 | Name | Required | Purpose |
 | --- | --- | --- |
-| `GITHUB_TOKEN` | Yes | Fine-grained token with **Issues: read and write** and **Contents: read and write** on the queue repository. Creates request issues, and commits visibility changes from the admin page. |
+| `GITHUB_TOKEN` | Yes | Fine-grained token with **Issues: read and write** and **Contents: read and write** on the queue repository. |
 | `GITHUB_REPO` | Optional | `owner/repo` for the queue. Defaults to `praisethefacts/puck-workshop-audit`. |
 | `ADMIN_TOKEN` | Yes, for `/admin.html` | Password for the admin page. Compared server-side; never rendered into the page. |
 
-Never put these in client code, `netlify.toml`, or the repository. Both functions read them from the
-environment and never return them to the browser.
+Never put these in client code or the repository: both functions read them from the environment and
+never return them to the browser. On the live GitHub Pages site, visibility changes are made by
+committing `data/site-config.json` (see `npm run admin -- --help`).
 
 ## Automation
 
@@ -114,7 +115,7 @@ The repository keeps itself current with GitHub Actions (details in
 [`docs/AUTOMATION.md`](docs/AUTOMATION.md)):
 
 - **CI** — build, verify, link-check and data-validate every push and pull request.
-- **Deploy** — build and publish to Netlify on every push to `main`, and after the data workflows.
+- **Publish mirror** — build, verify and publish to GitHub Pages on every push to `main`, and after the data workflows.
 - **Sync audit requests** — hourly, on issue events and on dispatch: issues labelled `mod-request`
   become `data/requests.json`, and the Workshop update watch is refreshed.
 - **Audit requested mod** — downloads a requested item, runs the static triage, publishes the report

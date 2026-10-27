@@ -90,7 +90,7 @@ function persist({ message } = {}) {
     sh("git", ["add", "data", "reports"]);    if (!sh("git", ["status", "--porcelain"]).trim()) return;
     sh("git", ["commit", "-m", message || `audit: ${id} progress`]);
     push();
-    if (deploy) deployNow();
+    if (deploy) console.log('push done - Publish mirror republishes the site');
   } catch (err) {
     console.warn("commit/deploy failed:", err.message);
   }
@@ -111,19 +111,6 @@ function push() {
       }
       if (attempt === 3) throw err;
     }
-  }
-}
-
-function deployNow() {
-  if (!process.env.NETLIFY_AUTH_TOKEN || !process.env.NETLIFY_SITE_ID) return;
-  try {
-    if (process.env.NETLIFY_CLI) {
-      sh(process.env.NETLIFY_CLI, ["deploy", "--prod", "--dir", "dist", "--message", `audit ${id}`], { stdio: "inherit" });
-    } else {
-      sh("npx", ["--yes", "netlify-cli@23", "deploy", "--prod", "--dir", "dist", "--message", `audit ${id}`], { stdio: "inherit" });
-    }
-  } catch (err) {
-    console.warn("deploy failed:", err.message);
   }
 }
 

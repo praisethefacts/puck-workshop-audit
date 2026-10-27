@@ -37,9 +37,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-      NETLIFY_CLI: netlify
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       ISSUE_NUMBER: ${{ github.event.issue.number || inputs.issue }}
       ISSUE_TITLE: ${{ github.event.issue.title }}
@@ -55,9 +52,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-
-      - name: Install Netlify CLI
-        run: npm install -g netlify-cli@23
 
       - name: Install steamcmd
         run: |
@@ -100,7 +94,7 @@ jobs:
         if: steps.resolve.outputs.id != '' && env.ISSUE_NUMBER != ''
         run: |
           gh issue edit "$ISSUE_NUMBER" --add-label "audit-running" || true
-          gh issue comment "$ISSUE_NUMBER" --body "Automated triage started for Workshop ${{ steps.resolve.outputs.id }}. Live progress: https://puck-workshop-safecheck.netlify.app/requests.html#automation"
+          gh issue comment "$ISSUE_NUMBER" --body "Automated triage started for Workshop ${{ steps.resolve.outputs.id }}. Live progress: https://praisethefacts.github.io/puck-workshop-audit/requests.html#automation"
 
       - name: Run automated triage
         if: steps.resolve.outputs.id != ''

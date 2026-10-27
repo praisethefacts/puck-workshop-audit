@@ -4490,3 +4490,48 @@ html.js .sort-fallback {
     forced-color-adjust: none;
   }
 }
+
+/* status chips in the request/automation rows (same language as the ledger badges) */
+.request-status {
+  justify-self: end;
+  align-self: start;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--silver);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 5px 7px;
+  white-space: nowrap;
+}
+
+.request-status--open {
+  color: var(--ink);
+  border-color: var(--silver-2);
+}
+
+.request-status--closed {
+  color: var(--muted);
+  border-color: var(--line-soft);
+  background: transparent;
+  opacity: 1;
+}
+
+/* the band label sat on top of the score track */
+.record-band {
+  margin-top: 10px;
+}
+
+/* on narrow screens the "/" separators end up at the start of wrapped lines */
+@media (max-width: 640px) {
+  .page-hero-meta {
+    gap: 6px 14px;
+  }
+
+  .page-hero-meta span + span::before {
+    content: none;
+    margin: 0;
+  }
+}

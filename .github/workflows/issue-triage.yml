@@ -47,7 +47,7 @@ jobs:
         run: |
           gh issue edit "$ISSUE_NUMBER" --add-label mod-request --repo "${{ github.repository }}"
           gh issue comment "$ISSUE_NUMBER" --repo "${{ github.repository }}" --body \
-            "Queued. The queue on the site refreshes within the hour (usually within a minute of this label). If the mod is already in the ledger, its report and audited hash are linked from https://puck-workshop-safecheck.netlify.app/ — otherwise it will show as pending until the next audit lands."
+            "Queued. The queue on the site refreshes within the hour (usually within a minute of this label). If the mod is already in the ledger, its report and audited hash are linked from https://praisethefacts.github.io/puck-workshop-audit/ — otherwise it will show as pending until the next audit lands."
 
       - name: Trigger the queue sync now
         if: steps.check.outputs.request == 'yes'

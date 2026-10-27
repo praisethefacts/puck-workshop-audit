@@ -270,6 +270,8 @@ function scoreMarkup(score, wide = false) {
 function dateDisplay(iso) {
   const value = String(iso || "");
   if (!value) return "";
+  const m = /^(\d{4}-\d{2}-\d{2})[T ](\d{2}:\d{2})/.exec(value);
+  if (m) return `${m[1]} ${m[2]} UTC`;
   return value.replace(/\.\d+Z$/, "Z").replace("T", " ").replace(/Z$/, " UTC");
 }
 
@@ -451,6 +453,19 @@ function renderList(lines, start, baseIndent, context) {
   }
 
   return { html: `<${tag}>${items.join("")}</${tag}>`, next: index };
+}
+
+// Tri* reports froze their generation time as raw ISO-8601; keep the page readable.
+function prettifyStamps(html) {
+  const stamp = /20\d\d-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?Z/g;
+  return String(html).replace(stamp, (iso) => {
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso;
+    const pad = (n) => String(n).padStart(2, "0");
+    return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ${pad(
+      d.getUTCHours()
+    )}:${pad(d.getUTCMinutes())} UTC`;
+  });
 }
 
 function renderTable(lines, start, context, currentHeading) {
@@ -1475,9 +1490,8 @@ function renderAutoReportPage(report) {
       <p class="report-timestamp"><span class="meta-label">Run</span> ${esc(dateDisplay(report.generatedAt))}</p>
     </div>
     <section class="report" id="report" aria-label="Automated triage report">
-      <div class="prose">${rendered.html}</div>
+      <div class="prose">${prettifyStamps(rendered.html)}</div>
     </section>
-    ${renderDecompiledSection(report)}
   </div>
   <aside class="report-aside" aria-label="Triage actions">
     <div class="aside-block">
@@ -1769,7 +1783,7 @@ function renderAdminPage() {
     <button class="btn btn--primary" type="submit" id="admin-submit">Unlock</button>
     <p class="admin-status" id="admin-status" role="status" aria-live="polite">Locked. Enter the admin token to manage visibility.</p>
   </form>
-  <p class="field-hint">Run this copy without the Netlify admin function? The same changes are available from the <a href="https://github.com/praisethefacts/puck-workshop-audit/actions/workflows/admin-commands.yml" rel="noopener">Site admin workflow</a> in the repository — every run writes a reviewed commit to <code>data/site-config.json</code>.</p>
+  <p class="field-hint">The hosted site is static, so visibility changes are applied by the <a href="https://github.com/praisethefacts/puck-workshop-audit/actions/workflows/admin-commands.yml" rel="noopener">Site admin workflow</a> in the repository — every run writes a reviewed commit to <code>data/site-config.json</code> (or run <code>npm run admin -- --help</code> locally).</p>
 </section>
 
 <div id="admin-panels" hidden>
@@ -1998,7 +2012,7 @@ copyAsset("queue-live.js");
 copyAsset("favicon.svg");
 
 const SITE_URL = String(
-  siteConfig.siteUrl || process.env.SITE_URL || "https://puck-workshop-safecheck.netlify.app"
+  siteConfig.siteUrl || process.env.SITE_URL || "https://praisethefacts.github.io/puck-workshop-audit"
 ).replace(/\/+$/, "");
 
 const sitemapEntries = ["", "method.html", "requests.html"]

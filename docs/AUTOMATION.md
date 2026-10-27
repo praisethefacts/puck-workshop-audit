@@ -10,7 +10,7 @@ those files and the generated `reports/`, then let the Deploy workflow publish t
 | Workflow | Trigger | What it does |
 | --- | --- | --- |
 | `ci.yml` | push, pull request, manual | Builds `dist/`, verifies structure, checks internal links and anchors, validates data files, uploads `dist` as a build artifact. |
-| `deploy.yml` | push to `main`, manual, after the data workflows | Same checks, then `netlify deploy --prod --dir=dist --functions=netlify/functions`. |
+| `pages.yml` | push to `main`, manual, after the data workflows | Same checks, then publish `dist/` to GitHub Pages. |
 | `requests-sync.yml` | hourly at :17, issue events, dispatch, data changes | `sync-requests.mjs` (GitHub issues labelled `mod-request` → `data/requests.json`), then `check-staleness.mjs`; commits if either file changed. |
 | `staleness.yml` | daily 05:23 UTC, manual | Refresh `data/staleness.json` against Steam's public Workshop API; commit when a build moved. |
 | `audit-request.yml` | issue opened/labelled `mod-request`, manual | Downloads the requested Workshop item with `steamcmd`, runs the static triage, commits each step to `data/audit-runs.json`, deploys, writes `reports/<id>.html` and comments the outcome on the issue. |
@@ -54,14 +54,12 @@ bytes, which is why the banner names the mod rather than changing its score.
 
 | Secret | Scope | Notes |
 | --- | --- | --- |
-| `NETLIFY_AUTH_TOKEN` | repository | Personal access token for deploys. |
-| `NETLIFY_SITE_ID` | repository | `710ee0da-e912-4c0d-a334-f9a6ad59b911`. |
 
 Workflows use the built-in `GITHUB_TOKEN` for issue reads and repository commits; no personal token is
 stored in Actions. That token cannot push workflow files, so changes to `.github/workflows/` have to
 arrive through a normal (non-workflow) push.
 
-The Netlify functions read these site environment variables:
+`netlify/functions/*` are optional and unused by the live site. If you host them yourself they read:
 
 | Variable | Used by | Notes |
 | --- | --- | --- |
@@ -81,7 +79,7 @@ npm run admin -- hide-mod 3776968217
 npm run admin -- show-mod 3776968217
 npm run admin -- hide-request 5
 npm run admin -- hide-reaudit 3811996661
-npm run admin -- site-url https://example.netlify.app
+npm run admin -- site-url https://praisethefacts.github.io/puck-workshop-audit
 ```
 
 ## Running the automated triage by hand

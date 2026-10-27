@@ -1,12 +1,7 @@
 name: Publish mirror
 
-# Free, always-available mirror of the audit site on GitHub Pages. Netlify is the
-# canonical host (it has the request/admin functions); Pages is the copy that keeps
-# updating when deploy credits run out, so progress stays visible.
-
-# Manual only: this repository is private, and GitHub Pages on a private repo needs
-# a paid plan. If the repo is ever made public (or the plan changes), run this from
-# the Actions UI to publish a free mirror at praisethefacts.github.io/puck-workshop-audit/.
+# The site. Free static hosting on GitHub Pages, republished on every commit and
+# after every data/audit workflow, so the queue and live triage progress stay visible.
 on:
   push:
     branches: [main]
