@@ -1,0 +1,36 @@
+{
+  "id": "3669932307",
+  "issue": 22,
+  "title": "Piluts´s Player Wireframes",
+  "creator": "76561199623120582",
+  "verdict": "CLEAN",
+  "score": 0,
+  "automated": true,
+  "generatedAt": "2026-10-27T04:36:40.611Z",
+  "reportPath": "reports/3669932307.md",
+  "fileCount": 1,
+  "bytes": 13312,
+  "codeFiles": 1,
+  "indicatorCount": 0,
+  "topIndicators": [],
+  "programs": [
+    {
+      "file": "PlayerOverlay.dll",
+      "typeCount": 7,
+      "methodCount": 26,
+      "sourceLines": 591,
+      "apiHits": [],
+      "types": [
+        "<Module>",
+        "Microsoft.CodeAnalysis.EmbeddedAttribute",
+        "System.Runtime.CompilerServices.RefSafetyRulesAttribute",
+        "PlayerOverlayLog",
+        "PlayerOverlayMod",
+        "PlayerOverlayPanel",
+        "PlayerOverlayPanel+PlayerDisplayInfo"
+      ],
+      "excerpt": ""
+    }
+  ],
+  "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3669932307"
+}
