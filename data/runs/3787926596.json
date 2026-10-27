@@ -1,18 +1,20 @@
 {
   "id": "3787926596",
   "issue": 15,
-  "title": null,
+  "title": "Improved Constant Angle Track",
   "state": "running",
   "startedAt": "2026-10-27T03:00:36.220Z",
-  "updatedAt": "2026-10-27T03:00:36.221Z",
+  "updatedAt": "2026-10-27T03:00:39.003Z",
   "step": "metadata",
   "stepIndex": 0,
   "steps": [
     {
       "key": "metadata",
       "label": "Reading Workshop metadata",
-      "state": "running",
-      "at": "2026-10-27T03:00:36.221Z"
+      "state": "done",
+      "at": "2026-10-27T03:00:36.221Z",
+      "detail": "Improved Constant Angle Track · 95232 B reported",
+      "finishedAt": "2026-10-27T03:00:39.002Z"
     },
     {
       "key": "download",
