@@ -117,7 +117,7 @@
 
       var fragment = document.createDocumentFragment();
       sorted.forEach(function (item) {
-        fragment.appendChild(item.row);
+        fragment.appendChild(item);
       });
       tbody.appendChild(fragment);
       updateSortHeader();
@@ -127,7 +127,7 @@
       var shown = 0;
       rows.forEach(function (item) {
         var visible = rowMatches(item._audit);
-        item.row.hidden = !visible;
+        item.hidden = !visible;
         if (visible) shown += 1;
       });
 
@@ -665,5 +665,111 @@
     });
 
     loadQueue();
+  }
+
+  /* ------------------------------------------------------------------------
+     Motion: sticky header, scroll reveals, score bars that fill on approach.
+     Everything here is optional polish; without JS the page is fully static.
+     ---------------------------------------------------------------------- */
+
+  var reducedMotion =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function initStickyHeader() {
+    var header = $(".site-header");
+    if (!header) return;
+    var ticking = false;
+
+    function update() {
+      ticking = false;
+      header.classList.toggle("is-stuck", window.scrollY > 6);
+    }
+
+    window.addEventListener(
+      "scroll",
+      function () {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(update);
+      },
+      { passive: true }
+    );
+    update();
+  }
+
+  function initReveal() {
+    var targets = $all(
+      ".section > .shell > *, .stat, .finding-row, .verdict-panel, .record-score-panel, .request-form-panel, .queue-panel, .aside-block, .closing"
+    );
+
+    if (reducedMotion || !("IntersectionObserver" in window)) return;
+
+    targets.forEach(function (element, index) {
+      element.classList.add("reveal");
+      element.style.transitionDelay = Math.min(index % 4, 3) * 60 + "ms";
+    });
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-in");
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.05 }
+    );
+
+    targets.forEach(function (element) {
+      observer.observe(element);
+    });
+  }
+
+  function initScoreBars() {
+    var fills = $all(".score-fill");
+    if (!fills.length) return;
+
+    if (reducedMotion || !("IntersectionObserver" in window)) {
+      fills.forEach(function (fill) {
+        fill.classList.add("is-filling");
+      });
+      return;
+    }
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var fill = entry.target;
+          var delay = Number(fill.getAttribute("data-delay") || 0);
+          window.setTimeout(function () {
+            fill.classList.add("is-filling");
+          }, delay);
+          observer.unobserve(fill);
+        });
+      },
+      { rootMargin: "0px 0px -6% 0px", threshold: 0.2 }
+    );
+
+    fills.forEach(function (fill, index) {
+      if (!fill.getAttribute("data-delay") && index < 24) {
+        fill.setAttribute("data-delay", String(index * 26));
+      }
+      observer.observe(fill);
+    });
+  }
+
+  function initMotion() {
+    document.documentElement.classList.add("js");
+    initStickyHeader();
+    initReveal();
+    initScoreBars();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMotion);
+  } else {
+    initMotion();
   }
 })();

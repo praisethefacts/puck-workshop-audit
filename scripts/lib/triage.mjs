@@ -1,6 +1,7 @@
 // Static triage for a downloaded Workshop mod.
 // Deterministic: hashes, PE structure, strings, indicator patterns.
 // This is deliberately conservative: it reports what it can see and says so.
+import { execFileSync } from "node:child_process";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
@@ -8,6 +9,127 @@ import path from "node:path";
 export const MAX_ANALYSED_FILE_BYTES = 96 * 1024 * 1024; // per file
 const STRING_SCAN_LIMIT = 8 * 1024 * 1024; // bytes per file for string extraction
 const MAX_STRINGS = 4000;
+
+// Decompiler used for the "what did it actually do" half of an automated run.
+// ilspycmd is a dotnet tool; set ILSPYCMD to override the path.
+const ILSPYCMD = process.env.ILSPYCMD || "C:\\Users\\w4ua\\.dotnet\\tools\\ilspycmd.exe";
+
+const API_NEEDLES = [
+  "HttpClient",
+  "WebClient",
+  "HttpWebRequest",
+  "WebRequest",
+  "TcpClient",
+  "UdpClient",
+  "Socket",
+  "System.Net",
+  "Process.Start",
+  "ProcessStartInfo",
+  "Registry",
+  "Assembly.Load",
+  "LoadFrom",
+  "DllImport",
+  "File.Delete",
+  "File.WriteAll",
+  "Directory.GetFiles",
+  "Environment.GetEnvironmentVariable",
+  "Environment.GetFolderPath",
+  "GetAsyncKeyState",
+  "SetWindowsHookEx",
+  "Aes",
+  "Rijndael",
+  "FromBase64String",
+  "Application.OpenURL",
+  "Steamworks",
+  "SteamFriends",
+  "UnityWebRequest",
+  "DownloadHandler",
+  "Application.persistentDataPath",
+  "PersistentDataPath",
+  "VoteKick",
+  "Harmony",
+  "PatchPrefix",
+  "PatchPostfix",
+];
+
+function runIlspy(args, timeoutMs = 60000) {
+  try {
+    const stdout = execFileSync(ILSPYCMD, args, {
+      encoding: "utf8",
+      timeout: timeoutMs,
+      maxBuffer: 64 * 1024 * 1024,
+      windowsHide: true,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    return { ok: true, stdout: String(stdout) };
+  } catch (err) {
+    // ilspycmd returns non-zero even on success; keep whatever it printed.
+    return {
+      ok: false,
+      stdout: String(err && err.stdout ? err.stdout : ""),
+      error: String((err && (err.stderr || err.message)) || err).slice(0, 200),
+    };
+  }
+}
+
+function excerptAround(source, limit = 24) {
+  const lines = source.split(/\r?\n/);
+  const hits = [];
+  const seen = new Set();
+  for (let i = 0; i < lines.length && hits.length < limit; i++) {
+    const line = lines[i];
+    const needle = API_NEEDLES.find((entry) => line.includes(entry));
+    if (!needle || seen.has(needle)) continue;
+    seen.add(needle);
+    const from = Math.max(0, i - 2);
+    const to = Math.min(lines.length, i + 4);
+    hits.push({ needle, atLine: i + 1, text: lines.slice(from, to).join("\n") });
+  }
+  return hits;
+}
+
+export function decompileManaged(file, options = {}) {
+  const maxSourceBytes = options.maxSourceBytes || 200000;
+  const result = { available: false, tool: "ilspycmd", command: `ilspycmd -p -o <out> "${path.basename(file)}"` };
+  if (!fs.existsSync(ILSPYCMD)) {
+    result.error = `ilspycmd not found at ${ILSPYCMD}`;
+    return result;
+  }
+
+  const typesOut = runIlspy(["-l", "c", file]);
+  const classes = typesOut.stdout
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => /^Class\s+/.test(line))
+    .map((line) => line.replace(/^Class\s+/, ""));
+
+  let methodCount = 0;
+  const tableOut = runIlspy(["--dump-table", "MethodDef", "--json", file]);
+  try {
+    const parsed = JSON.parse(tableOut.stdout);
+    methodCount = Number(parsed.rowCount) || (Array.isArray(parsed.rows) ? parsed.rows.length : 0);
+  } catch {
+    methodCount = 0;
+  }
+
+  const decompiled = runIlspy([file], 120000);
+  const source = decompiled.stdout.slice(0, maxSourceBytes);
+  if (!classes.length && !source.trim()) {
+    result.error = decompiled.error || typesOut.error || "no decompiler output";
+    return result;
+  }
+
+  const apiHits = excerptAround(source);
+  result.available = true;
+  result.typeCount = classes.length;
+  result.types = classes.slice(0, 150);
+  result.methodCount = methodCount;
+  result.sourceBytes = Buffer.byteLength(decompiled.stdout, "utf8");
+  result.sourceLines = decompiled.stdout ? decompiled.stdout.split(/\r?\n/).length : 0;
+  result.apiHits = apiHits.map((hit) => hit.needle);
+  result.excerpt = apiHits.map((hit) => `// line ${hit.atLine} · ${hit.needle}\n${hit.text}`).join("\n\n");
+  return result;
+}
 
 const INDICATORS = [
   // shells / lolbins
@@ -172,8 +294,9 @@ function scanIndicators(strings) {
 
 const SKIP_DIRS = /^(\.git|\.netlify|node_modules)$/i;
 
-export function analyzeDirectory(root, meta = {}) {
+export function analyzeDirectory(root, meta = {}, options = {}) {
   const started = Date.now();
+  const decompileEnabled = options.decompile !== false;
   const files = walk(root).filter((f) => !SKIP_DIRS.test(path.basename(path.dirname(f))));
   const inventory = [];
   const binaries = [];
@@ -206,6 +329,9 @@ export function analyzeDirectory(root, meta = {}) {
       stringCount: strings.length, benignMarkers: benign,
     };
     binaries.push(binary);
+    if (pe && pe.dotnet && decompileEnabled) {
+      binary.decompile = decompileManaged(file);
+    }
     for (const ind of indicators) {
       const already = findings.find((f) => f.id === ind.id && f.file === rel);
       if (already) continue;
@@ -303,6 +429,33 @@ export function toMarkdown(report) {
     for (const f of [...report.findings].sort((a, b) => b.severity - a.severity)) {
       lines.push(`- **${order[f.severity] || "info"}** — ${f.label} (${f.file})`);
       for (const s of f.samples || []) lines.push(`  - \`${String(s).replace(/`/g, "").slice(0, 180)}\``);
+    }
+  }
+  lines.push("");
+  lines.push("## Decompiled with ILSpy");
+  lines.push("");
+  const decompiled = report.binaries.filter((b) => b.decompile && b.decompile.available);
+  if (!decompiled.length) {
+    lines.push("No managed .NET assembly was decompiled in this item.");
+  } else {
+    lines.push("Managed assemblies were opened with `ilspycmd` (ICSharpCode.Decompiler) so the report can show");
+    lines.push("what the code actually contains, not only which strings it carries.");
+    for (const b of decompiled) {
+      const d = b.decompile;
+      lines.push("");
+      lines.push(`### ${b.path}`);
+      lines.push("");
+      lines.push(`- ILSpy: ${d.typeCount} types, ${d.methodCount} methods, ${d.sourceLines} lines of C# reconstructed`);
+      if (d.apiHits && d.apiHits.length) {
+        lines.push(`- API surface used: ${d.apiHits.map((h) => "`" + h + "`").join(", ")}`);
+      }
+      lines.push(`- Types: ${d.types.slice(0, 40).map((t) => "`" + t + "`").join(", ")}${d.typeCount > 40 ? ", …" : ""}`);
+      if (d.excerpt) {
+        lines.push("");
+        lines.push("```csharp");
+        lines.push(d.excerpt.slice(0, 4000));
+        lines.push("```");
+      }
     }
   }
   lines.push("");

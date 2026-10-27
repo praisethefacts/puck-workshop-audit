@@ -279,6 +279,18 @@ async function main() {
     codeFiles: report.codeFiles,
     indicatorCount: report.findings.length,
     topIndicators: report.findings.slice(0, 6).map((f) => f.label),
+    programs: report.binaries
+      .filter((b) => b.decompile && b.decompile.available)
+      .slice(0, 6)
+      .map((b) => ({
+        file: b.path,
+        typeCount: b.decompile.typeCount,
+        methodCount: b.decompile.methodCount,
+        sourceLines: b.decompile.sourceLines,
+        apiHits: b.decompile.apiHits,
+        types: b.decompile.types.slice(0, 40),
+        excerpt: b.decompile.excerpt.slice(0, 6000),
+      })),
     workshopUrl: `https://steamcommunity.com/sharedfiles/filedetails/?id=${id}`,
   };
   writeJson(REPORT_META_FILE, summary);

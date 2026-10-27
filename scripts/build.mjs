@@ -649,6 +649,23 @@ function navItems(prefix) {
   ];
 }
 
+function renderWireframe() {
+  return `<div class="wireframe" aria-hidden="true">
+<svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" focusable="false">
+<g>
+<path class="wire" d="M1082 170a150 150 0 1 0 300 0 150 150 0 1 0-300 0"/>
+<path class="wire wire--slow" d="M760 468l150-86 152 86v176l-152 88-150-88z"/>
+<path class="wire wire--faint" d="M760 468l150 88 152-88"/>
+<path class="wire wire--faint" d="M910 556v174"/>
+<path class="wire wire--slow" d="M-40 762h610l120-120h352"/>
+<path class="wire wire--faint" d="M182-40v298l158 160v242"/>
+<path class="wire wire--faint" d="M118 96h236v236"/>
+<path class="wire wire--slow" d="M1140 690l190-108v190l-190 108z"/>
+<path class="wire wire--dashed" d="M0 132h1440M0 312h1440M0 492h1440M0 672h1440M0 852h1440"/>
+</g>
+</svg></div>`;
+}
+
 function pageShell({ title, description, prefix = "", current = "home", main, bodyClass = "", noindex = false }) {
   const nav = navItems(prefix)
     .map(
@@ -664,8 +681,8 @@ function pageShell({ title, description, prefix = "", current = "home", main, bo
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#090a08">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#f3f3f1">
 <title>${esc(title)}</title>
 <meta name="description" content="${attr(description)}">
 ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
@@ -675,6 +692,7 @@ ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
 </head>
 <body${bodyClass ? ` class="${attr(bodyClass)}"` : ""}>
 <a class="skip-link" href="#main">Skip to content</a>
+${renderWireframe()}
 <div class="statusbar">
   <div class="shell statusbar-inner">
     <span class="status-state"><span class="status-dot" aria-hidden="true"></span>No malware found</span>
@@ -1183,8 +1201,22 @@ function renderModPage(mod, index) {
 /* -------------------------------------------------------------------------- */
 
 function renderMethodPage() {
+  const automatedSection = `
+
+## Automated triage — the machine half
+
+Requested mods that are not yet installed are audited by a GitHub Actions workflow, not by hand:
+
+1. The published Workshop item is downloaded with \`steamcmd\` into a throwaway directory.
+2. Every file is hashed with SHA-256 and the PE headers of every executable are parsed.
+3. Every managed .NET assembly is decompiled with \`ilspycmd\` (the CLI of ICSharpCode.Decompiler, the engine behind ILSpy), which yields the type list, method count, reconstructed C# and the external APIs the code actually calls.
+4. ASCII and UTF-16 strings are matched against indicator patterns for shells, credential and wallet stores, input capture, injection, persistence, encryption, miner markers and raw-IP endpoints.
+5. A report is written, committed and published, and the run's progress is visible on the requests page while it happens.
+
+Automated triage is deliberately shallower than a manual audit: it reads code but does not reason about intent, and it never runs the mod. The decompiled section of each automated report shows exactly what ILSpy produced, so the machine output can be checked rather than trusted.
+`;
   const methodSource = String(data.method || "")
-    .replace(/any of the 61 mods/g, `any of the ${counts.total} mods`);
+    .replace(/any of the 61 mods/g, `any of the ${counts.total} mods`) + automatedSection;
   const rendered = renderMarkdown(methodSource, {
     skipFirstH1: true,
     modHref: (id) => `mods/${id}.html`,
@@ -1290,7 +1322,7 @@ ${detail}
 <div class="run-head">
   <div>
     <p class="request-title"><a href="${attr(WORKSHOP + String(run.id))}" target="_blank" rel="noopener noreferrer">${esc(title)}<span class="external-mark" aria-hidden="true">↗</span></a></p>
-    <p class="request-meta">Mod ${esc(run.id)}${run.issue ? ` · Issue #${esc(run.issue)}` : ""} · started ${esc(timeMarkup(run.startedAt))}</p>
+    <p class="request-meta">Mod ${esc(run.id)}${run.issue ? ` · Issue #${esc(run.issue)}` : ""} · started ${timeMarkup(run.startedAt)}</p>
   </div>
   ${automationStateChip(run)}
 </div>
@@ -1315,7 +1347,7 @@ function renderAutomationSection() {
     <div class="section-head-copy">
       <p class="kicker">Automated triage</p>
       <h2 id="automation-title">Working on it, in public.</h2>
-      <p class="section-lede">Requested mods are fetched from Steam, unpacked, hashed and scanned by an automated static triage. Every step commits and redeploys, so this list shows the run as it happens.${
+      <p class="section-lede">Requested mods are fetched from Steam, unpacked, hashed and scanned by an automated static triage. Every step commits and republishes, so this list shows the run as it happens.${
         live ? " A run is active right now — the page checks for updates on its own." : ""
       }</p>
     </div>
@@ -1328,6 +1360,59 @@ function renderAutomationSection() {
     <p class="meta-label">Source: data/audit-runs.json · runs triggered by the audit workflow</p>
     <p class="meta-label">Automated triage is a scan, not a manual audit. It can miss runtime behaviour and remote payloads.</p>
   </div>
+</section>`;
+}
+
+function renderDecompiledSection(report) {
+  const programs = Array.isArray(report.programs) ? report.programs : [];
+  if (!programs.length) {
+    return `<section class="decompile" aria-labelledby="decompile-title">
+  <div class="report-head">
+    <div>
+      <p class="kicker">Decompiled</p>
+      <h2 class="report-title" id="decompile-title">What ILSpy reads</h2>
+    </div>
+    <p class="report-timestamp">ilspycmd · ICSharpCode.Decompiler</p>
+  </div>
+  <p class="aside-note">No managed .NET assembly was decompiled in this item — only assets, or the binaries are native.</p>
+</section>`;
+  }
+
+  const blocks = programs
+    .map(
+      (program) => `<article class="program">
+  <p class="program-file"><code>${esc(program.file)}</code></p>
+  <dl class="program-facts">
+    <div><dt>Types</dt><dd>${Number(program.typeCount) || 0}</dd></div>
+    <div><dt>Methods</dt><dd>${Number(program.methodCount) || 0}</dd></div>
+    <div><dt>C# lines</dt><dd>${Number(program.sourceLines) || 0}</dd></div>
+  </dl>
+  ${
+    Array.isArray(program.apiHits) && program.apiHits.length
+      ? `<p class="program-apis"><span class="meta-label">API surface</span>${program.apiHits
+          .map((hit) => `<span class="api-chip">${esc(hit)}</span>`)
+          .join("")}</p>`
+      : ""
+  }
+  ${
+    program.excerpt
+      ? `<pre class="code"><code>${esc(String(program.excerpt).slice(0, 6000))}</code></pre>`
+      : ""
+  }
+</article>`
+    )
+    .join("");
+
+  return `<section class="decompile" aria-labelledby="decompile-title">
+  <div class="report-head">
+    <div>
+      <p class="kicker">Decompiled</p>
+      <h2 class="report-title" id="decompile-title">What ILSpy reads</h2>
+    </div>
+    <p class="report-timestamp">ilspycmd · ICSharpCode.Decompiler</p>
+  </div>
+  <p class="aside-note">The managed assemblies in this item were decompiled with <code>ilspycmd</code>, the CLI of ICSharpCode.Decompiler (the engine behind ILSpy). Counts and snippets below come from that decompilation; this is what the code contains, not what strings it happens to carry.</p>
+  ${blocks}
 </section>`;
 }
 
@@ -1390,6 +1475,7 @@ function renderAutoReportPage(report) {
     <section class="report" id="report" aria-label="Automated triage report">
       <div class="prose">${rendered.html}</div>
     </section>
+    ${renderDecompiledSection(report)}
   </div>
   <aside class="report-aside" aria-label="Triage actions">
     <div class="aside-block">
@@ -1672,7 +1758,7 @@ function renderAdminPage() {
     <div class="section-head-copy">
       <p class="kicker">Authenticate</p>
       <h2 id="admin-title">Admin password</h2>
-      <p>Set as <code>ADMIN_TOKEN</code> on the site. It is checked server-side and never stored in the page.</p>
+      <p>Set as <code>ADMIN_TOKEN</code> on the deployment that serves the admin API. It is checked server-side and never stored in the page. This static mirror has no server functions, so on GitHub Pages the same change is made by committing <code>data/site-config.json</code>.</p>
     </div>
   </div>
   <form class="admin-bar" id="admin-form" autocomplete="off">
