@@ -236,3 +236,47 @@ for 30 days. It does not publish to the public site - that stays with the
 What is still different from a hand audit: the automated pass does not read intent.
 It reports what the bytes can do and the same 0-100 rubric, but a person still decides
 whether a capability is legitimate for a hockey mod.
+
+### One click on Windows: `audit.bat`
+
+Double-click `audit.bat` (or drag a Workshop link onto it) and it will:
+
+1. accept a Workshop id, a `steamcommunity.com/...?id=` link or a `steam://` link,
+2. find `node`, `ilspycmd` and `steamcmd` (it looks in the usual places, including
+   `%USERPROFILE%\Documents\Code\_steamcmd`),
+3. run the full audit into `audit-out\<id>_<name>\` and open the folder.
+
+```bat
+audit.bat                          :: asks for an id / link
+audit.bat 3765045334               :: full audit (REPORT.md + evidence\ + sources\)
+audit.bat 3765045334 site          :: also publish it as an automated site triage
+audit.bat 3765045334 --dir "%CD%\mod"   :: audit files already on disk
+```
+
+Set `AUDIT_BATCH=1` to skip the "press any key" and the Explorer window (CI use).
+
+### Docker
+
+Same pipeline in a container: Node 22, .NET 8, ILSpy CLI and steamcmd are baked in.
+
+```bash
+docker build -t puck-audit .
+docker run --rm -e ID=3765045334 -v "$PWD/audit-out:/work/audit-out" puck-audit
+```
+
+or with Compose (mounts `audit-out/`, `data/` and `reports/` back into the repo):
+
+```bash
+ID=3765045334 docker compose run --rm audit          # full audit
+MODE=site ID=3765045334 docker compose run --rm audit   # site triage in reports/ + data/
+```
+
+In PowerShell the variables go through the environment:
+
+```powershell
+$env:ID = "3765045334"; docker compose run --rm audit
+```
+
+The image downloads Workshop items with steamcmd anonymous login inside the
+container, so no Steam account is needed. Decompiled sources land in
+`audit-out\<id>_<name>\sources\`.

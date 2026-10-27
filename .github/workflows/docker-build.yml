@@ -1,0 +1,46 @@
+﻿name: Docker image
+
+# Builds the audit container so the Dockerfile cannot rot. No image is pushed;
+# the goal is to prove `docker build` works with the committed scripts.
+
+on:
+  push:
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - docker/**
+      - scripts/audit-box.mjs
+      - scripts/lib/**
+      - package.json
+      - .github/workflows/docker-build.yml
+  pull_request:
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - docker/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build the image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: puck-audit:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Smoke test the image
+        run: |
+          docker run --rm puck-audit:ci bash -lc 'node --version && ilspycmd --version | head -2 && steamcmd +quit 2>&1 | tail -2'

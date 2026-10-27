@@ -1,0 +1,24 @@
+﻿# Docker Compose wrapper for the audit image.
+#
+#   docker compose run --rm audit                       # uses ID from .env or the default
+#   ID=3776968217 docker compose run --rm audit          # PowerShell: $env:ID="3776968217"; docker compose run --rm audit
+#   MODE=site docker compose run --rm audit              # publish as a site triage instead
+#
+# The output folders are mounted back into this repository so the container can
+# be thrown away afterwards.
+services:
+  audit:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: puck-audit:local
+    environment:
+      ID: "${ID:-3765045334}"
+      MODE: "${MODE:-full}"
+    volumes:
+      - ./audit-out:/work/audit-out
+      - ./data:/work/data
+      - ./reports:/work/reports
+    working_dir: /work
+    stdin_open: true
+    tty: true

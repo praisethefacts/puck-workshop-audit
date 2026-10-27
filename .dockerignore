@@ -1,0 +1,9 @@
+﻿node_modules
+dist
+.git
+.github
+audit-out
+_auditbox-test*
+.netlify
+*.zip
+*.log
