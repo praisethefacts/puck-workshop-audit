@@ -16,6 +16,12 @@ const OUT = path.resolve(ROOT, cliArg("out") || "dist");
 const OUT_MODS = path.join(OUT, "mods");
 const OUT_ASSETS = path.join(OUT, "assets");
 
+// Cache-busting for the shared assets, so a deploy is picked up immediately.
+const ASSET_VERSION =
+  String(process.env.ASSET_VERSION || process.env.GITHUB_SHA || "")
+    .replace(/[^a-z0-9]/gi, "")
+    .slice(0, 8) || String(Date.now().toString(36));
+
 const GITHUB_REPO = "praisethefacts/puck-workshop-audit";
 const GITHUB_ISSUES = `https://github.com/${GITHUB_REPO}/issues`;
 const WORKSHOP = "https://steamcommunity.com/sharedfiles/filedetails/?id=";
@@ -664,8 +670,8 @@ function pageShell({ title, description, prefix = "", current = "home", main, bo
 <meta name="description" content="${attr(description)}">
 ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
 <link rel="icon" href="${prefix}assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="${prefix}assets/style.css">
-<script src="${prefix}assets/app.js" defer></script>
+<link rel="stylesheet" href="${prefix}assets/style.css?v=${ASSET_VERSION}">
+<script src="${prefix}assets/app.js?v=${ASSET_VERSION}" defer></script>
 </head>
 <body${bodyClass ? ` class="${attr(bodyClass)}"` : ""}>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -1478,7 +1484,7 @@ ${autoLine}
 
 function renderRequestsPage() {
   const main = `<div class="shell page-enter">
-<script src="assets/queue-live.js" defer></script>
+<script src="assets/queue-live.js?v=${ASSET_VERSION}" defer></script>
 <header class="page-hero page-hero--request">
   <div>
     <p class="eyebrow"><span class="eyebrow-index">REQUESTS</span><span class="eyebrow-sep" aria-hidden="true">/</span><span>Public queue</span></p>
