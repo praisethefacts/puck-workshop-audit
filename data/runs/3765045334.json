@@ -2,103 +2,44 @@
   "id": "3765045334",
   "issue": 16,
   "title": "Puck Heatseeker",
-  "state": "done",
+  "state": "running",
   "startedAt": "2026-10-27T03:02:25.059Z",
-  "updatedAt": "2026-10-27T03:14:55.851Z",
-  "step": "publish",
-  "stepIndex": 4,
+  "updatedAt": "2026-10-27T03:15:26.965Z",
+  "step": "metadata",
+  "stepIndex": 0,
   "steps": [
     {
       "key": "metadata",
       "label": "Reading Workshop metadata",
       "state": "done",
-      "at": "2026-10-27T03:14:11.628Z",
+      "at": "2026-10-27T03:15:24.688Z",
       "detail": "Puck Heatseeker · 49664 B reported · metadata unavailable",
-      "finishedAt": "2026-10-27T03:14:15.612Z"
+      "finishedAt": "2026-10-27T03:15:26.965Z"
     },
     {
       "key": "download",
       "label": "Downloading the published files",
-      "state": "done",
+      "state": "running",
       "at": "2026-10-27T03:14:18.743Z",
-      "detail": "49664 B on disk",
-      "finishedAt": "2026-10-27T03:14:36.697Z"
+      "detail": "steamcmd reported success but the item folder is missing",
+      "finishedAt": "2026-10-27T03:07:53.787Z"
     },
     {
       "key": "scan",
       "label": "Hashing files and scanning binaries",
-      "state": "done",
-      "at": "2026-10-27T03:14:39.781Z",
-      "detail": "1 files, 1 code files, 1 indicators",
-      "finishedAt": "2026-10-27T03:14:46.302Z"
+      "state": "pending"
     },
     {
       "key": "report",
       "label": "Writing the triage report",
-      "state": "done",
-      "at": "2026-10-27T03:14:49.447Z",
-      "detail": "NO OBVIOUS INDICATORS (12/100)",
-      "finishedAt": "2026-10-27T03:14:49.448Z"
+      "state": "pending"
     },
     {
       "key": "publish",
       "label": "Publishing to the site",
-      "state": "done",
-      "at": "2026-10-27T03:14:52.714Z",
-      "detail": "Report live on the site",
-      "finishedAt": "2026-10-27T03:14:55.851Z"
+      "state": "pending"
     }
   ],
-  "report": {
-    "id": "3765045334",
-    "issue": 16,
-    "title": "Puck Heatseeker",
-    "creator": "76561198033311962",
-    "verdict": "NO OBVIOUS INDICATORS",
-    "score": 12,
-    "automated": true,
-    "generatedAt": "2026-10-27T03:14:46.302Z",
-    "reportPath": "reports/3765045334.md",
-    "fileCount": 1,
-    "bytes": 49664,
-    "codeFiles": 1,
-    "indicatorCount": 1,
-    "topIndicators": [
-      "Hardcoded IPv4 endpoint"
-    ],
-    "programs": [
-      {
-        "file": "PuckHeatseeker.dll",
-        "typeCount": 17,
-        "methodCount": 115,
-        "sourceLines": 2851,
-        "apiHits": [
-          "Harmony",
-          "File.WriteAll"
-        ],
-        "types": [
-          "<Module>",
-          "PuckHeatseeker.ClientBehaviour",
-          "PuckHeatseeker.HeatseekerConfig",
-          "PuckHeatseeker.HeatseekerMode",
-          "PuckHeatseeker.HeatseekerPlugin",
-          "PuckHeatseeker.PhysicsManagerUpdatePatch",
-          "PuckHeatseeker.PuckCollisionPatch",
-          "PuckHeatseeker.GameManagerServerTickPatch",
-          "PuckHeatseeker.GameManagerSetGameStatePatch",
-          "PuckHeatseeker.HumanizedGamePhasePatch",
-          "PuckHeatseeker.PlayerSetGameStatePatch",
-          "PuckHeatseeker.HeatseekerSettingsUI",
-          "PuckHeatseeker.Net",
-          "PuckHeatseeker.ClientBehaviour+TrailVisual",
-          "PuckHeatseeker.ClientBehaviour+<>c",
-          "PuckHeatseeker.HeatseekerMode+PuckState",
-          "PuckHeatseeker.HeatseekerMode+<>c"
-        ],
-        "excerpt": "// line 10 · Harmony\nusing System.Runtime.Versioning;\nusing System.Text;\nusing HarmonyLib;\nusing Newtonsoft.Json;\nusing Unity.Collections;\nusing Unity.Netcode;\n\n// line 609 · File.WriteAll\n\t\t\t{\n\t\t\t\tHeatseekerConfig heatseekerConfig = new HeatseekerConfig();\n\t\t\t\tFile.WriteAllText(FilePath, JsonConvert.SerializeObject((object)heatseekerConfig, (Formatting)1));\n\t\t\t\tDebug.Log((object)(\"[PuckHeatseeker] Created default config at \" + FilePath));\n\t\t\t\treturn heatseekerConfig;\n\t\t\t}"
-      }
-    ],
-    "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3765045334"
-  },
+  "report": null,
   "note": "Could not obtain the files: steamcmd reported success but the item folder is missing"
 }
