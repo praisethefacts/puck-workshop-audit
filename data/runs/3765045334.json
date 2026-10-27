@@ -4,9 +4,9 @@
   "title": "Puck Heatseeker",
   "state": "running",
   "startedAt": "2026-10-27T03:02:25.059Z",
-  "updatedAt": "2026-10-27T04:12:30.212Z",
-  "step": "download",
-  "stepIndex": 1,
+  "updatedAt": "2026-10-27T04:12:32.437Z",
+  "step": "scan",
+  "stepIndex": 2,
   "steps": [
     {
       "key": "metadata",
@@ -27,8 +27,8 @@
     {
       "key": "scan",
       "label": "Hashing files and scanning binaries",
-      "state": "done",
-      "at": "2026-10-27T03:43:46.403Z",
+      "state": "running",
+      "at": "2026-10-27T04:12:32.437Z",
       "detail": "1 files, 1 code files, 1 indicators",
       "finishedAt": "2026-10-27T03:43:51.688Z"
     },
