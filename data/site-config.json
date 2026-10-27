@@ -1,6 +1,8 @@
 {
   "siteUrl": "https://puck-workshop-safecheck.netlify.app",
   "hiddenMods": [],
-  "hiddenRequests": [],
+  "hiddenRequests": [
+    "3814654306"
+  ],
   "hiddenReaudits": []
 }
