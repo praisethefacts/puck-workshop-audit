@@ -1,0 +1,19 @@
+{
+  "id": "3774089198",
+  "issue": 14,
+  "title": "Stubby Rinks",
+  "creator": "76561198980566127",
+  "verdict": "NO OBVIOUS INDICATORS",
+  "score": 12,
+  "automated": true,
+  "generatedAt": "2026-10-27T02:45:33.091Z",
+  "reportPath": "reports/3774089198.md",
+  "fileCount": 4,
+  "bytes": 2911451,
+  "codeFiles": 1,
+  "indicatorCount": 1,
+  "topIndicators": [
+    "Hardcoded IPv4 endpoint"
+  ],
+  "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3774089198"
+}
