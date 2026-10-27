@@ -2,9 +2,9 @@
   "id": "3774089198",
   "issue": 14,
   "title": "Stubby Rinks",
-  "state": "running",
+  "state": "blocked",
   "startedAt": "2026-10-27T02:46:29.744Z",
-  "updatedAt": "2026-10-27T02:46:36.391Z",
+  "updatedAt": "2026-10-27T02:46:47.826Z",
   "step": "download",
   "stepIndex": 1,
   "steps": [
@@ -19,8 +19,10 @@
     {
       "key": "download",
       "label": "Downloading the published files",
-      "state": "running",
-      "at": "2026-10-27T02:46:36.391Z"
+      "state": "failed",
+      "at": "2026-10-27T02:46:36.391Z",
+      "detail": "steamcmd reported success but the item folder is missing",
+      "finishedAt": "2026-10-27T02:46:47.826Z"
     },
     {
       "key": "scan",
@@ -39,5 +41,5 @@
     }
   ],
   "report": null,
-  "note": null
+  "note": "Could not obtain the files: steamcmd reported success but the item folder is missing"
 }
