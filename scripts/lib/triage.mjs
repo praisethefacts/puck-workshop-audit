@@ -127,6 +127,9 @@ export function decompileManaged(file, options = {}) {
   result.methodCount = methodCount;
   result.sourceBytes = Buffer.byteLength(decompiled.stdout, "utf8");
   result.sourceLines = decompiled.stdout ? decompiled.stdout.split(/\r?\n/).length : 0;
+  // Keep the reconstructed C# so the indicator pass can read the code, not just
+  // the strings a binary happens to carry. Capped so a huge assembly stays sane.
+  result.source = decompiled.stdout ? decompiled.stdout.slice(0, 8 * 1024 * 1024) : "";
   result.apiHits = apiHits.map((hit) => hit.needle);
   result.excerpt = apiHits.map((hit) => `// line ${hit.atLine} · ${hit.needle}\n${hit.text}`).join("\n\n");
   return result;
@@ -140,7 +143,7 @@ const INDICATORS = [
   { id: "browser-login", label: "Browser credential database reference", sev: 4, re: /(Login Data|Web Data|Local State|Cookies|History)\b.*(sqlite|leveldb|chromium|chrome|edge|brave)|\\Google\\Chrome\\User Data|\\Microsoft\\Edge\\User Data/i },
   { id: "wallet", label: "Crypto wallet path reference", sev: 5, re: /(wallet\.dat|Exodus[\\/]|MetaMask|Phantom[\\/]|Electrum[\\/]|Coinbase[\\/]|Keplr|Trust\s*Wallet)/i },
   { id: "discord-token", label: "Discord token storage reference", sev: 5, re: /(discord[\\/]Local Storage|leveldb|discordcanary|discordptb)/i },
-  { id: "steam-session", label: "Steam session / SSFN / config reference", sev: 4, re: /(loginusers\.vdf|ssfn\d*|config[\\/]config\.vdf|Steam[\\/]config|steamguard|SteamAppTicket|GetAuthTicketForWebApi)/i },
+  { id: "steam-session", label: "Steam session / SSFN / config reference", sev: 2, re: /(loginusers\.vdf|ssfn\d*|config[\\/]config\.vdf|Steam[\\/]config|steamguard|SteamAppTicket|GetAuthTicketForWebApi)/i },
   // input capture / screen
   { id: "keylog", label: "Keystroke or clipboard capture API", sev: 4, re: /\b(GetAsyncKeyState|SetWindowsHookEx|GetKeyboardState|OpenClipboard|GetClipboardData)\b/ },
   { id: "screen-capture", label: "Screen capture API", sev: 2, re: /\b(BitBlt|PrintWindow|GetDC|CaptureScreenshot)\b/ },
@@ -156,11 +159,32 @@ const INDICATORS = [
   { id: "ransom", label: "File-encryption / ransom markers", sev: 5, re: /(encrypt(?:ed|ion)?\s+(?:all|your)\s+files|readme.*(?:decrypt|btc|monero)|\.locked\b|ransom)/i },
   { id: "miner", label: "Miner markers", sev: 5, re: /(stratum\+tcp|stratum\+ssl|xmrig|monero|randomx|cryptonight|nicehash)/i },
   // network
-  { id: "raw-ip", label: "Hardcoded IPv4 endpoint", sev: 3, re: /\b(?:\d{1,3}\.){3}\d{1,3}\b/, skip: (value) => /^v?\d+(?:\.\d+){3,}$/i.test(value.trim()) },
+  { id: "raw-ip", label: "Hardcoded IPv4 endpoint", sev: 3, re: /\b(?:\d{1,3}\.){3}\d{1,3}\b/, skip: (value) => /Version=|PublicKeyToken|\.dll|assembly|^v?\d+(?:\.\d+){3,}$/i.test(value.trim()) },
   { id: "http", label: "HTTP(S) endpoint", sev: 1, re: /https?:\/\/[^\s"'<>)]{6,}/i },
   { id: "webhook", label: "Discord webhook / paste / exfil style endpoint", sev: 5, re: /(discord(?:app)?\.com\/api\/webhooks|api\.telegram\.org\/bot|pastebin\.com\/raw|transfer\.sh|anonfiles|gofile\.io|ngrok\.io)/i },
   { id: "process-start", label: "Launches external processes", sev: 2, re: /\b(Process\.Start|UseShellExecute\s*=\s*true|ShellExecute(?:Ex)?)\b/ },
   { id: "registry-write", label: "Registry writes", sev: 3, re: /\b(Registry\.CurrentUser|RegistryKey|SetValue\s*\(|HKEY_CURRENT_USER)\b/ },
+  { id: "file-write", label: "Writes files at runtime", sev: 1, re: /\b(File\.WriteAllText|File\.WriteAllBytes|File\.AppendAllText|StreamWriter|FileStream\s*\()/ },
+  { id: "harmony", label: "Harmony patches into game code", sev: 1, re: /\b(HarmonyPatch|Harmony\.Patch|AccessTools|PatchProcessor)\b/ },
+
+  // --- the things a manual audit actually flags (parity with the hand reports) ---
+  // Machine binding / anti-alt detection: a mod that fingerprints the PC is doing
+  // something a hockey mod has no need for.
+  { id: "hwid-binding", label: "Hardware / machine fingerprinting", sev: 4, re: /(deviceUniqueIdentifier|GetVolumeInformation|volume\s*serial|HWID|hardware\s*id|machine\s*(?:id|guid|fingerprint)|K32EnumProcessModules|EnumProcessModules|GetModuleFileNameEx|GetModuleInformation|ProcessorCount\s*\+|Win32_ComputerSystem)/i },
+  // Account identity leaving the game: SteamID + a network call in the same item.
+  { id: "steam-identity", label: "Steam account identity in code/data", sev: 3, re: /(steamId64|SteamID64|GetSteamID\(\)|m_SteamID|SteamId\b|GetAuthTicketForWebApi|ISteamUser)/ },
+  { id: "telemetry", label: "Telemetry / analytics payload", sev: 3, re: /(analytics|telemetry|heartbeat|usage\s*data|usage\s*ping|trackEvent)/i },
+  // Endpoints that are not TLS or not resolvable to a domain are a manual-audit red flag.
+  { id: "plain-http", label: "Unencrypted HTTP endpoint", sev: 3, re: /\bhttp:\/\/[^\s"'<>)]{4,}/i },
+  { id: "ip-endpoint", label: "Endpoint addressed by raw IP", sev: 4, re: /(?:https?|wss?):\/\/(?:\d{1,3}\.){3}\d{1,3}(?::\d+)?/i },
+  { id: "credential-store", label: "Password / token cache on disk", sev: 4, re: /(SavedServerPasswords|password[s]?\s*(?:cache|store|file|json|list)|savePassword|credential[s]?\s*(?:cache|store|file|json))/i },
+  // Browser engine embedded in a game mod = remote content and remote JS.
+  { id: "browser-embed", label: "Embedded browser engine (WebView/CEF)", sev: 2, re: /(WebView|CefSharp|CefSharpWrapper|ChromiumWebBrowser|uBlock|\.crx\b)/i },
+  { id: "remote-content", label: "Loads remote pages or executes remote JS", sev: 3, re: /(LoadURL|LoadPage|Navigate\s*\(\s*"https?:|EvaluateJavascript|ExecuteJavaScript|RemoteMOTD|motd)/i },
+  // Mods that load third-party bundles filled at runtime are a capability, not malware.
+  { id: "remote-bundle", label: "Runtime bundle / payload loading", sev: 2, re: /(AssetBundle\.LoadFromFile|LoadFromFile\s*\(|\.abx\b|decrypt.*bundle|bundle.*decrypt)/i },
+  { id: "base64-payload", label: "Base64-encoded payload strings", sev: 2, re: /(FromBase64String|Convert\.ToBase64String|base64)/i },
+
 ];
 
 // Strings that look scary but are normal for a Unity game mod.
@@ -295,6 +319,79 @@ function scanIndicators(strings) {
 
 const SKIP_DIRS = /^(\.git|\.netlify|node_modules)$/i;
 
+// Signals that a managed assembly was run through an obfuscator. A hand audit
+// treats "the code is unreadable on purpose" as a real finding, so the scanner
+// has to see it too, not just long strings.
+function obfuscationSignals(source) {
+  if (!source) return { junk: 0, blobs: 0, escapes: 0, lines: 0, ratio: 0 };
+  const junk = (source.match(/\b_[0-9A-F]{3,10}\b/g) || []).length;
+  const blobs = (source.match(/\b[A-Fa-f0-9]{32,}\b/g) || []).length;
+  const escapes = (source.match(/\\u[0-9A-Fa-f]{4}/g) || []).length;
+  const lines = source.split(/\r?\n/).length || 1;
+  // Obfuscated assemblies are dominated by escaped literals and renamed
+  // identifiers; a normal mod that touches a few \u escapes sits far below this.
+  const ratio = (escapes + junk * 4) / lines;
+  return { junk, blobs, escapes, lines, ratio: Math.round(ratio * 1000) / 1000 };
+}
+
+// Capability buckets: the same vocabulary the hand-written reports use. Each
+// bucket contributes a fixed weight, and extra severity inside a bucket bumps it
+// a little, so a mod cannot reach the suspicious band on one weak hint alone.
+const CAPABILITIES = [
+  { key: "hostile", label: "Hostile primitives (wallet/token theft, ransom, miner, injection)", weight: 26, ids: ["wallet", "discord-token", "ransom", "miner", "injection", "destructive-cmd", "run-key"] },
+  { key: "credentials", label: "Credential or session access", weight: 18, ids: ["browser-login", "keylog", "screen-capture"] },
+  { key: "obfuscation", label: "Deliberately obfuscated code", weight: 20, ids: ["obfuscated-code"] },
+  { key: "fingerprinting", label: "Machine/account fingerprinting", weight: 12, ids: ["hwid-binding", "steam-identity"] },
+  { key: "c2", label: "Outbound network with telemetry/C2 shape", weight: 8, ids: ["ip-endpoint", "plain-http", "webhook", "telemetry", "raw-ip"] },
+  { key: "credential-cache", label: "Passwords/secrets cached in plain files", weight: 6, ids: ["credential-store", "steam-session"] },
+  { key: "encrypted-payload", label: "Encrypted / encoded payload handling", weight: 4, ids: ["crypto", "base64-payload", "remote-bundle"] },
+  { key: "crypto", label: "Encryption in use", weight: 6, ids: ["crypto"] },
+  { key: "code-loading", label: "Executable content loaded at runtime", weight: 1, ids: ["dynamic-load", "browser-embed", "remote-content"] },
+  { key: "filesystem", label: "Writes outside the mod folder / registry", weight: 1, ids: ["wide-write", "registry-write", "file-write"] },
+  { key: "shell", label: "Launches external processes", weight: 1, ids: ["shell-exec", "process-start"] },
+  { key: "native", label: "Native code / P/Invoke", weight: 1, ids: ["native-call"] },
+  { key: "binary-anomaly", label: "Packed sections or appended data", weight: 1, ids: ["packed-section", "overlay"] },
+  { key: "patches", label: "Harmony patches into game code", weight: 1, ids: ["harmony"] },
+];
+
+// Manual rubric: 0-15 clean, 16-30 benign with caveats, 31-50 suspicious,
+// 51+ treat as hostile. Same bands as the hand reports.
+export function manualVerdict(score) {
+  if (score >= 51) return "HIGH RISK - treat as hostile";
+  if (score >= 31) return "SUSPICIOUS";
+  if (score >= 16) return "BENIGN WITH CAVEATS";
+  return "CLEAN";
+}
+
+function deriveCapabilities(findings) {
+  const caps = [];
+  for (const cap of CAPABILITIES) {
+    const hits = findings.filter((f) => cap.ids.includes(f.id));
+    if (!hits.length) continue;
+    const maxSev = Math.max(...hits.map((h) => h.severity));
+    let weight = cap.weight;
+    // A single weak hint should not move a whole bucket: encryption alone is
+    // not "encrypted payload handling", and fingerprinting only bites when the
+    // identity actually leaves the machine.
+    if (cap.key === "encrypted-payload") {
+      const strong = hits.some((h) => ["base64-payload", "remote-bundle"].includes(h.id)) && findings.some((f) => f.id === "crypto");
+      weight = strong ? 16 : 4;
+    }
+    if (cap.key === "crypto" && findings.some((f) => f.id === "encrypted-payload")) weight = 6;
+    const bump = maxSev >= 4 ? 2 : 0;
+    caps.push({ key: cap.key, label: cap.label, weight, bump, ids: [...new Set(hits.map((h) => h.id))], count: hits.length });
+  }
+  // Manual reports put a whole mod in one band; summing every hint would push
+  // ordinary mods into "suspicious". Count the minor buckets at most four
+  // points total, then damp the sum so the bands line up with the hand reports.
+  const minor = new Set(["code-loading", "filesystem", "shell", "native", "binary-anomaly", "patches"]);
+  const majorScore = caps.filter((c) => !minor.has(c.key)).reduce((s, c) => s + c.weight + c.bump, 0);
+  const minorScore = Math.min(4, caps.filter((c) => minor.has(c.key)).reduce((s, c) => s + c.weight + c.bump, 0));
+  const score = Math.min(100, Math.round((majorScore + minorScore) * 0.8));
+  return { capabilities: caps, score };
+}
+
+
 export function analyzeDirectory(root, meta = {}, options = {}) {
   const started = Date.now();
   const decompileEnabled = options.decompile !== false;
@@ -332,6 +429,37 @@ export function analyzeDirectory(root, meta = {}, options = {}) {
     binaries.push(binary);
     if (pe && pe.dotnet && decompileEnabled) {
       binary.decompile = decompileManaged(file);
+      if (binary.decompile && binary.decompile.available) {
+        const sig = obfuscationSignals(binary.decompile.source);
+        const weight = Math.round(sig.ratio * 100) + Math.round(sig.blobs / 4);
+        binary.obfuscation = { ...sig, weight };
+        if (sig.ratio >= 0.15 && sig.escapes >= 60) {
+          findings.push({
+            id: "obfuscated-code",
+            file: rel,
+            severity: sig.ratio >= 0.3 ? 4 : 3,
+            label: "Obfuscated managed assembly (renamed types/methods, packed string table)",
+            samples: [`${sig.junk} junk identifiers, ${sig.blobs} hex blobs, ${sig.escapes} unicode escapes over ${sig.lines} lines`],
+          });
+        }
+        // Read the decompiled code with the same indicator list used for raw
+        // strings: a hand audit reads the code, so the scanner should too.
+        const codeLines = binary.decompile.source ? binary.decompile.source.split(/\r?\n/) : [];
+        const codeIndicators = scanIndicators(codeLines);
+        binary.codeIndicators = codeIndicators.map(({ id, label, sev, samples }) => ({ id, label, severity: sev, samples }));
+        for (const ind of codeIndicators) {
+          if (findings.some((f) => f.id === ind.id)) continue;
+          findings.push({
+            id: ind.id,
+            file: rel,
+            severity: ind.sev,
+            label: ind.label,
+            samples: ind.samples.slice(0, 2),
+            source: "decompiled",
+            benignContext: ind.sev <= 1 && benign > 0,
+          });
+        }
+      }
     }
     for (const ind of indicators) {
       const already = findings.find((f) => f.id === ind.id && f.file === rel);
@@ -352,25 +480,19 @@ export function analyzeDirectory(root, meta = {}, options = {}) {
     }
   }
 
-  // score: strongest per category, ignore benign-context low-sev items
+  // Scoring mirrors the hand-audit rubric: capability buckets with fixed
+  // weights, same 0-15 / 16-30 / 31-50 / 51+ bands, so an automated report and a
+  // manual report of the same build land in the same band.
   const scored = findings.filter((f) => !f.benignContext);
-  const maxPerId = new Map();
-  for (const f of scored) maxPerId.set(f.id, Math.max(maxPerId.get(f.id) || 0, f.severity));
-  let score = 0;
-  for (const v of maxPerId.values()) score += v;
-  if (findings.some((f) => f.id === "ransom" || f.id === "miner" || f.id === "wallet" || f.id === "discord-token" || f.id === "injection")) score = Math.max(score, 14);
-  score = Math.min(100, score * 4);
-
-  let verdict;
-  if (score >= 56) verdict = "HIGH RISK - do not run";
-  else if (score >= 36) verdict = "SUSPICIOUS";
-  else if (score >= 16) verdict = "REVIEW";
-  else verdict = "NO OBVIOUS INDICATORS";
+  const { capabilities, score } = deriveCapabilities(scored);
+  const verdict = manualVerdict(score);
 
   const hashes = inventory.map((i) => "`" + i.sha256.slice(0, 16) + "` " + i.path).slice(0, 40);
 
   return {
     meta, verdict, score, automated: true,
+    rubric: "manual-parity",
+    capabilities,
     generatedAt: new Date().toISOString(),
     analysisMs: Date.now() - started,
     root, files: inventory.length, bytes: inventory.reduce((a, b) => a + b.size, 0),
@@ -418,6 +540,21 @@ export function toMarkdown(report) {
     }
     if (b.indicators.length) {
       for (const i of b.indicators) lines.push(`  - indicator ${i.id} (${i.label})${i.samples.length ? ": " + i.samples.map((x) => "`" + x.replace(/`/g, "") + "`").join(", ") : ""}`);
+    }
+  }
+  lines.push("");
+  lines.push("## Capabilities observed");
+  lines.push("");
+  lines.push("Same vocabulary and the same 0-100 rubric as the hand-written reports: 0-15 clean,");
+  lines.push("16-30 benign with caveats, 31-50 suspicious, 51+ treat as hostile. A capability is");
+  lines.push("listed when a machine-checkable pattern for it was present in the shipped bytes.");
+  lines.push("");
+  const caps = report.capabilities || [];
+  if (!caps.length) {
+    lines.push("- No capability pattern matched. The files are asset data or ordinary mod code.");
+  } else {
+    for (const c of [...caps].sort((a, b) => b.weight - a.weight)) {
+      lines.push(`- **${c.label}** — ${c.weight + c.bump}/100 weight${c.ids.length ? `, evidence: ${c.ids.join(", ")}` : ""}`);
     }
   }
   lines.push("");
