@@ -4,7 +4,7 @@
   "title": "Piluts´s Player Wireframes",
   "state": "running",
   "startedAt": "2026-10-27T04:36:14.362Z",
-  "updatedAt": "2026-10-27T04:36:19.408Z",
+  "updatedAt": "2026-10-27T04:36:33.604Z",
   "step": "download",
   "stepIndex": 1,
   "steps": [
@@ -19,8 +19,10 @@
     {
       "key": "download",
       "label": "Downloading the published files",
-      "state": "running",
-      "at": "2026-10-27T04:36:19.408Z"
+      "state": "done",
+      "at": "2026-10-27T04:36:19.408Z",
+      "detail": "13312 B on disk",
+      "finishedAt": "2026-10-27T04:36:33.604Z"
     },
     {
       "key": "scan",
