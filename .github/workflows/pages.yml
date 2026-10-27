@@ -8,6 +8,8 @@ name: Publish mirror
 # a paid plan. If the repo is ever made public (or the plan changes), run this from
 # the Actions UI to publish a free mirror at praisethefacts.github.io/puck-workshop-audit/.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
