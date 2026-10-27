@@ -2,51 +2,51 @@
   "id": "3765045334",
   "issue": 16,
   "title": "Puck Heatseeker",
-  "state": "done",
+  "state": "running",
   "startedAt": "2026-10-27T03:02:25.059Z",
-  "updatedAt": "2026-10-27T03:23:10.985Z",
-  "step": "publish",
-  "stepIndex": 4,
+  "updatedAt": "2026-10-27T03:23:59.632Z",
+  "step": "metadata",
+  "stepIndex": 0,
   "steps": [
     {
       "key": "metadata",
       "label": "Reading Workshop metadata",
       "state": "done",
-      "at": "2026-10-27T03:22:41.265Z",
+      "at": "2026-10-27T03:23:57.459Z",
       "detail": "Puck Heatseeker · 49664 B reported · metadata unavailable",
-      "finishedAt": "2026-10-27T03:22:44.657Z"
+      "finishedAt": "2026-10-27T03:23:59.632Z"
     },
     {
       "key": "download",
       "label": "Downloading the published files",
       "state": "done",
-      "at": "2026-10-27T03:22:46.878Z",
+      "at": "2026-10-27T03:15:29.025Z",
       "detail": "49664 B on disk",
-      "finishedAt": "2026-10-27T03:22:57.877Z"
+      "finishedAt": "2026-10-27T03:15:45.289Z"
     },
     {
       "key": "scan",
       "label": "Hashing files and scanning binaries",
       "state": "done",
-      "at": "2026-10-27T03:22:59.999Z",
+      "at": "2026-10-27T03:15:47.300Z",
       "detail": "1 files, 1 code files, 1 indicators",
-      "finishedAt": "2026-10-27T03:23:04.412Z"
+      "finishedAt": "2026-10-27T03:15:52.780Z"
     },
     {
       "key": "report",
       "label": "Writing the triage report",
       "state": "done",
-      "at": "2026-10-27T03:23:06.593Z",
+      "at": "2026-10-27T03:15:54.726Z",
       "detail": "NO OBVIOUS INDICATORS (12/100)",
-      "finishedAt": "2026-10-27T03:23:06.594Z"
+      "finishedAt": "2026-10-27T03:15:54.727Z"
     },
     {
       "key": "publish",
       "label": "Publishing to the site",
       "state": "done",
-      "at": "2026-10-27T03:23:08.807Z",
+      "at": "2026-10-27T03:15:57.252Z",
       "detail": "Report live on the site",
-      "finishedAt": "2026-10-27T03:23:10.985Z"
+      "finishedAt": "2026-10-27T03:15:59.251Z"
     }
   ],
   "report": {
@@ -57,7 +57,7 @@
     "verdict": "NO OBVIOUS INDICATORS",
     "score": 12,
     "automated": true,
-    "generatedAt": "2026-10-27T03:23:04.412Z",
+    "generatedAt": "2026-10-27T03:15:52.780Z",
     "reportPath": "reports/3765045334.md",
     "fileCount": 1,
     "bytes": 49664,
@@ -100,5 +100,5 @@
     ],
     "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3765045334"
   },
-  "note": null
+  "note": "Could not obtain the files: steamcmd reported success but the item folder is missing"
 }
