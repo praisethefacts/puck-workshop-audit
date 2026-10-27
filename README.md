@@ -1,5 +1,9 @@
 # Puck Workshop mod audit
 
+**Live site:** https://praisethefacts.github.io/puck-workshop-audit/ (GitHub Pages mirror,
+republished on every commit) · https://puck-workshop-safecheck.netlify.app (canonical host with
+the request/admin functions; its deploys pause when the Netlify account credits run out).
+
 A static, dependency-free security audit site for 63 installed Puck Workshop mods, an automated
 triage pipeline for newly requested mods, and a public request queue. Plain HTML, CSS and vanilla
 JavaScript; the build is a single Node script with no npm dependencies, and Netlify hosts the static
