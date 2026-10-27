@@ -4,7 +4,7 @@
   "title": "Minecraft Teams",
   "state": "running",
   "startedAt": "2026-10-27T01:08:53.058Z",
-  "updatedAt": "2026-10-27T04:18:01.557Z",
+  "updatedAt": "2026-10-27T04:18:07.719Z",
   "step": "scan",
   "stepIndex": 2,
   "steps": [
@@ -27,10 +27,10 @@
     {
       "key": "scan",
       "label": "Hashing files and scanning binaries",
-      "state": "running",
+      "state": "done",
       "at": "2026-10-27T04:18:01.557Z",
-      "detail": "1 files, 1 code files, 1 indicators",
-      "finishedAt": "2026-10-27T03:12:13.811Z"
+      "detail": "1 files, 1 code files, 3 indicators",
+      "finishedAt": "2026-10-27T04:18:07.719Z"
     },
     {
       "key": "report",
