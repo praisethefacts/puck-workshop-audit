@@ -7,3 +7,4 @@ dist/
 # local / Codespace audit output
 _auditbox-test/
 audit-out/
+_auditbox-test*/
