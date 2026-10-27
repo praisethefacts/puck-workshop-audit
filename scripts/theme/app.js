@@ -36,8 +36,10 @@
   }
 
   function safeHttpUrl(value) {
+    var raw = String(value == null ? "" : value).trim();
+    if (!/^(?:https?:)?\/\//i.test(raw)) return "";
     try {
-      var url = new URL(String(value), window.location.href);
+      var url = new URL(raw, window.location.href);
       return /^https?:$/.test(url.protocol) ? url.href : "";
     } catch (error) {
       return "";
@@ -527,7 +529,8 @@
       var meta = document.createElement("p");
       meta.className = "request-meta";
       var idMatch = String(item.title || "").match(/\((\d{5,20})\)\s*$/);
-      var modId = idMatch ? idMatch[1] : "";
+      var modId = String(item.modId || (idMatch ? idMatch[1] : "")).trim();
+      if (!/^\d{5,20}$/.test(modId)) modId = "";
       var number = item.number ? "#" + item.number : "";
       var parts = [];
       if (modId) parts.push("Mod " + modId);
@@ -616,10 +619,11 @@
               items = items.map(function (entry) {
                 return {
                   number: entry.issue,
+                  modId: entry.id,
                   title: entry.title || "Workshop item " + entry.id,
                   state: normalize(entry.status) === "closed" ? "closed" : "open",
                   createdAt: entry.requestedAt || "",
-                  htmlUrl:
+                  url:
                     entry.issue && GITHUB_ISSUES
                       ? GITHUB_ISSUES.replace(/\/issues\/?$/, "") + "/issues/" + entry.issue
                       : "",
