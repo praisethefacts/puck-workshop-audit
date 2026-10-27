@@ -4,17 +4,17 @@
   "title": "Puck Heatseeker",
   "state": "running",
   "startedAt": "2026-10-27T03:02:25.059Z",
-  "updatedAt": "2026-10-27T03:06:15.505Z",
+  "updatedAt": "2026-10-27T03:06:18.900Z",
   "step": "metadata",
   "stepIndex": 0,
   "steps": [
     {
       "key": "metadata",
       "label": "Reading Workshop metadata",
-      "state": "running",
+      "state": "done",
       "at": "2026-10-27T03:06:15.505Z",
-      "detail": "Puck Heatseeker · 49664 B reported",
-      "finishedAt": "2026-10-27T03:02:27.331Z"
+      "detail": "Puck Heatseeker · 49664 B reported · metadata unavailable",
+      "finishedAt": "2026-10-27T03:06:18.900Z"
     },
     {
       "key": "download",
