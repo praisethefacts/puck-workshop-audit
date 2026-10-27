@@ -252,6 +252,9 @@ async function main() {
   }
   const size = dirSize(dir);
   step("download", "done", { detail: `${size} B on disk` });
+  // The files are here, so a leftover "could not obtain" note from an earlier
+  // attempt no longer applies.
+  if (run.note && /could not obtain/i.test(run.note)) run.note = null;
   persist({ message: `audit: ${id} downloaded` });
 
   step("scan", "running");
