@@ -4,9 +4,9 @@
   "title": "Puck Heatseeker",
   "state": "running",
   "startedAt": "2026-10-27T03:02:25.059Z",
-  "updatedAt": "2026-10-27T03:07:41.065Z",
-  "step": "metadata",
-  "stepIndex": 0,
+  "updatedAt": "2026-10-27T03:07:43.342Z",
+  "step": "download",
+  "stepIndex": 1,
   "steps": [
     {
       "key": "metadata",
@@ -19,8 +19,8 @@
     {
       "key": "download",
       "label": "Downloading the published files",
-      "state": "failed",
-      "at": "2026-10-27T03:02:29.489Z",
+      "state": "running",
+      "at": "2026-10-27T03:07:43.342Z",
       "detail": "steamcmd reported success but the item folder is missing",
       "finishedAt": "2026-10-27T03:02:39.442Z"
     },
