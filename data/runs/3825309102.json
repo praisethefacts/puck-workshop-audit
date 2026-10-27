@@ -2,9 +2,9 @@
   "id": "3825309102",
   "issue": 9,
   "title": "Minecraft Teams",
-  "state": "running",
+  "state": "blocked",
   "startedAt": "2026-10-27T01:08:53.058Z",
-  "updatedAt": "2026-10-27T04:21:10.136Z",
+  "updatedAt": "2026-10-27T04:21:20.728Z",
   "step": "download",
   "stepIndex": 1,
   "steps": [
@@ -19,10 +19,10 @@
     {
       "key": "download",
       "label": "Downloading the published files",
-      "state": "running",
+      "state": "failed",
       "at": "2026-10-27T04:21:10.136Z",
-      "detail": "70144 B on disk",
-      "finishedAt": "2026-10-27T04:17:59.293Z"
+      "detail": "steamcmd reported success but the item folder is missing",
+      "finishedAt": "2026-10-27T04:21:20.728Z"
     },
     {
       "key": "scan",
@@ -116,5 +116,5 @@
     ],
     "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3825309102"
   },
-  "note": null
+  "note": "Could not obtain the files: steamcmd reported success but the item folder is missing"
 }
