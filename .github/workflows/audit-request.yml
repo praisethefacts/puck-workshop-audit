@@ -28,9 +28,12 @@ concurrency:
 jobs:
   audit:
     # Only run for the request queue, or a manual dispatch.
+    # Label churn from the run itself (audit-running / audit-ready) must not
+    # re-trigger the audit, so a `labeled` event only counts for mod-request.
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      contains(github.event.issue.labels.*.name, 'mod-request')
+      (contains(github.event.issue.labels.*.name, 'mod-request') &&
+       (github.event.action != 'labeled' || github.event.label.name == 'mod-request'))
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
