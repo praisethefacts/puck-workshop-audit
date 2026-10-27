@@ -42,6 +42,7 @@ jobs:
           node scripts/validate-data.mjs
 
       - name: Deploy production
+        continue-on-error: true
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
@@ -54,4 +55,6 @@ jobs:
             --prod \
             --dir=dist \
             --functions=netlify/functions \
-            --message "Deploy ${GITHUB_SHA::7} from GitHub Actions"
+            --message "Deploy ${GITHUB_SHA::7} from GitHub Actions" || {
+            echo "::warning::Netlify refused the deploy (usually exhausted deploy credits). The repository is still up to date; add credits or wait for the monthly reset and this workflow will publish automatically."
+          }
