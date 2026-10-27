@@ -4,9 +4,9 @@
   "title": "Puck Heatseeker",
   "state": "running",
   "startedAt": "2026-10-27T03:02:25.059Z",
-  "updatedAt": "2026-10-27T03:23:04.412Z",
-  "step": "scan",
-  "stepIndex": 2,
+  "updatedAt": "2026-10-27T03:23:06.594Z",
+  "step": "report",
+  "stepIndex": 3,
   "steps": [
     {
       "key": "metadata",
@@ -36,9 +36,9 @@
       "key": "report",
       "label": "Writing the triage report",
       "state": "done",
-      "at": "2026-10-27T03:15:54.726Z",
+      "at": "2026-10-27T03:23:06.593Z",
       "detail": "NO OBVIOUS INDICATORS (12/100)",
-      "finishedAt": "2026-10-27T03:15:54.727Z"
+      "finishedAt": "2026-10-27T03:23:06.594Z"
     },
     {
       "key": "publish",
@@ -57,7 +57,7 @@
     "verdict": "NO OBVIOUS INDICATORS",
     "score": 12,
     "automated": true,
-    "generatedAt": "2026-10-27T03:15:52.780Z",
+    "generatedAt": "2026-10-27T03:23:04.412Z",
     "reportPath": "reports/3765045334.md",
     "fileCount": 1,
     "bytes": 49664,
