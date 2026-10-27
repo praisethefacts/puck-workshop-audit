@@ -583,13 +583,43 @@
         })
         .catch(function () {
           window.clearTimeout(timer);
-          showQueueState("error");
-          var detail = $("#queue-error-detail");
-          if (detail) {
-            detail.textContent =
-              "The API is unreachable or GitHub did not answer. The request queue lives on GitHub as issues labelled mod-request.";
-          }
-          queueUpdated.textContent = "Queue unavailable · GitHub issues still available";
+          // Static mirrors (GitHub Pages) have no request API: fall back to the
+          // queue snapshot committed with the site, so the list stays readable.
+          fetch("data/requests.json?ts=" + Date.now(), { cache: "no-store", signal: controller.signal })
+            .then(function (response) {
+              if (!response.ok) throw new Error("no snapshot");
+              return response.json();
+            })
+            .then(function (snapshot) {
+              var items = snapshot && Array.isArray(snapshot.requests) ? snapshot.requests : null;
+              if (!items) throw new Error("no snapshot");
+              queueList.textContent = "";
+              if (!items.length) {
+                showQueueState("empty");
+                queueUpdated.textContent = "Static queue snapshot · no requests";
+                return;
+              }
+              var fragment = document.createDocumentFragment();
+              items.forEach(function (item) {
+                fragment.appendChild(buildQueueItem(item));
+              });
+              queueList.appendChild(fragment);
+              showQueueState("list");
+              queueUpdated.textContent =
+                "Static snapshot from the repository · " +
+                items.length +
+                (items.length === 1 ? " request" : " requests") +
+                " · open issues for live state";
+            })
+            .catch(function () {
+              showQueueState("error");
+              var detail = $("#queue-error-detail");
+              if (detail) {
+                detail.textContent =
+                  "The API is unreachable or GitHub did not answer. The request queue lives on GitHub as issues labelled mod-request.";
+              }
+              queueUpdated.textContent = "Queue unavailable · GitHub issues still available";
+            });
         })
         .finally(function () {
           window.clearTimeout(timer);
