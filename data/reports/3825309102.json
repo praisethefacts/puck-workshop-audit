@@ -3,18 +3,17 @@
   "issue": 9,
   "title": "Minecraft Teams",
   "creator": "76561198101351445",
-  "verdict": "REVIEW",
-  "score": 28,
+  "verdict": "NO OBVIOUS INDICATORS",
+  "score": 12,
   "automated": true,
-  "generatedAt": "2026-10-27T01:09:24.492Z",
+  "generatedAt": "2026-10-27T02:37:19.467Z",
   "reportPath": "reports/3825309102.md",
   "fileCount": 1,
   "bytes": 70144,
   "codeFiles": 1,
-  "indicatorCount": 2,
+  "indicatorCount": 1,
   "topIndicators": [
-    "Dynamic code loading",
-    "Steam session / SSFN / config reference"
+    "Dynamic code loading"
   ],
   "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3825309102"
 }
