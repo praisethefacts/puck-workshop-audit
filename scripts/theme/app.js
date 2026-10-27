@@ -393,11 +393,24 @@
           var contentType = response.headers.get("content-type") || "";
 
           if (!response.ok && contentType.indexOf("application/json") === -1) {
+            var modId = extractSteamId(payload.mod) || payload.mod;
+            var issueUrl =
+              GITHUB_ISSUES.replace(/\/issues\/?$/, "") +
+              "/issues/new?labels=mod-request&title=" +
+              encodeURIComponent("Audit request: " + modId) +
+              "&body=" +
+              encodeURIComponent(
+                "https://steamcommunity.com/sharedfiles/filedetails/?id=" +
+                  modId +
+                  "\n\n" +
+                  (payload.reason ? "Why: " + payload.reason + "\n\n" : "") +
+                  "Requested from the audit site mirror (no request API on this copy)."
+              );
             showStatus(
               "error",
               "This copy of the site has no request API. Open the request as a GitHub issue instead — the audit workflow picks it up from there.",
-              GITHUB_ISSUES,
-              "Open GitHub issues"
+              issueUrl,
+              "Open the pre-filled issue"
             );
             return;
           }
