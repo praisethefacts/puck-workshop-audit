@@ -2,88 +2,41 @@
   "id": "3669932307",
   "issue": 22,
   "title": "Piluts´s Player Wireframes",
-  "state": "done",
-  "startedAt": "2026-10-27T04:36:14.362Z",
-  "updatedAt": "2026-10-27T04:36:46.909Z",
-  "step": "publish",
-  "stepIndex": 4,
+  "state": "running",
+  "startedAt": "2026-10-27T04:37:44.958Z",
+  "updatedAt": "2026-10-27T04:37:47.005Z",
+  "step": "metadata",
+  "stepIndex": 0,
   "steps": [
     {
       "key": "metadata",
       "label": "Reading Workshop metadata",
       "state": "done",
-      "at": "2026-10-27T04:36:14.363Z",
+      "at": "2026-10-27T04:37:44.959Z",
       "detail": "Piluts´s Player Wireframes · 13312 B reported",
-      "finishedAt": "2026-10-27T04:36:17.418Z"
+      "finishedAt": "2026-10-27T04:37:47.005Z"
     },
     {
       "key": "download",
       "label": "Downloading the published files",
-      "state": "done",
-      "at": "2026-10-27T04:36:19.408Z",
-      "detail": "13312 B on disk",
-      "finishedAt": "2026-10-27T04:36:33.604Z"
+      "state": "pending"
     },
     {
       "key": "scan",
       "label": "Hashing files and scanning binaries",
-      "state": "done",
-      "at": "2026-10-27T04:36:35.774Z",
-      "detail": "1 files, 1 code files, 0 indicators",
-      "finishedAt": "2026-10-27T04:36:40.612Z"
+      "state": "pending"
     },
     {
       "key": "report",
       "label": "Writing the triage report",
-      "state": "done",
-      "at": "2026-10-27T04:36:42.711Z",
-      "detail": "CLEAN (0/100)",
-      "finishedAt": "2026-10-27T04:36:42.713Z"
+      "state": "pending"
     },
     {
       "key": "publish",
       "label": "Publishing to the site",
-      "state": "done",
-      "at": "2026-10-27T04:36:44.845Z",
-      "detail": "Report live on the site",
-      "finishedAt": "2026-10-27T04:36:46.909Z"
+      "state": "pending"
     }
   ],
-  "report": {
-    "id": "3669932307",
-    "issue": 22,
-    "title": "Piluts´s Player Wireframes",
-    "creator": "76561199623120582",
-    "verdict": "CLEAN",
-    "score": 0,
-    "automated": true,
-    "generatedAt": "2026-10-27T04:36:40.611Z",
-    "reportPath": "reports/3669932307.md",
-    "fileCount": 1,
-    "bytes": 13312,
-    "codeFiles": 1,
-    "indicatorCount": 0,
-    "topIndicators": [],
-    "programs": [
-      {
-        "file": "PlayerOverlay.dll",
-        "typeCount": 7,
-        "methodCount": 26,
-        "sourceLines": 591,
-        "apiHits": [],
-        "types": [
-          "<Module>",
-          "Microsoft.CodeAnalysis.EmbeddedAttribute",
-          "System.Runtime.CompilerServices.RefSafetyRulesAttribute",
-          "PlayerOverlayLog",
-          "PlayerOverlayMod",
-          "PlayerOverlayPanel",
-          "PlayerOverlayPanel+PlayerDisplayInfo"
-        ],
-        "excerpt": ""
-      }
-    ],
-    "workshopUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3669932307"
-  },
+  "report": null,
   "note": null
 }
