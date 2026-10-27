@@ -64,6 +64,15 @@ jobs:
           "$HOME/steamcmd/steamcmd.sh" +quit >/dev/null 2>&1 || true
           echo "STEAMCMD=$HOME/steamcmd/steamcmd.sh" >> "$GITHUB_ENV"
 
+      # ilspycmd is the CLI of ICSharpCode.Decompiler (the engine behind ILSpy):
+      # the automated report shows the decompiled types, methods and C# that
+      # actually shipped, not just file hashes and strings.
+      - name: Install ILSpy CLI
+        run: |
+          dotnet tool install --global ilspycmd
+          echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
+          echo "ILSPYCMD=$HOME/.dotnet/tools/ilspycmd" >> "$GITHUB_ENV"
+
       - name: Configure git
         run: |
           git config user.name "puck-audit-bot"

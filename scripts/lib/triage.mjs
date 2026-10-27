@@ -12,7 +12,8 @@ const MAX_STRINGS = 4000;
 
 // Decompiler used for the "what did it actually do" half of an automated run.
 // ilspycmd is a dotnet tool; set ILSPYCMD to override the path.
-const ILSPYCMD = process.env.ILSPYCMD || "C:\\Users\\w4ua\\.dotnet\\tools\\ilspycmd.exe";
+const WINDOWS_ILSPYCMD = "C:\\Users\\w4ua\\.dotnet\\tools\\ilspycmd.exe";
+const ILSPYCMD = process.env.ILSPYCMD || (fs.existsSync(WINDOWS_ILSPYCMD) ? WINDOWS_ILSPYCMD : "ilspycmd");
 
 const API_NEEDLES = [
   "HttpClient",
