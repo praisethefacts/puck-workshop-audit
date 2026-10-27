@@ -2,17 +2,17 @@
   "id": "3669932307",
   "issue": 22,
   "title": "Piluts´s Player Wireframes",
-  "state": "done",
+  "state": "running",
   "startedAt": "2026-10-27T04:37:44.958Z",
-  "updatedAt": "2026-10-27T04:54:27.255Z",
-  "step": "publish",
-  "stepIndex": 4,
+  "updatedAt": "2026-10-27T05:20:37.530Z",
+  "step": "metadata",
+  "stepIndex": 0,
   "steps": [
     {
       "key": "metadata",
       "label": "Reading Workshop metadata",
-      "state": "done",
-      "at": "2026-10-27T04:53:55.082Z",
+      "state": "running",
+      "at": "2026-10-27T05:20:37.530Z",
       "detail": "Piluts´s Player Wireframes · 13312 B reported · metadata unavailable",
       "finishedAt": "2026-10-27T04:53:57.658Z"
     },
