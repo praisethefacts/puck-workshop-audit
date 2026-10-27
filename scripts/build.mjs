@@ -651,6 +651,8 @@ function navItems(prefix) {
 
 function renderWireframe() {
   return `<div class="wireframe" aria-hidden="true">
+<span class="aura aura--one"></span>
+<span class="aura aura--two"></span>
 <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" focusable="false">
 <g>
 <path class="wire" d="M1082 170a150 150 0 1 0 300 0 150 150 0 1 0-300 0"/>
@@ -681,8 +683,8 @@ function pageShell({ title, description, prefix = "", current = "home", main, bo
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light">
-<meta name="theme-color" content="#f3f3f1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#060708">
 <title>${esc(title)}</title>
 <meta name="description" content="${attr(description)}">
 ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ""}
