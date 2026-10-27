@@ -1,0 +1,39 @@
+{
+  "id": "3826743382",
+  "issue": 3,
+  "title": null,
+  "state": "skipped",
+  "startedAt": "2026-10-27T01:05:07.629Z",
+  "updatedAt": "2026-10-27T01:05:07.629Z",
+  "step": "queued",
+  "stepIndex": 0,
+  "steps": [
+    {
+      "key": "metadata",
+      "label": "Reading Workshop metadata",
+      "state": "skipped"
+    },
+    {
+      "key": "download",
+      "label": "Downloading the published files",
+      "state": "skipped"
+    },
+    {
+      "key": "scan",
+      "label": "Hashing files and scanning binaries",
+      "state": "skipped"
+    },
+    {
+      "key": "report",
+      "label": "Writing the triage report",
+      "state": "skipped"
+    },
+    {
+      "key": "publish",
+      "label": "Publishing to the site",
+      "state": "skipped"
+    }
+  ],
+  "report": null,
+  "note": "A manual audit already exists for this mod, so the automated run was skipped."
+}
