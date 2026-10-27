@@ -2,9 +2,9 @@
   "id": "3774089198",
   "issue": 14,
   "title": "Stubby Rinks",
-  "state": "running",
+  "state": "done",
   "startedAt": "2026-10-27T02:45:01.699Z",
-  "updatedAt": "2026-10-27T02:45:39.961Z",
+  "updatedAt": "2026-10-27T02:45:43.415Z",
   "step": "publish",
   "stepIndex": 4,
   "steps": [
@@ -43,8 +43,10 @@
     {
       "key": "publish",
       "label": "Publishing to the site",
-      "state": "running",
-      "at": "2026-10-27T02:45:39.961Z"
+      "state": "done",
+      "at": "2026-10-27T02:45:39.961Z",
+      "detail": "Report live on the site",
+      "finishedAt": "2026-10-27T02:45:43.415Z"
     }
   ],
   "report": {
