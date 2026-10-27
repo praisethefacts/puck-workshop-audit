@@ -1,0 +1,88 @@
+name: Full audit (on demand)
+
+# Runs the exact same pipeline as the operator's machine: steamcmd downloads the
+# Workshop item, every file is hashed, binaries are parsed, managed assemblies are
+# decompiled with ILSpy, indicators are matched, and the result is written in the
+# hand-audit layout (REPORT.md + evidence/ + sources/) and uploaded as an artifact.
+#
+# Use it when you want the PC-grade evidence for one mod without a local setup:
+#   Actions -> Full audit (on demand) -> Run workflow -> workshop id
+#
+# This does not publish to the public site; publishable triage still goes through
+# the audit-request workflow. The artifact is the deliverable here.
+
+on:
+  workflow_dispatch:
+    inputs:
+      id:
+        description: "Workshop published file id (e.g. 3765045334)"
+        required: true
+        type: string
+      decompile:
+        description: "Export decompiled C# sources into sources/ (slower)"
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: full-audit-${{ inputs.id }}
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Install ILSpy CLI and steamcmd
+        run: bash scripts/install-audit-tools.sh
+
+      - name: Write the Steam id to the output
+        env:
+          ID: ${{ inputs.id }}
+        run: echo "Auditing Workshop $ID"
+
+      - name: Run the audit
+        env:
+          ID: ${{ inputs.id }}
+          DECOMPILE: ${{ inputs.decompile }}
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/steamcmd:$HOME/.dotnet/tools:$PATH"
+          ARGS=(--id "$ID" --out audit-out)
+          if [ "$DECOMPILE" != "true" ]; then ARGS+=(--no-sources); fi
+          node scripts/audit-box.mjs "${ARGS[@]}"
+
+      - name: Summarise
+        if: always()
+        run: |
+          echo "## Full audit ${{ inputs.id }}" >> "$GITHUB_STEP_SUMMARY"
+          for f in audit-out/*/REPORT.md; do
+            [ -f "$f" ] || continue
+            head -20 "$f" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "Evidence files:" >> "$GITHUB_STEP_SUMMARY"
+            ls -la "$(dirname "$f")/evidence" >> "$GITHUB_STEP_SUMMARY" || true
+            ls -d "$(dirname "$f")/sources" >> "$GITHUB_STEP_SUMMARY" || true
+          done
+
+      - name: Upload the audit folder
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-${{ inputs.id }}
+          path: audit-out/
+          if-no-files-found: warn
+          retention-days: 30

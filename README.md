@@ -190,3 +190,49 @@ deploy workflow.
 
 The audit content belongs to its author. Steam Workshop names and links belong to their respective
 creators. This repository contains no mod binaries.
+
+## Run the same audit in a Codespace or in Actions
+
+The hand audits were made with a local pipeline: download the Workshop files, hash
+every file, parse the PE headers, decompile the managed assemblies with ILSpy, match
+indicators, then write `REPORT.md` + `evidence/` + `sources/`. That pipeline is in this
+repository as `scripts/audit-box.mjs`, so the same output can be produced anywhere Node
+and .NET run.
+
+### GitHub Codespace (interactive, same as the PC)
+
+1. On GitHub: **Code -> Codespaces -> Create codespace on main** (this repo's
+   `.devcontainer/devcontainer.json` installs Node, .NET, ILSpy CLI and steamcmd).
+2. In the Codespace terminal:
+
+   ```bash
+   node scripts/audit-box.mjs --id 3776968217
+   # or, for files you already have:
+   node scripts/audit-box.mjs --id 3776968217 --dir /workspaces/puck-workshop-audit/mod
+   ```
+
+   It downloads the item anonymously with steamcmd, then writes:
+
+   ```
+   audit-out/<id>_<name>/
+     REPORT.md
+     evidence/   inventory.tsv, hashes_sha256.txt, pe_info.txt,
+                 scan_hits.tsv, api_surface.txt, FACTS.md
+     sources/    decompiled C# (ILSpy project export)
+     report.json
+   ```
+
+3. Download the folder or run `zip -r audit.zip audit-out` if you want it locally.
+
+Re-running `scripts/install-audit-tools.sh` is safe; it only installs what is missing.
+
+### GitHub Actions (no local setup)
+
+`Actions -> Full audit (on demand) -> Run workflow` takes a Workshop id, runs the same
+script on `ubuntu-24.04`, and uploads the `audit-out/` folder as a downloadable artifact
+for 30 days. It does not publish to the public site - that stays with the
+`audit-request` workflow, which produces the lighter site triage.
+
+What is still different from a hand audit: the automated pass does not read intent.
+It reports what the bytes can do and the same 0-100 rubric, but a person still decides
+whether a capability is legitimate for a hockey mod.

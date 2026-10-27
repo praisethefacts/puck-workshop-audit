@@ -3,3 +3,7 @@ node_modules/
 .DS_Store
 .admin-token.txt
 dist/
+
+# local / Codespace audit output
+_auditbox-test/
+audit-out/

@@ -523,9 +523,9 @@ export function toMarkdownLegacy(report) {
   const m = report.meta || {};
   const item = m.title || `Workshop item ${m.id}`;
   const lines = [];
-  lines.push(`# ${item} â€” automated triage`);
+  lines.push(`# ${item}  -  automated triage`);
   lines.push("");
-  lines.push(`**Verdict:** ${report.verdict} â€” automated score ${report.score}/100`);
+  lines.push(`**Verdict:** ${report.verdict}  -  automated score ${report.score}/100`);
   lines.push("");
   lines.push("> This report was produced by an automated static scanner, not a manual audit. It lists");
   lines.push("> machine-checkable indicators in the shipped files. Nothing here is executed, and a low");
@@ -542,16 +542,16 @@ export function toMarkdownLegacy(report) {
   lines.push("## Files and hashes");
   lines.push("");
   for (const f of report.inventory.slice(0, 60)) {
-    lines.push(`- \`${f.sha256}\` ${f.size} B â€” ${f.path}`);
+    lines.push(`- \`${f.sha256}\` ${f.size} B  -  ${f.path}`);
   }
-  if (report.inventory.length > 60) lines.push(`- â€¦ ${report.inventory.length - 60} more`);
+  if (report.inventory.length > 60) lines.push(`- ... ${report.inventory.length - 60} more`);
   lines.push("");
   lines.push("## Binaries");
   lines.push("");
   if (!report.binaries.length) lines.push("No code files were found in this item.");
   for (const b of report.binaries) {
     const pe = b.pe ? `PE${b.pe.bitness}${b.pe.dotnet ? " .NET" : " native"}, ${b.pe.sections.length} sections, overlay ${b.pe.overlay} B` : b.kind;
-    lines.push(`- **${b.path}** â€” ${b.size} B, ${pe}, sha256 \`${b.sha256}\``);
+    lines.push(`- **${b.path}**  -  ${b.size} B, ${pe}, sha256 \`${b.sha256}\``);
     for (const s of b.pe ? b.pe.sections : []) {
       lines.push(`  - section ${s.name}: entropy ${s.entropy}${s.executable ? ", executable" : ""}${s.writable ? ", writable" : ""}`);
     }
@@ -571,7 +571,7 @@ export function toMarkdownLegacy(report) {
     lines.push("- No capability pattern matched. The files are asset data or ordinary mod code.");
   } else {
     for (const c of [...caps].sort((a, b) => b.weight - a.weight)) {
-      lines.push(`- **${c.label}** â€” ${c.weight + c.bump}/100 weight${c.ids.length ? `, evidence: ${c.ids.join(", ")}` : ""}`);
+      lines.push(`- **${c.label}**  -  ${c.weight + c.bump}/100 weight${c.ids.length ? `, evidence: ${c.ids.join(", ")}` : ""}`);
     }
   }
   lines.push("");
@@ -582,7 +582,7 @@ export function toMarkdownLegacy(report) {
   } else {
     const order = { 5: "critical", 4: "high", 3: "medium", 2: "low", 1: "info" };
     for (const f of [...report.findings].sort((a, b) => b.severity - a.severity)) {
-      lines.push(`- **${order[f.severity] || "info"}** â€” ${f.label} (${f.file})`);
+      lines.push(`- **${order[f.severity] || "info"}**  -  ${f.label} (${f.file})`);
       for (const s of f.samples || []) lines.push(`  - \`${String(s).replace(/`/g, "").slice(0, 180)}\``);
     }
   }
@@ -604,7 +604,7 @@ export function toMarkdownLegacy(report) {
       if (d.apiHits && d.apiHits.length) {
         lines.push(`- API surface used: ${d.apiHits.map((h) => "`" + h + "`").join(", ")}`);
       }
-      lines.push(`- Types: ${d.types.slice(0, 40).map((t) => "`" + t + "`").join(", ")}${d.typeCount > 40 ? ", â€¦" : ""}`);
+      lines.push(`- Types: ${d.types.slice(0, 40).map((t) => "`" + t + "`").join(", ")}${d.typeCount > 40 ? ", ..." : ""}`);
       if (d.excerpt) {
         lines.push("");
         lines.push("```csharp");
