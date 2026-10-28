@@ -1,7 +1,21 @@
 {
-  "checkedAt": "2026-10-27T02:32:11.617Z",
+  "checkedAt": "2026-10-28T01:21:31.632Z",
   "source": "Steam ISteamRemoteStorage/GetPublishedFileDetails",
   "items": [
+    {
+      "id": "3745510574",
+      "name": "Ponce's Custom Goal Songs and Horns Pack",
+      "auditedAt": "2026-10-26",
+      "state": "updated",
+      "workshopUpdated": "2026-10-27T21:54:09.000Z"
+    },
+    {
+      "id": "3578502215",
+      "name": "Ponce's Music Pack",
+      "auditedAt": "2026-10-26",
+      "state": "updated",
+      "workshopUpdated": "2026-10-27T21:54:01.000Z"
+    },
     {
       "id": "3578513105",
       "name": "Halloween Music Pack",
