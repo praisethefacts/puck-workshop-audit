@@ -1,7 +1,14 @@
 {
-  "checkedAt": "2026-10-28T01:21:31.632Z",
+  "checkedAt": "2026-10-28T21:04:35.990Z",
   "source": "Steam ISteamRemoteStorage/GetPublishedFileDetails",
   "items": [
+    {
+      "id": "3818726796",
+      "name": "GPM Scoreboard",
+      "auditedAt": "2026-10-26",
+      "state": "updated",
+      "workshopUpdated": "2026-10-28T19:24:49.000Z"
+    },
     {
       "id": "3745510574",
       "name": "Ponce's Custom Goal Songs and Horns Pack",
