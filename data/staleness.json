@@ -1,7 +1,14 @@
 {
-  "checkedAt": "2026-11-06T17:29:13.938Z",
+  "checkedAt": "2026-11-07T10:07:17.877Z",
   "source": "Steam ISteamRemoteStorage/GetPublishedFileDetails",
   "items": [
+    {
+      "id": "3824215759",
+      "name": "bJ0RK's Sticks",
+      "auditedAt": "2026-10-26 23:45",
+      "state": "updated",
+      "workshopUpdated": "2026-11-07T09:56:50.000Z"
+    },
     {
       "id": "3745510574",
       "name": "Ponce's Custom Goal Songs and Horns Pack",
